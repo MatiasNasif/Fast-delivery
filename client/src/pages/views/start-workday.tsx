@@ -10,11 +10,12 @@ import {
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Image from 'next/image';
-import brand from '../assets/brand.png';
+import brand from '../../assets/brand.png';
 import styles from '../../styles/StartWorkday.module.css';
 import { styled } from '@mui/material/styles';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import dummyData from '../../dummy-data/package-dummy.json';
 
 export default function StartWorkday() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -85,96 +86,62 @@ export default function StartWorkday() {
               <Typography ml={2} variant="subtitle1" sx={{ fontSize: '12px' }}>
                 Ya repartiste 58 paquetes
               </Typography>
-              <Box display={'flex'} sx={{ marginTop: '5%', justifyContent: 'space-between' }}>
-                <LocalShippingIcon
-                  fontSize="large"
-                  sx={{
-                    marginLeft: '5%',
-                    width: '80px',
-                    height: '80px',
-                    backgroundColor: '#E8EFFA',
-                    borderRadius: '5%',
-                  }}
-                />
-                <Typography
-                  ml={2}
-                  variant="subtitle1"
-                  sx={{ fontSize: '12px', width: '156px', marginTop: '2%' }}
-                >
-                  Amenabar 2356, CABA
-                </Typography>
-                <Box sx={{ marginRight: '5%', marginTop: '2%' }}>
-                  <DeleteForeverIcon color="error" />
-                </Box>
-              </Box>
-              <Typography
-                ml={2}
-                variant="h6"
-                sx={{ fontSize: '12px', textAlign: 'end', marginRight: '5%' }}
-              >
-                Entregado
-              </Typography>
-              <Divider sx={{ m: '5%' }} />
-              <Box display={'flex'} sx={{ marginTop: '5%', justifyContent: 'space-between' }}>
-                <LocalShippingIcon
-                  fontSize="large"
-                  sx={{
-                    marginLeft: '5%',
-                    width: '80px',
-                    height: '80px',
-                    backgroundColor: '#E8EFFA',
-                    borderRadius: '5%',
-                  }}
-                />
-                <Typography
-                  ml={2}
-                  variant="subtitle1"
-                  sx={{ fontSize: '12px', width: '156px', marginTop: '2%' }}
-                >
-                  Avenida Carabobo y Rivadavia, CABA
-                </Typography>
-                <Box sx={{ marginRight: '5%', marginTop: '2%' }}>
-                  <DeleteForeverIcon color="error" />
-                </Box>
-              </Box>
-              <Typography
-                ml={2}
-                variant="h6"
-                sx={{ fontSize: '12px', textAlign: 'end', marginRight: '5%' }}
-              >
-                Entregado
-              </Typography>
-              <Divider sx={{ m: '5%' }} />
-              <Box display={'flex'} sx={{ marginTop: '5%', justifyContent: 'space-between' }}>
-                <LocalShippingIcon
-                  fontSize="large"
-                  sx={{
-                    marginLeft: '5%',
-                    width: '80px',
-                    height: '80px',
-                    backgroundColor: '#E8EFFA',
-                    borderRadius: '5%',
-                  }}
-                />
-                <Typography
-                  ml={2}
-                  variant="subtitle1"
-                  sx={{ fontSize: '12px', width: '156px', marginTop: '2%' }}
-                >
-                  Mendoza 1810, CABA
-                </Typography>
-                <Box sx={{ marginRight: '5%', marginTop: '2%' }}>
-                  <DeleteForeverIcon color="error" />
-                </Box>
-              </Box>
-              <Typography
-                ml={2}
-                variant="h6"
-                sx={{ fontSize: '12px', textAlign: 'end', marginRight: '5%', color: '#D9C830' }}
-              >
-                En Curso
-              </Typography>
-              <Divider sx={{ m: '5%' }} />
+              {dummyData.map((dummy: any, i: number) => (
+                <>
+                  <Box display={'flex'} sx={{ marginTop: '5%', justifyContent: 'space-between' }}>
+                    <LocalShippingIcon
+                      fontSize="large"
+                      sx={{
+                        marginLeft: '5%',
+                        width: '80px',
+                        height: '80px',
+                        backgroundColor: '#E8EFFA',
+                        borderRadius: '5%',
+                      }}
+                    />
+                    <Typography
+                      ml={2}
+                      variant="subtitle1"
+                      sx={{ fontSize: '12px', width: '156px', marginTop: '2%' }}
+                    >
+                      {dummy.address}
+                    </Typography>
+                    <Box sx={{ marginRight: '5%', marginTop: '2%' }}>
+                      <DeleteForeverIcon color="error" />
+                    </Box>
+                  </Box>
+                  {dummy.deliveryStatus === 'Entregado' ? (
+                    <Typography
+                      key={i}
+                      ml={2}
+                      variant="h6"
+                      sx={{
+                        fontSize: '12px',
+                        textAlign: 'end',
+                        marginRight: '5%',
+                        color: 'black',
+                      }}
+                    >
+                      {dummy.deliveryStatus}
+                    </Typography>
+                  ) : (
+                    <Typography
+                      key={i}
+                      ml={2}
+                      variant="h6"
+                      sx={{
+                        fontSize: '12px',
+                        textAlign: 'end',
+                        marginRight: '5%',
+                        color: '#D9C830',
+                      }}
+                    >
+                      {dummy.deliveryStatus}
+                    </Typography>
+                  )}
+                  <Divider sx={{ m: '5%' }} />
+                </>
+              ))}
             </Accordion>
           </Box>
         </Container>
