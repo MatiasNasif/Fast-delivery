@@ -12,6 +12,7 @@ import brand from '../../assets/brand.png';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import maps from '../../assets/maps.png';
+import dummyData from '../../dummy-data/package-dummy.json';
 
 export default function CurrentDistribution() {
   return (
@@ -71,7 +72,7 @@ export default function CurrentDistribution() {
                   fontWeight: 'bold',
                 }}
               >
-                Destino:<span style={{ fontWeight: 'normal' }}> Amenabar 2356, CABA</span>
+                Destino: <span style={{ fontWeight: 'normal' }}>{dummyData[0].address}</span>
               </Typography>
               <Typography
                 sx={{
@@ -80,7 +81,7 @@ export default function CurrentDistribution() {
                   fontWeight: 'bold',
                 }}
               >
-                # del paquete:<span style={{ fontWeight: 'normal' }}>712</span>
+                # del paquete: <span style={{ fontWeight: 'normal' }}>{dummyData[0].id}</span>
               </Typography>
               <Typography
                 sx={{
@@ -89,7 +90,7 @@ export default function CurrentDistribution() {
                   fontWeight: 'bold',
                 }}
               >
-                Recibe:<span style={{ fontWeight: 'normal' }}> Raúl Rodriguez</span>
+                Recibe: <span style={{ fontWeight: 'normal' }}>{dummyData[0].receiver}</span>
               </Typography>
             </Box>
           </AccordionDetails>
@@ -110,6 +111,7 @@ export default function CurrentDistribution() {
                 letterSpacing: '0.46px',
                 textTransform: 'uppercase',
                 color: '#FFFFFF',
+                borderRaduis: '5px',
               }}
               variant="contained"
             >
