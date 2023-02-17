@@ -1,0 +1,26 @@
+.main{
+    color: black;
+}
+
+.center{
+    display: flex;
+}
+
+.textLabelcolor{
+    color: #FEBC14 !important;
+    font-weight: 400;
+    fill: solid;
+    font-style: regular;
+}
+
+.brand{
+ display: flex;
+ justify-content: center;
+}
+
+.avatar{
+    width: 100px;
+    height: 80px;
+    margin-top: 29px;
+  
+}

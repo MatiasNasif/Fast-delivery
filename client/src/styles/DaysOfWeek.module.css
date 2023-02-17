@@ -1,0 +1,24 @@
+.day{
+
+    color: white;
+height: 100px;
+width: 61px;
+background-color: #217BCE;
+border-radius: 40px;
+font-family: "Roboto";
+margin: 2px;
+display: flex;
+flex-direction: column-reverse;
+justify-content: center;
+text-align: center;
+}
+
+.currentDay{
+    color: white;
+    font-family: "Roboto";
+    width: 61px;
+    height:100px;
+    text-align: center;
+    
+    background-color: #FCBC11;
+}
