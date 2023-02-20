@@ -18,13 +18,6 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import dummyData from '../../dummy-data/package-dummy.json';
 
 export default function StartWorkday() {
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
   return (
     <>
       <main>
