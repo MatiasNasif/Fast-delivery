@@ -12,17 +12,6 @@
   height: 32px;
 }
 
-.container_icon_arrow {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 10px;
-}
-
-.icon_arrow {
-  width: 26px;
-  height: 26px;
-}
-
 .container_accordion {
   display: flex;
   justify-content: center;

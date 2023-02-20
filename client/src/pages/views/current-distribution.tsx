@@ -1,7 +1,6 @@
 import styles from '../../styles/CurrentDistribution.module.css';
 import Image from 'next/image';
 import brand from '../../assets/brand.png';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import maps from '../../assets/maps.png';
 import dummyData from '../../dummy-data/package-dummy.json';
@@ -14,6 +13,7 @@ import {
   AccordionDetails,
   Typography,
 } from '@mui/material';
+import ArrowApp from '@/components/ArrowApp';
 
 export default function CurrentDistribution() {
   return (
@@ -22,9 +22,7 @@ export default function CurrentDistribution() {
         <Image className={styles.header_container_image} src={brand} alt="brand" />
       </Box>
 
-      <Box className={styles.container_icon_arrow}>
-        <KeyboardArrowLeftIcon className={styles.icon_arrow} />
-      </Box>
+      <ArrowApp />
 
       <Box className={styles.container_accordion}>
         <Accordion>
