@@ -29,14 +29,18 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
   );
 }
 
-export default function CircularStatic() {
+export default function CircularStatic(props) {
   const [progress, setProgress] = React.useState(20);
 
   return (
     <>
       {' '}
       <Box sx={{ marginLeft: '2%' }}>
-        <CircularProgressWithLabel sx={{ color: '#6373F7' }} size={60} value={progress} />
+        <CircularProgressWithLabel
+          sx={{ color: props.colorCircle }}
+          size={60}
+          value={props.value}
+        />
       </Box>
     </>
   );

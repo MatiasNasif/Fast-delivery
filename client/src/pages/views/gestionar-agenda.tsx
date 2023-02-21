@@ -15,16 +15,16 @@ import brand from '../assets/brand.png';
 import avatarOne from '../assets/avatar1.jpeg';
 import Image from 'next/image';
 import Head from 'next/head';
-import Link from 'next/link';
 import Calendar from './day';
 import Progress from './progress';
-import Paquetes from './paquetes.tsx';
+import CircleDummy from '../../dummy-data/Circular-Progress.json';
 
 export default function ManagerSchedule() {
   let date: Date = new Date();
   const dateNum = date.getMonth() + 1;
   const dateFullyear = date.getFullYear().toString().slice(-2);
   console.log('FULL YEAR ' + dateFullyear);
+
   return (
     <>
       <Head>
@@ -125,96 +125,55 @@ export default function ManagerSchedule() {
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '100%' }}></Typography>
             </AccordionSummary>
-            <Box sx={{ display: 'flex', marginTop: '20px' }}>
-              <Progress />
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: '18px',
-                    fontWeight: '700',
-                    fontFamily: 'Roboto',
-                    marginLeft: '20px',
-                  }}
-                  variant="inherit"
-                  color="black"
-                >
-                  Repartidores
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: '14px',
-                    fontWeight: '400',
-                    fontFamily: 'Roboto',
-                    marginLeft: '20px',
-                    marginTop: '5px',
-                  }}
-                  variant="inherit"
-                  color="black"
-                >
-                  2/10 activos
-                </Typography>
-              </Box>
-            </Box>
+            {CircleDummy.map((data, i) => (
+              <Box key={i}>
+                <Box sx={{ display: 'flex', marginTop: '20px' }}>
+                  <Progress value={data.circle} colorCircle={data.color} />
+                  <Box>
+                    <Typography
+                      sx={{
+                        fontSize: '18px',
+                        fontWeight: '700',
+                        fontFamily: 'Roboto',
+                        marginLeft: '20px',
+                      }}
+                      variant="inherit"
+                      color="black"
+                    >
+                      {data.name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: '14px',
+                        fontWeight: '400',
+                        fontFamily: 'Roboto',
+                        marginLeft: '20px',
+                        marginTop: '5px',
+                      }}
+                      variant="inherit"
+                      color="black"
+                    >
+                      {data.activos} {data.status}
+                    </Typography>
+                  </Box>
+                </Box>
 
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                marginBottom: '5px',
-              }}
-            >
-              <Box mt={2} px={2}>
-                <Button fullWidth variant="contained" size="small" className={styles.box}>
-                  Ver Repartidores
-                </Button>
-              </Box>
-            </Box>
-            <Box sx={{ display: 'flex', marginTop: '30px' }}>
-              <Paquetes />
-              <Box>
-                <Typography
+                <Box
                   sx={{
-                    fontSize: '18px',
-                    fontWeight: '700',
-                    fontFamily: 'Roboto',
-                    marginLeft: '20px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    marginBottom: '5px',
                   }}
-                  variant="inherit"
-                  color="black"
                 >
-                  Paquetes
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: '14px',
-                    fontWeight: '400',
-                    fontFamily: 'Roboto',
-                    marginLeft: '20px',
-                    marginTop: '5px',
-                  }}
-                  variant="inherit"
-                  color="black"
-                >
-                  16/20 Repartidos
-                </Typography>
+                  <Box mt={2} px={2}>
+                    <Button fullWidth variant="contained" size="small" className={styles.box}>
+                      {data.nameBtn}
+                    </Button>
+                  </Box>
+                </Box>
               </Box>
-            </Box>
-
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                marginBottom: '5px',
-              }}
-            >
-              <Box mt={2} px={2}>
-                <Button fullWidth variant="contained" size="small" className={styles.box}>
-                  Ver Paquetes
-                </Button>
-              </Box>
-            </Box>
+            ))}
           </Accordion>
         </Box>
       </Container>
