@@ -1,0 +1,11 @@
+.container_icon_arrow {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .icon_arrow {
+    width: 26px;
+    height: 26px;
+  }
