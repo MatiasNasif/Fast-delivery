@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  TextField,
   Container,
   Button,
   Typography,
@@ -14,7 +13,7 @@ import styles from '../../styles/Schedule.module.css';
 import brand from '../assets/brand.png';
 import avatarOne from '../assets/avatar1.jpeg';
 import Image from 'next/image';
-import Head from 'next/head';
+import Header from '@/commons/header';
 import Calendar from './day';
 import Progress from './progress';
 import CircleDummy from '../../dummy-data/Circular-Progress.json';
@@ -23,17 +22,10 @@ export default function ManageSchedule() {
   let date: Date = new Date();
   const dateNum = date.getMonth() + 1;
   const dateFullyear = date.getFullYear().toString().slice(-2);
-  console.log('FULL YEAR ' + dateFullyear);
 
   return (
     <>
-      <Head>
-        <title>Gestionar Agenda</title>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
-      </Head>
+      <Header />
 
       <Container disableGutters={true}>
         <Box
