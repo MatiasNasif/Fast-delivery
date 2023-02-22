@@ -1,26 +1,19 @@
-import Head from 'next/head';
-import { Inter } from '@next/font/google';
-import styles from '../styles/Login.module.css';
-import { Box, TextField, Container, Button, Typography, FormControl } from '@mui/material';
+import React from 'react';
+import { Box, TextField, Container, Button, Typography } from '@mui/material';
+import styles from '../../styles/Register.module.css';
 import Image from 'next/image';
-import brand from '../../src/assets/brand.png';
+import brand from '../../assets/brand.png';
 import Link from 'next/link';
-import InputPassword from '../commons/InputPassword';
+import InputPassword from '../../commons/InputPassword';
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function Home() {
+export default function Register() {
   return (
     <>
-      <Head>
-        <title>Login</title>
-      </Head>
       <Container maxWidth={'xs'}>
         <Box className={styles.boxspace}></Box>
         <Box className={styles.boxBrand}>
           <Image className={styles.brand} src={brand} alt="Fast Delivery Brand" />
         </Box>
-        <FormControl className={styles.form}></FormControl>
         <TextField
           label="Usuario"
           InputLabelProps={{ className: styles.textLabelcolor }}
@@ -29,21 +22,12 @@ export default function Home() {
           focused
           fullWidth
         />
-        <InputPassword />{' '}
+        <InputPassword />
         <Button fullWidth variant="contained">
-          Ingresar
+          Registrate
         </Button>
         <Box className={styles.boxLinks}>
-          <Typography
-            className={styles.TextLiks}
-            sx={{ fontWeight: '300' }}
-            variant="inherit"
-            color="primary"
-          >
-            Recuperar contraseña
-          </Typography>
-
-          <Link href="/views/register">
+          <Link href="/">
             {' '}
             <Typography
               className={styles.TextLiks}
@@ -51,7 +35,7 @@ export default function Home() {
               variant="inherit"
               color="primary"
             >
-              Registrarse
+              Volver al inicio
             </Typography>
           </Link>
         </Box>

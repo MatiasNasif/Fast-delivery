@@ -1,0 +1,23 @@
+[
+  {
+    "circle": 60,
+    "deliveryName": "Farid",
+    "status": "Viaje en curso",
+    "color": "#FCBC11",
+    "dotColor": "#217BCE"
+  },
+  {
+    "circle": 100,
+    "deliveryName": "Luciana",
+    "status": "Finalizó",
+    "color": "#96DB76",
+    "dotColor": "#96DB76"
+  },
+  {
+    "circle": 65,
+    "deliveryName": "Santiago",
+    "status": "Inactivo",
+    "color": "#FCBC11",
+    "dotColor": "#FF6B6B"
+  }
+]
