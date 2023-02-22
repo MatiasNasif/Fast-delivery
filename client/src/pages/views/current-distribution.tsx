@@ -115,10 +115,7 @@ export default function CurrentDistribution() {
               }}
               variant="contained"
             >
-              Finalizar
-            </Button>
-          </Box>
-        </Accordion>
+       </Accordion>
       </Box>
     </Container>
   );
