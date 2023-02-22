@@ -1,0 +1,18 @@
+[
+  {
+    "circle": 20,
+    "activos": "2/10",
+    "color": "#6373F7",
+    "name": "Repatidores",
+    "nameBtn": "Ver Repartidores",
+    "status": "Activos"
+  },
+  {
+    "circle": 80,
+    "activos": "16/20",
+    "color": "#FEBD93",
+    "name": "Paquetes",
+    "nameBtn": "Ver Paquetes",
+    "status": "Repartidos"
+  }
+]
