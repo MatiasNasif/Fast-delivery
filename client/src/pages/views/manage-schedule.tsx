@@ -19,7 +19,7 @@ import Calendar from './day';
 import Progress from './progress';
 import CircleDummy from '../../dummy-data/Circular-Progress.json';
 
-export default function ManagerSchedule() {
+export default function ManageSchedule() {
   let date: Date = new Date();
   const dateNum = date.getMonth() + 1;
   const dateFullyear = date.getFullYear().toString().slice(-2);
