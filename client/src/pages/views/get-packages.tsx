@@ -1,14 +1,14 @@
 import { Container, Box, Typography, Button } from '@mui/material';
-import Image from 'next/image';
-import brand from '../../assets/brand.png';
 import Checkbox from '@mui/material/Checkbox';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useState } from 'react';
 import Divider from '@mui/material/Divider';
 import dummyData from '../../dummy-data/package-dummy.json';
 import styles from '../../styles/GetPackages.module.css';
+import Header from '../../commons/header';
+import ButtonApp from '../../commons/ButtonApp';
+import ArrowApp from '../../commons/ArrowApp';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -26,32 +26,8 @@ export default function GetPackages() {
   };
   return (
     <Container maxWidth={'xs'} disableGutters={true}>
-      <Box
-        component="form"
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          marginBottom: '10px',
-          background: '#FFFFFF',
-          WebkitBoxShadow: '0px 2px 5px -1px rgba(0,0,0,0.75)',
-          MozBoxShadow: ' 0px 2px 5px -1px rgba(0,0,0,0.75)',
-          boxShadow: '0px 2px 5px -1px rgba(0,0,0,0.75)',
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <Image
-          src={brand}
-          alt="Fast Delivery Brand"
-          width={51}
-          height={32}
-          style={{ marginBottom: '5px' }}
-        />
-      </Box>
-
-      <Box>
-        <KeyboardArrowLeftIcon className={styles.keyboardArrowLeftIcon}></KeyboardArrowLeftIcon>
-      </Box>
+      <Header />
+      <ArrowApp />
 
       <Box className={styles.boxGetAndHowMany}>
         <Box>
@@ -92,15 +68,8 @@ export default function GetPackages() {
           <Divider sx={{ m: '5%' }} />
         </>
       ))}
-      <Box mt={2} px={2}>
-        <Button
-          fullWidth
-          variant="contained"
-          size="small"
-          sx={{ borderRadius: '5px', fontSize: '15px', backgroundColor: '#217BCE' }}
-        >
-          INICIAR JORNADA
-        </Button>
+      <Box className={styles.boxContainer}>
+        <ButtonApp>Iniciar Jornada</ButtonApp>
       </Box>
     </Container>
   );
