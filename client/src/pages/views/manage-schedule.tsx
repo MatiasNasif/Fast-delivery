@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import ArrowDropDownSharpIcon from '@mui/icons-material/ArrowDropDownSharp';
 import styles from '../../styles/Schedule.module.css';
-import brand from '../assets/brand.png';
-import avatarOne from '../assets/avatar1.jpeg';
+import brand from '../../assets/brand.png';
+import avatarOne from '../../assets/avatar1.jpeg';
 import Image from 'next/image';
 import Header from '@/commons/header';
 import Calendar from './day';
@@ -28,28 +28,6 @@ export default function ManageSchedule() {
       <Header />
 
       <Container disableGutters={true}>
-        <Box
-          component="form"
-          sx={{
-            width: '100%',
-            height: '38px',
-            display: 'flex',
-            justifyContent: 'start',
-            WebkitBoxShadow: '0px 2px 5px -1px rgba(0,0,0,0.75)',
-            MozBoxShadow: ' 0px 2px 5px -1px rgba(0,0,0,0.75)',
-            boxShadow: '0px 2px 5px -1px rgba(0,0,0,0.75)',
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <Image
-            className={styles.brand}
-            src={brand}
-            alt="Fast Delivery Brand"
-            width={51}
-            height={32}
-          />
-        </Box>
         <Box
           component="form"
           sx={{
