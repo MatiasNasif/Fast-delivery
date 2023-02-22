@@ -1,0 +1,62 @@
+.keyboardArrowLeftIcon {
+  font-size: 32px;
+  left: 10px;
+  top: 60px;
+}
+
+.boxGetAndHowMany {
+  margin-bottom: 20px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 4%;
+  max-width: 100%;
+}
+
+.wordGet {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 2px;
+}
+
+.wordHowMany {
+  font-size: 14px;
+  font-weight: normal;
+  margin-top: -3px;
+}
+
+.boxAddress {
+  font-size: 12px;
+  width: 215px;
+  margin-top: 2%;
+  font-weight: normal;
+  margin-left: 26px;
+}
+
+.boxContainIcons {
+  display: flex;
+  margin-left: 26px;
+  margin-top: 13px;
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+.buttonRemove {
+  height: 20px;
+  min-width: 13px;
+  padding: 12px 1px 12px 1px;
+  margin-right: 13px;
+  border: 1px;
+  background-color: white;
+  border-color: #b2bcca;
+}
+
+.buttonAdd {
+  height: 20px;
+  padding: 12px 1px 12px 1px;
+  min-width: 13px;
+  margin-left: 13px;
+  border: 1px;
+  background-color: white;
+  border-color: #b2bcca;
+}
