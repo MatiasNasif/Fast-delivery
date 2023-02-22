@@ -4,6 +4,8 @@ import styles from '../../styles/StartWorkday.module.css';
 import dummyData from '../../dummy-data/package-dummy.json';
 import Header from '../../commons/header';
 import Card from '../../commons/card';
+import ButtonApp from '../../commons/ButtonApp';
+import Link from 'next/link';
 
 export default function StartWorkday() {
   return (
@@ -11,11 +13,9 @@ export default function StartWorkday() {
       <main>
         <Container maxWidth="xs" disableGutters={true}>
           <Header />
-          <Box className={styles.box}>
-            <Button fullWidth variant="contained" size="small">
-              OBTENER PAQUETES
-            </Button>
-          </Box>
+          <Link href="/views/get-packages">
+            <ButtonApp>obtener paquetes</ButtonApp>
+          </Link>
           <Box className={styles.box}>
             <Accordion>
               <AccordionSummary
