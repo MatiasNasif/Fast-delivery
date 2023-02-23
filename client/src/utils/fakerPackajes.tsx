@@ -7,7 +7,7 @@ export type Package = {
   weight: number;
   deliveryDate: Date;
   deliveryManId: number;
-  deliveryStatus: string;
+  deliveryStatus?: string;
 };
 
 function createPackage(): Package {

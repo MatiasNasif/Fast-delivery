@@ -3,25 +3,23 @@ import { faker } from '@faker-js/faker';
 export type DeliveryMan = {
   _id: string;
   fullName: string;
-  email: string;
   avatar: string;
-  status: boolean;
+  status: string;
 };
 
-function createDeliveryMan(email: string, status: boolean): DeliveryMan {
+function createDeliveryMan(): DeliveryMan {
   return {
     _id: faker.datatype.uuid(),
-    fullName: faker.name.firstName() + faker.name.lastName(),
-    email,
+    fullName: faker.name.firstName() + ' ' + faker.name.lastName(),
     avatar: faker.image.avatar(),
-    status,
+    status: faker.helpers.arrayElement(['Activo', 'Inactivo']),
   };
 }
 
 async function requestDeliveryMans(cant: number) {
   let deliveryMans: DeliveryMan[] = [];
   for (let i = 0; i < cant; i++) {
-    deliveryMans.push(createDeliveryMan('seed@seed.com', true));
+    deliveryMans.push(createDeliveryMan());
   }
   return deliveryMans;
 }
