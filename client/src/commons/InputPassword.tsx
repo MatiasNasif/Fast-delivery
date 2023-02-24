@@ -25,11 +25,12 @@ export default function InputPassword() {
         Contraseña
       </InputLabel>
       <Input
+        className="Mui-focused"
         sx={{ marginBottom: '20px' }}
         fullWidth={true}
         type={showPassword ? 'text' : 'password'}
         endAdornment={
-          <InputAdornment position="end">
+          <InputAdornment position="start">
             <IconButton
               aria-label="toggle password visibility"
               onClick={handleClickShowPassword}
