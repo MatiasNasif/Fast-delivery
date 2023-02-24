@@ -4,9 +4,9 @@ import AddIcon from '@mui/icons-material/Add';
 import Header from '../../commons/header';
 import Card from '../../commons/card';
 import Link from 'next/link';
-import ArrowApp from '@/commons/ArrowApp';
+import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
-import { Package, requestPackages } from '@/utils/fakerPackajes';
+import { Package, requestPackages } from '@/utils/fakerPackages';
 import { useState, useEffect } from 'react';
 
 export default function ManagePackages() {

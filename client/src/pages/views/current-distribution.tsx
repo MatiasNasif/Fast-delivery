@@ -12,7 +12,7 @@ import {
   AccordionDetails,
   Typography,
 } from '@mui/material';
-import ArrowApp from '@/commons/ArrowApp';
+import ArrowApp from '@/commons/arrowApp';
 import Header from '@/commons/header';
 
 export default function CurrentDistribution() {

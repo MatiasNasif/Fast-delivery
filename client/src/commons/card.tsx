@@ -5,7 +5,7 @@ import styles from '../styles/Card.module.css';
 
 interface Props {
   dummy: any;
-  hideDeliveryStatus: boolean;
+  hideDeliveryStatus?: boolean;
 }
 
 export default function Card({ dummy, hideDeliveryStatus }: Props) {

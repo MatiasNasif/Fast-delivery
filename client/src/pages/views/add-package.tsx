@@ -1,4 +1,4 @@
-import ArrowApp from '@/commons/ArrowApp';
+import ArrowApp from '@/commons/arrowApp';
 import Header from '@/commons/header';
 import {
   Typography,
@@ -13,7 +13,7 @@ import styles from '../../styles/AddPackage.module.css';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useState } from 'react';
-import ButtonApp from '@/commons/ButtonApp';
+import ButtonApp from '@/commons/buttonApp';
 
 const AddPackage = () => {
   const [count, setCount] = useState(0);

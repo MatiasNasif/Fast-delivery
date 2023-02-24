@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Header from '@/commons/header';
-import ArrowApp from '@/commons/ArrowApp';
+import ArrowApp from '@/commons/arrowApp';
 import Card from '@/commons/card';
 import { Container, Box, Typography, Accordion, AccordionSummary } from '@mui/material';
 import styles from '../../styles/DeliveryManDetails.module.css';
 import { DeliveryMan, requestDeliveryMen } from '@/utils/fakerDeliveryMen';
-import { Package, requestPackages } from '@/utils/fakerPackajes';
+import { Package, requestPackages } from '@/utils/fakerPackages';
 import Avatar from '@mui/material/Avatar';
 import Image from 'next/image';
 import imageAvatar from '../../assets/avatar1.jpeg';
