@@ -1,0 +1,21 @@
+.brightness_finish{
+    width: 10px;
+    height: 10px;
+    color: rgb(17, 255, 0);
+    margin-top: 8px;
+    margin-right: 2px;
+}
+.brightness_travel_in_course{
+    width: 10px;
+    height: 10px;
+    color: rgb(14, 98, 255);
+    margin-top: 8px;
+    margin-right: 2px;
+}
+.brightness_inactive{
+    margin-top: 8px;
+    margin-right: 2px;
+    width: 10px;
+    height: 10px;
+    color: rgba(215, 0, 0, 0.988);
+}

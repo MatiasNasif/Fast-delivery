@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Container,
@@ -16,6 +15,8 @@ import Calendar from '../../commons/day.tsx';
 import Progress from '../../commons/progress.tsx';
 import CircleDummy from '../../dummy-data/Circular-Progress.json';
 import PackageDummy from '../../dummy-data/package-progress.json';
+import React, { useEffect, useState } from 'react';
+import { Delivery, requestDelivery } from '../../utils/fakerDeliverys';
 import Link from 'next/link';
 
 export default function ManageSchedule() {
@@ -27,10 +28,18 @@ export default function ManageSchedule() {
 
   PackageDummy;
 
+  const [deliverys, setDeliverys] = useState<Delivery[]>([]);
+
+  useEffect(() => {
+    requestDelivery(3).then((delivery) => {
+      setDeliverys(delivery);
+    });
+  }, []);
+
   return (
     <>
       <Header />
-      <Container disableGutters={true}>
+      <Container disableGutters={true} className={styles.containerManage}>
         <Box className={styles.boxAdmin}>
           <Avatar alt="Admin" src={AvatarAdmin} />
           <Box>
@@ -59,7 +68,7 @@ export default function ManageSchedule() {
                   <Progress value={data.circle} colorCircle={data.color} />
                   <Box sx={{ width: '100%' }}>
                     <Typography className={styles.textOfdeliveryman} variant="inherit">
-                      {data.name}
+                      Repartidores
                     </Typography>
                     <Typography className={styles.textOfstatus} variant="inherit">
                       {data.activos} {data.status}

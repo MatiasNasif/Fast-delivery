@@ -31,8 +31,41 @@
     font-weight: 400;
     font-family: 'Roboto';
     margin-top: 5px;
+    color: blue;
 }
+
+.deliveryStatusFinish{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color:  #96DB76;
+}
+
+.deliveryStatusInCourse{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color: #217BCE;
+}
+
+.deliveryStatusInactive{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color: #FF6B6B;
+}
+
+
 .deliveryManContainer{
     margin-left: 20px;
    
+}
+
+.boxDeliveryStatus{
+    display: flex; 
+;
+
 }
