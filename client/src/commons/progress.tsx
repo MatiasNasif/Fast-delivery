@@ -2,6 +2,7 @@ import * as React from 'react';
 import CircularProgress, { CircularProgressProps } from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import styles from '../styles/Progress.module.css';
 
 function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
   return (
@@ -28,20 +29,35 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
     </Box>
   );
 }
-
 export default function CircularStatic(props) {
   const [progress, setProgress] = React.useState(20);
-
+  const deliveryStatusMessages = {
+    'Viaje en curso': (
+      <CircularProgressWithLabel size={60} className={styles.travelInCourse} value={props.value} />
+    ),
+    Finalizó: (
+      <CircularProgressWithLabel
+        size={60}
+        className={styles.travelInFinalization}
+        value={props.value}
+      />
+    ),
+    Inactivo: (
+      <CircularProgressWithLabel size={60} className={styles.travelInactive} value={props.value} />
+    ),
+  };
+  let deliveryStatus = props.deliveryStatus;
+  if (props.value == 100) {
+    deliveryStatus = 'Finalizó';
+  } else if (props.value >= 1 && props.value <= 20) {
+    deliveryStatus = 'Inactivo';
+  } else if (props.value >= 21 && props.value <= 99) {
+    deliveryStatus = 'Viaje en curso';
+  }
   return (
     <>
       {' '}
-      <Box sx={{ marginLeft: '2%' }}>
-        <CircularProgressWithLabel
-          sx={{ color: props.colorCircle }}
-          size={60}
-          value={props.value}
-        />
-      </Box>
+      <Box sx={{ marginLeft: '2%' }}>{deliveryStatusMessages[deliveryStatus]}</Box>
     </>
   );
 }

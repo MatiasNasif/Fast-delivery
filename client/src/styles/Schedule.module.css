@@ -7,6 +7,10 @@
     max-width: 100%;
 }
 
+.containerManage{
+    min-height: 100%;
+}
+
 .helloAdmin{
     font-size: 14px;
     font-weight: 400;
