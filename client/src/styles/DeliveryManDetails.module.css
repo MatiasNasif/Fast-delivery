@@ -1,0 +1,51 @@
+.container_all {
+  background: #ffffff;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.14);
+  border-radius: 4px;
+  width: 350px;
+  height: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.container_grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+}
+
+.container_avatar_image {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.container_avatar {
+  width: 50px;
+  height: 53px;
+}
+
+.image_avatar {
+  width: 100px;
+  height: 80px;
+  margin-top: 29px;
+}
+
+.container_options_and_typography {
+  margin-left: 10%;
+}
+
+.box {
+  margin-top: 30px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.subtitle {
+  margin-left: 5%;
+  font-size: 12px;
+  margin-bottom: 2%;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 16px;
+}
