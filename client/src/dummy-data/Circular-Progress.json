@@ -5,14 +5,10 @@
     "color": "#6373F7",
     "name": "Repatidores",
     "nameBtn": "Ver Repartidores",
+    "image": {
+      "AvatarImgOne": "https://s3-alpha-sig.figma.com/img/15d4/c286/08555874bd3ce497a4386f4e11256da7?Expires=1678060800&Signature=LJkrp9NIfzxyqCApUIm365176tQ6Z0xmbYtuhlW8uSVyWWqWKiAEu0K1JWkwMneJXHVEWqkxGtrBR-Tv8xHgDtRdUpBoBvFrsJ6QQJO9akZqURR1z67A10E11wBaPOHKrQbBb3DdgAZJ8~keG~7odt2q3EQ9WAH9rKj6qTfpTC~UXvOzE7xSZbmOtXGCoqIFoadLDweaVK8DBwQo8b~WPvptsNpfjAu8yY7Nf5ov0LAD6RTBHghhSC0XsWagUUmaNPzobax4hjSzDoFQs2DFR5YPqon8cAm88pMIASh6xFSlcy6BYE5hjiP96b9S93yIxmTyHQVFG44ZUpu5XgvUSA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
+      "AvatarImgTwo": "https://s3-alpha-sig.figma.com/img/9214/000d/7f235ed6f78a4d254a5139a3aec927cc?Expires=1678060800&Signature=QHKHVKpcr9mwb5kF38QITtiRkT7xnpHfsHH-b-Goo-eX3M~XJztZSdDT6Y519W3EBcXN2GTUKM-IFHqC4n07z2Oudw~A4pEnX8W9Wpv9IXGpWTIJpTvGcRz-SSMAKDA3vLJyU32elRahOYKYKqSUVC2OTj~iGHSuzMJ-ocqN-uo1NrWb9D0HxK4zm~Lo16TYm9WQxTfxwW7BiGIFBSMF0dEgfBT1sYhrUnur0nxQwvBI9jfdO8tYloGP67osFAd0IZMK8HljFGxkQodKGsmg4Q1~Yg555TkEObX2UWo6vzXPaLwGXiX~uDa0M~fkXni1FuvyK6oIRQe43-GTtvZHTw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+    },
     "status": "Activos"
-  },
-  {
-    "circle": 80,
-    "activos": "16/20",
-    "color": "#FEBD93",
-    "name": "Paquetes",
-    "nameBtn": "Ver Paquetes",
-    "status": "Repartidos"
   }
 ]

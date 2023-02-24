@@ -1,5 +1,68 @@
-.main{
-    color: black;
+.boxAdmin{
+    margin-bottom: 30px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 30px;
+    max-width: 100%;
+}
+
+.helloAdmin{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Roboto";
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.textOfmanage{
+    font-size: 18px;
+    font-weight: 700;
+    font-family: "Roboto";
+    margin-left: 20px;
+    margin-top: 5px;
+}
+.textOfdetails{
+    font-size: 18px;
+    font-weight: 700;
+    font-family: "Roboto";
+    color:"black"
+}
+
+
+
+.boxOfdeliveryman{
+    display: flex;
+ margin-top: 20px;
+}
+
+.boxOfpackages{
+    display: flex;
+ margin-top: 20px;
+ justify-content: space-between;
+ align-items: center;
+}
+
+.textOfdeliveryman{
+    font-size: 18px;
+    font-weight: 700;
+    font-family: "Roboto";
+    margin-left: 20px;
+    color:"black"
+}
+
+.textOfstatus{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Roboto";
+    margin-left: 20px;
+    margin-top: 5px;
+}
+.boxBtn{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 5px;
 }
 
 .center{
@@ -12,6 +75,7 @@
     fill: solid;
     font-style: regular;
 }
+
 
 .brand{
  display: flex;

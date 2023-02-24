@@ -4,6 +4,7 @@
     "deliveryName": "Farid",
     "status": "Viaje en curso",
     "color": "#FCBC11",
+    "image": "https://s3-alpha-sig.figma.com/img/fe3b/dc64/b35041053a27babeaaf943bdb439dd72?Expires=1678060800&Signature=HrZ516assA9hWVJWR7ZiYrAJVhsQka90MSRMlyHGpvI8vgdLDrQ0TEpsyEVKBwUw8x3VprwxvwfEaWX41LQR8lUxjNow0x8rpIyvMBxGGYCP2kVWwZNlhREZnipSNDlKEOLUH-Vy2bSUxu~3kYGAv5Vz7kqMyZezr7LP~GlWpUvQkKRFp4HH-dJwGtBZNo~k35yyc8K-SyqkaUg8Bm-4sxpXXKZki8g6o0lHD69EdWn4UxzuBO2l0vUTF8p44OvGPj0l-5LX6GPsG1rH8pFCi~3xj~87V8ADmAt9nTvujKWS0N-kcSF5t13JkPycjObk84rDxXrolW~-RS4EXONp4w__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
     "dotColor": "#217BCE"
   },
   {
@@ -11,6 +12,7 @@
     "deliveryName": "Luciana",
     "status": "Finalizó",
     "color": "#96DB76",
+    "image": "https://s3-alpha-sig.figma.com/img/6176/0e0e/f63dd3ce8cc099f498024b15eb8b1b41?Expires=1678060800&Signature=cZw-jacGqeDY8gDSMm3hTucNycEkhsAUBfWcKj8CDFgfdkVcwMErWc-S~8Jf-Riozbq9ft0l0XYfYPI~81wefT06iLOJ79Vp8KXzb87mpanpVTl4Mgglk3qyTHxYNkN~u4FA3Hr~98VHfl5yl59Ipsc8MYBD0LVijfIXIvPNXQIeMoIohXYbvofTgRQaIshh8pooqQecXzlNfBMD6QovIrFbcF35nd~NHxC7e74LsLjW0mX7ih7kXvxZzEqhJIEDLVLtkI38HQg4vjGHMNFmlUitNTZioA3Ffw4qcJcTKuOv~Y9fwXZmp97Io8~cD~0XUXweMnqltc1E83cVOP~9Ig__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
     "dotColor": "#96DB76"
   },
   {
@@ -18,6 +20,7 @@
     "deliveryName": "Santiago",
     "status": "Inactivo",
     "color": "#FCBC11",
+    "image": "https://s3-alpha-sig.figma.com/img/1141/ebd5/1000abf83b15e844f859f0357131846c?Expires=1678060800&Signature=DOHGo1cL6r3ZTEIVqc8nJzr5nrnsDjaIlkaD9YaGf3KbjgugjLgqU1aczODasPf5HDe2mRklos5RHT4UeZWOtnKo-wIZgj94fQ5YlXaBX0rsOA~BH6Q9zDM7TyCkqTsG4FhAGexFLmTDIUARMkrCsmVAN8mv1v~a-a9SU7i1mDotNemiQ-25hw~6axCijaQ5tVwjX3EQq2qkiZIoS1DU8Nr3YQUv-AByWIIuHsx2vr4PvzY-6tRJcMe9RA034IbY~6s0ooaL60So~iB~KZDKY0INhMZ8GixewTXfReZybMRg4-8ihZ3AfU40igSHlarRKYfdrDBVDiJU6vfJx1X6Xg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
     "dotColor": "#FF6B6B"
   }
 ]
