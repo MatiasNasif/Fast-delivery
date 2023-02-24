@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  TextField,
   Container,
   Button,
   Typography,
@@ -11,10 +10,10 @@ import {
 } from '@mui/material';
 import ArrowDropDownSharpIcon from '@mui/icons-material/ArrowDropDownSharp';
 import styles from '../../styles/Schedule.module.css';
-import brand from '../assets/brand.png';
-import avatarOne from '../assets/avatar1.jpeg';
+import brand from '../../assets/brand.png';
+import avatarOne from '../../assets/avatar1.jpeg';
 import Image from 'next/image';
-import Head from 'next/head';
+import Header from '@/commons/header';
 import Calendar from './day';
 import Progress from './progress';
 import CircleDummy from '../../dummy-data/Circular-Progress.json';
@@ -23,41 +22,12 @@ export default function ManageSchedule() {
   let date: Date = new Date();
   const dateNum = date.getMonth() + 1;
   const dateFullyear = date.getFullYear().toString().slice(-2);
-  console.log('FULL YEAR ' + dateFullyear);
 
   return (
     <>
-      <Head>
-        <title>Gestionar Agenda</title>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
-      </Head>
+      <Header />
 
       <Container disableGutters={true}>
-        <Box
-          component="form"
-          sx={{
-            width: '100%',
-            height: '38px',
-            display: 'flex',
-            justifyContent: 'start',
-            WebkitBoxShadow: '0px 2px 5px -1px rgba(0,0,0,0.75)',
-            MozBoxShadow: ' 0px 2px 5px -1px rgba(0,0,0,0.75)',
-            boxShadow: '0px 2px 5px -1px rgba(0,0,0,0.75)',
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <Image
-            className={styles.brand}
-            src={brand}
-            alt="Fast Delivery Brand"
-            width={51}
-            height={32}
-          />
-        </Box>
         <Box
           component="form"
           sx={{

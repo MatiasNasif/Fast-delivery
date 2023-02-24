@@ -1,18 +1,10 @@
-import {
-  Box,
-  Container,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-} from '@mui/material';
+import { Box, Container, Accordion, AccordionSummary, Typography } from '@mui/material';
 
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import Progress from './progressDeliveryMan';
 import DeliveryDummy from '../../dummy-data/Delivery-progress.json';
 
-export default function ManagerDeliveryMan() {
+export default function ManageDeliveryMan() {
   return (
     <Container maxWidth="xs" disableGutters={true}>
       <Box mt={2}>
