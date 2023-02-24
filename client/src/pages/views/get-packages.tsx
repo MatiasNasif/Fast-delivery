@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import styles from '../../styles/GetPackages.module.css';
 import Header from '../../commons/header';
-import ButtonApp from '../../commons/ButtonApp';
-import ArrowApp from '../../commons/ArrowApp';
+import ButtonApp from '../../commons/buttonApp';
+import ArrowApp from '../../commons/arrowApp';
 import { requestGetPackages, Package } from '@/utils/fakerGetPackages';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };

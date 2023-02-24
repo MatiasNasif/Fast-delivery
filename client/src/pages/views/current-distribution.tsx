@@ -1,6 +1,5 @@
 import styles from '../../styles/CurrentDistribution.module.css';
 import Image from 'next/image';
-import brand from '../../assets/brand.png';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import maps from '../../assets/maps.png';
 import dummyData from '../../dummy-data/package-dummy.json';
@@ -13,15 +12,13 @@ import {
   AccordionDetails,
   Typography,
 } from '@mui/material';
-import ArrowApp from '@/commons/ArrowApp';
+import ArrowApp from '@/commons/arrowApp';
+import Header from '/@/commons/header';
 
 export default function CurrentDistribution() {
   return (
     <Container maxWidth="xs" disableGutters={true}>
-      <Box component="form" className={styles.header__container} noValidate autoComplete="off">
-        <Image className={styles.header_container_image} src={brand} alt="brand" />
-      </Box>
-
+      <Header />
       <ArrowApp />
 
       <Box className={styles.container_accordion}>

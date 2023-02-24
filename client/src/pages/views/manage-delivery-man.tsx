@@ -1,78 +1,115 @@
-import { Box, Container, Accordion, AccordionSummary, Typography } from '@mui/material';
-
+import {
+  Box,
+  Container,
+  Accordion,
+  AccordionSummary,
+  Typography,
+  Avatar,
+  AvatarGroup,
+} from '@mui/material';
+import Header from '../../commons/header';
+import ArrowApp from '../../commons/arrowApp';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
-import Progress from './progressDeliveryMan';
-import DeliveryDummy from '../../dummy-data/Delivery-progress.json';
+import Progress from '../../commons/progress';
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Delivery, requestDelivery } from '../../utils/fakerDeliverys';
+import styles from '../../styles/ManageDeliveryMan.module.css';
+import SwitchDeliveryStatus from '../../utils/SwitchDeliveryStatus';
 
 export default function ManageDeliveryMan() {
+  const [deliverys, setDeliverys] = useState<Delivery[]>([]);
+
+  useEffect(() => {
+    requestDelivery(3).then((delivery) => {
+      setDeliverys(delivery);
+    });
+  }, []);
+
   return (
-    <Container maxWidth="xs" disableGutters={true}>
-      <Box mt={2}>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ArrowDropDownRoundedIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            {' '}
-            <Typography
-              sx={{
-                fontSize: '18px',
-                fontWeight: '700',
-                fontFamily: 'Roboto',
-              }}
-              variant="inherit"
-              color="black"
+    <>
+      <Header />
+      <Container maxWidth="xs" disableGutters={true}>
+        <Link href={'/views/manage-schedule'}>
+          <ArrowApp />
+        </Link>
+        <Box mt={2}>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ArrowDropDownRoundedIcon />}
+              aria-controls="panel1a-content"
             >
-              Repartidores
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '100%' }}></Typography>
-          </AccordionSummary>
-          {DeliveryDummy.map((data, i) => (
-            <Box key={i}>
-              <Box sx={{ display: 'flex', marginTop: '20px' }}>
-                <Progress value={data.circle} colorCircle={data.color} />
-                <Box>
-                  <Typography
-                    sx={{
-                      fontSize: '18px',
-                      fontWeight: '700',
-                      fontFamily: 'Roboto',
-                      marginLeft: '20px',
-                    }}
-                    variant="inherit"
-                    color="black"
-                  >
-                    {data.deliveryName}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: '14px',
-                      fontWeight: '400',
-                      fontFamily: 'Roboto',
-                      marginLeft: '20px',
-                      marginTop: '5px',
-                    }}
-                    variant="inherit"
-                    color={data.dotColor}
-                  >
-                    {data.status}
-                  </Typography>
+              <Typography className={styles.tittle} variant="inherit">
+                Repartidores
+              </Typography>
+            </AccordionSummary>
+            {deliverys.map((data, i) => (
+              <Box key={i}>
+                <Box className={styles.boxOfdeliveryman}>
+                  <Progress value={data.circle} deliveryStatus={data.deliveryStatus} />
+                  <Box className={styles.deliveryManContainer}>
+                    <Typography className={styles.deliveryName} variant="inherit">
+                      {data.firstname}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography className={styles.deliveryStatus} variant="inherit">
+                        {data.deliveryStatus &&
+                          (data.circle === 100 ? (
+                            <>
+                              <Box className={styles.boxDeliveryStatus}>
+                                <SwitchDeliveryStatus checked={'Finalizó'} />
+                                <Typography
+                                  className={styles.deliveryStatusFinish}
+                                  variant="inherit"
+                                >
+                                  Finalizó
+                                </Typography>{' '}
+                              </Box>
+                            </>
+                          ) : data.circle >= 50 && data.circle <= 99 ? (
+                            <>
+                              <Box className={styles.boxDeliveryStatus}>
+                                <SwitchDeliveryStatus checked={'Viaje en curso'} />
+                                <Typography
+                                  className={styles.deliveryStatusInCourse}
+                                  variant="inherit"
+                                >
+                                  Viaje en curso
+                                </Typography>{' '}
+                              </Box>
+                            </>
+                          ) : data.circle >= 1 && data.circle <= 49 ? (
+                            <>
+                              {' '}
+                              <Box className={styles.boxDeliveryStatus}>
+                                <SwitchDeliveryStatus checked={'Inactivo'} />
+                                <Typography
+                                  className={styles.deliveryStatusInactive}
+                                  variant="inherit"
+                                >
+                                  Inactivo
+                                </Typography>{' '}
+                              </Box>
+                            </>
+                          ) : (
+                            ''
+                          ))}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Link href={'/views/delivery-man-details'}>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src={data.avatar}
+                      sx={{ marginLeft: 'auto', marginRight: '20px' }}
+                    />
+                  </Link>
                 </Box>
               </Box>
-
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  marginBottom: '5px',
-                }}
-              ></Box>
-            </Box>
-          ))}
-        </Accordion>
-      </Box>
-    </Container>
+            ))}
+          </Accordion>
+        </Box>
+      </Container>
+    </>
   );
 }

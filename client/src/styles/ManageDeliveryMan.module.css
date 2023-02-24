@@ -1,0 +1,71 @@
+
+.tittle{
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Roboto';
+}
+.boxOfdeliveryman{
+    display: flex;
+ margin-top: 20px;
+ justify-content: space-between;
+ align-items: center;
+}
+.deliveryName{
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Roboto';
+}
+
+.deliveryManDot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    margin-right: 5px;
+
+}
+
+.deliveryStatus{
+
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color: blue;
+}
+
+.deliveryStatusFinish{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color:  #96DB76;
+}
+
+.deliveryStatusInCourse{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color: #217BCE;
+}
+
+.deliveryStatusInactive{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color: #FF6B6B;
+}
+
+
+.deliveryManContainer{
+    margin-left: 20px;
+   
+}
+
+.boxDeliveryStatus{
+    display: flex; 
+;
+
+}
