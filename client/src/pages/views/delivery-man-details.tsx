@@ -4,7 +4,7 @@ import ArrowApp from '@/commons/ArrowApp';
 import Card from '@/commons/card';
 import { Container, Box, Typography, Accordion, AccordionSummary } from '@mui/material';
 import styles from '../../styles/DeliveryManDetails.module.css';
-import { DeliveryMan, requestDeliveryMans } from '@/utils/fakerDeliveryMans';
+import { DeliveryMan, requestDeliveryMen } from '@/utils/fakerDeliveryMen';
 import { Package, requestPackages } from '@/utils/fakerPackajes';
 import Avatar from '@mui/material/Avatar';
 import Image from 'next/image';
@@ -21,7 +21,7 @@ const DeliveryManDetails = () => {
   const [checked, setChecked] = useState(true);
 
   useEffect(() => {
-    requestDeliveryMans(1).then((deliveryMan) => {
+    requestDeliveryMen(1).then((deliveryMan) => {
       setDeliveryMans(deliveryMan);
     });
   }, []);
@@ -31,7 +31,7 @@ const DeliveryManDetails = () => {
   }, []);
 
   const requestPackagesAll = () => {
-    requestPackages(5).then((packs) => {
+    requestPackages(10).then((packs) => {
       const packsDelivered = packs.filter((packs) => {
         return packs.deliveryStatus == 'Entregado' ? packs : null;
       });
@@ -52,8 +52,8 @@ const DeliveryManDetails = () => {
   return (
     <>
       <Header />
-      <Container>
-        <ArrowApp />
+      <ArrowApp />
+      <Container className={styles.container_all}>
         <Box className={styles.container_grid}>
           {deliveryMans?.map((deliveryMan: any, i: number) => (
             <>

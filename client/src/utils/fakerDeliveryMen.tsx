@@ -16,7 +16,7 @@ function createDeliveryMan(): DeliveryMan {
   };
 }
 
-async function requestDeliveryMans(cant: number) {
+async function requestDeliveryMen(cant: number) {
   let deliveryMans: DeliveryMan[] = [];
   for (let i = 0; i < cant; i++) {
     deliveryMans.push(createDeliveryMan());
@@ -24,4 +24,4 @@ async function requestDeliveryMans(cant: number) {
   return deliveryMans;
 }
 
-export { requestDeliveryMans };
+export { requestDeliveryMen };
