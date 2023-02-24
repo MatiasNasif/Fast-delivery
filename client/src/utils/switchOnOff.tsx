@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Typography } from '@mui/material';
 import Brightness1Icon from '@mui/icons-material/Brightness1';
-import styles from '../styles/switchOnOff.module.css';
+import styles from '../styles/SwitchOnOff.module.css';
 
 const SwitchOnOff = ({ checked }: { checked: boolean }) => {
   return (

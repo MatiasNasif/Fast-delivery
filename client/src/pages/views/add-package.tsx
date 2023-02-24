@@ -1,4 +1,5 @@
 import ArrowApp from '@/commons/arrowApp';
+import React from 'react';
 import Header from '@/commons/header';
 import {
   Typography,
@@ -14,6 +15,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
+import Link from 'next/link';
 
 const AddPackage = () => {
   const [count, setCount] = useState(0);
@@ -32,7 +34,9 @@ const AddPackage = () => {
       <Header />
       <Container maxWidth={'xs'}>
         <Box className={styles.arrow}>
-          <ArrowApp />
+          <Link href={'/views/manage-packages'}>
+            <ArrowApp />
+          </Link>
         </Box>
         <Box>
           <Typography variant="h6" className={styles.wordAdd}>

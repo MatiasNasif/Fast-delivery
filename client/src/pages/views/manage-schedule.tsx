@@ -107,9 +107,11 @@ export default function ManageSchedule() {
 
                 <Box className={styles.boxBtn}>
                   <Box mt={2} px={2}>
-                    <Button fullWidth variant="contained" size="small" className={styles.box}>
-                      {data.nameBtn}
-                    </Button>
+                    <Link href={'/views/manage-packages'}>
+                      <Button fullWidth variant="contained" size="small" className={styles.box}>
+                        {data.nameBtn}
+                      </Button>
+                    </Link>
                   </Box>
                 </Box>
               </Box>

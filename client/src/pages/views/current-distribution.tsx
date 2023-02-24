@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowApp from '@/commons/arrowApp';
-import Header from '@/commons/header';
+import Header from '/@/commons/header';
 
 export default function CurrentDistribution() {
   return (

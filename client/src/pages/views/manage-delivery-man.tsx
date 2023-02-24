@@ -7,8 +7,8 @@ import {
   Avatar,
   AvatarGroup,
 } from '@mui/material';
-import Header from '@/commons/header';
-import ArrowApp from '@/commons/arrowApp';
+import Header from '../../commons/header';
+import ArrowApp from '../../commons/arrowApp';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
@@ -97,12 +97,13 @@ export default function ManageDeliveryMan() {
                       </Typography>
                     </Box>
                   </Box>
-
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={data.avatar}
-                    sx={{ marginLeft: 'auto', marginRight: '20px' }}
-                  />
+                  <Link href={'/views/delivery-man-details'}>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src={data.avatar}
+                      sx={{ marginLeft: 'auto', marginRight: '20px' }}
+                    />
+                  </Link>
                 </Box>
               </Box>
             ))}

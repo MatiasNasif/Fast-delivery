@@ -3,6 +3,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AddIcon from '@mui/icons-material/Add';
 import Header from '../../commons/header';
 import Card from '../../commons/card';
+import React from 'react';
 import Link from 'next/link';
 import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
@@ -23,12 +24,12 @@ export default function ManagePackages() {
   let countPackages = packages.length;
 
   return (
-    <main>
+    <>
+      <Header />
+      <Link href={'/views/manage-schedule'}>
+        <ArrowApp />
+      </Link>
       <Container maxWidth="xs" disableGutters={true}>
-        <Header />
-        <Link href={'/views/manage-schedule'}>
-          <ArrowApp />
-        </Link>
         <Box className={styles.box}>
           <Accordion>
             <AccordionSummary
@@ -52,10 +53,12 @@ export default function ManagePackages() {
         </Box>
         <Box className={styles.addIconContainer}>
           <Fab color="primary" aria-label="add">
-            <AddIcon />
+            <Link href={'/views/add-package'}>
+              <AddIcon />
+            </Link>
           </Fab>
         </Box>
       </Container>
-    </main>
+    </>
   );
 }

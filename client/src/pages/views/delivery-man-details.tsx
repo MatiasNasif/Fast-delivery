@@ -12,6 +12,7 @@ import imageAvatar from '../../assets/avatar1.jpeg';
 import Switch from '@mui/material/Switch';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SwitchOnOff from '../../utils/switchOnOff';
+import Link from 'next/link';
 
 const DeliveryManDetails = () => {
   const [deliveryMans, setDeliveryMans] = useState<DeliveryMan[]>([]);
@@ -52,7 +53,9 @@ const DeliveryManDetails = () => {
   return (
     <>
       <Header />
-      <ArrowApp />
+      <Link href={'/views/manage-delivery-man'}>
+        <ArrowApp />
+      </Link>
       <Container className={styles.container_all}>
         <Box className={styles.container_grid}>
           {deliveryMans?.map((deliveryMan: any, i: number) => (
