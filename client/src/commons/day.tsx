@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../styles/DaysOfWeek.module.css';
+import styles from '../styles/DaysOfWeek.module.css';
 
 const DAYS_OF_WEEK = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie'];
 
