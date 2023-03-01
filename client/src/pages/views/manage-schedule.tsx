@@ -11,8 +11,8 @@ import {
 import ArrowDropDownSharpIcon from '@mui/icons-material/ArrowDropDownSharp';
 import styles from '../../styles/Schedule.module.css';
 import Header from '@/commons/header';
-import Calendar from '../../commons/day.tsx';
-import Progress from '../../commons/progress.tsx';
+import Calendar from '../../commons/day';
+import Progress from '../../commons/progress';
 import CircleDummy from '../../dummy-data/Circular-Progress.json';
 import PackageDummy from '../../dummy-data/package-progress.json';
 import React, { useEffect, useState } from 'react';
