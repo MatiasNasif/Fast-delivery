@@ -1,12 +1,4 @@
-import {
-  Box,
-  Container,
-  Accordion,
-  AccordionSummary,
-  Typography,
-  Avatar,
-  AvatarGroup,
-} from '@mui/material';
+import { Box, Container, Accordion, AccordionSummary, Typography, Avatar } from '@mui/material';
 import Header from '../../commons/header';
 import ArrowApp from '../../commons/arrowApp';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
@@ -97,12 +89,11 @@ export default function ManageDeliveryMan() {
                       </Typography>
                     </Box>
                   </Box>
-                  <Link href={'/views/delivery-man-details'}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={data.avatar}
-                      sx={{ marginLeft: 'auto', marginRight: '20px' }}
-                    />
+                  <Link
+                    href={'/views/delivery-man-details'}
+                    style={{ marginLeft: 'auto', marginRight: '20px' }}
+                  >
+                    <Avatar alt="Remy Sharp" src={data.avatar} />
                   </Link>
                 </Box>
               </Box>
