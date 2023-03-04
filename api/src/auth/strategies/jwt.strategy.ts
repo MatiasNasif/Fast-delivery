@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+/* import { Injectable, Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 
@@ -19,4 +19,4 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   validate(payload: PayloadToken) {
     return payload;
   }
-}
+} */
