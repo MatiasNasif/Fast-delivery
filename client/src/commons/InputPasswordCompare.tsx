@@ -4,7 +4,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React from 'react';
 import styles from '../styles/Login.module.css';
 
-export default function InputPassword({ register, errors }) {
+export default function InputPasswordCompare() {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -16,21 +16,17 @@ export default function InputPassword({ register, errors }) {
   return (
     <>
       <InputLabel
-        sx={{ fontSize: '12px', marginTop: '20px' }}
+        sx={{ fontSize: '12px', marginTop: '10px' }}
         className={styles.textLabelcolor}
         focused={true}
         color="info"
         htmlFor="password"
       >
-        Contraseña
+        Confirmar Contraseña
       </InputLabel>
       <Input
         className="Mui-focused"
         sx={{ marginBottom: '20px' }}
-        name="password"
-        {...register('password', { required: true })}
-        error={!!errors?.password}
-        helperText={!!errors?.password ? errors.password.message : null}
         fullWidth={true}
         type={showPassword ? 'text' : 'password'}
         endAdornment={
