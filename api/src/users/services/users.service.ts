@@ -1,38 +1,30 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from '../dto';
-import { UpdateUserDto } from '../dto';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from '../entities/user.entity';
+import { UserDocument } from '../entities/user.entity';
+import { CreateUserDto } from '../dtos/user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
-  async create(data: CreateUserDto) {
-    const existingUser = await this.userModel.findOne({
-      email: data.email,
+  constructor(
+    @InjectModel('user') private readonly userModel: Model<UserDocument>,
+  ) {}
+
+  async createUser(createUserDto: CreateUserDto): Promise<CreateUserDto> {
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      saltOrRounds,
+    );
+    const createdUser = await this.userModel.create({
+      ...createUserDto,
+      password: hashedPassword,
     });
-
-    if (existingUser) {
-      throw new NotFoundException(`User ${data.email} existing`);
-    }
-    const newUser = new this.userModel(data);
-    return newUser.save();
+    return createdUser;
   }
 
-  update(id: string, changes: UpdateUserDto) {
-    //
-    const user = this.userModel
-      .findByIdAndUpdate(id, { $set: changes }, { new: true })
-      .exec();
-    if (!user) {
-      throw new NotFoundException(`User #${id} not found`);
-    }
-    return user;
-  }
-
-  remove(id: string) {
-    //
-    return this.userModel.findByIdAndDelete(id);
+  async getUser(query: object): Promise<CreateUserDto> {
+    return this.userModel.findOne(query);
   }
 }
