@@ -9,6 +9,7 @@ import InputPassword from '../commons/InputPassword';
 import InputEmail from '../commons/InputEmail';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,8 +20,14 @@ export default function Login() {
     formState: { errors },
   } = useForm();
 
-  const onSubmitOfLogin = (data) => {
-    axios.post('https://localhost:5000/auth/login', data).then((res) => res.data);
+  const navigate = useRouter();
+
+  const onSubmitOfLogin = (data: any) => {
+    axios
+      .post('http://localhost:5000/auth/login', data)
+      .then((res) => res.data)
+      .then(() => navigate.push('/views/start-workday'))
+      .catch((err) => console.log(err));
   };
 
   return (

@@ -9,6 +9,7 @@ import InputFullName from '../../commons/InputFullname';
 import InputEmail from '../../commons/InputEmail';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
   const {
@@ -17,8 +18,14 @@ export default function Register() {
     formState: { errors },
   } = useForm();
 
-  const onSubmitOfRegister = (data) => {
-    axios.post('https://localhost:5000/users/signup', data).then((res) => res.data);
+  const navigate = useRouter();
+
+  const onSubmitOfRegister = (data: any) => {
+    axios
+      .post('http://localhost:5000/users/signup', data)
+      .then((res) => res.data)
+      .then(() => navigate.push('/'))
+      .catch((err) => console.log(err));
   };
 
   return (
