@@ -10,6 +10,9 @@ import {
   InputLabel,
   Container,
 } from '@mui/material';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import es from 'dayjs/locale/es';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -19,6 +22,9 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
 import Link from 'next/link';
+
+dayjs.extend(localizedFormat);
+dayjs.locale('es');
 
 const AddPackage = () => {
   const [count, setCount] = useState(0);
@@ -79,7 +85,7 @@ const AddPackage = () => {
           focused
           fullWidth
         /> */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} locale={es}>
           <DatePicker />
         </LocalizationProvider>
         <InputLabel
