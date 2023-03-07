@@ -10,7 +10,7 @@
     "format": "prettier --write",
     "pre-commit": "lint-staged",
     "commit-msg": "npm commitlint --edit",
-    "pre-push": "concurrently 'cd api && npm run test' 'cd client && npm run test'",
+    "pre-push": "concurrently \"cd api && npm run test\" \"cd client && npm run test\"",
     "prepare": "husky install",
     "test": "exit 0",
     "lint": "cd api && npm run lint && cd ../client && npm run lint"
