@@ -13,6 +13,12 @@ export class User {
 
   @Prop()
   password: string;
+
+  @Prop({ default: false })
+  admin: boolean;
+
+  @Prop({ default: 'inactivo' })
+  status: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
