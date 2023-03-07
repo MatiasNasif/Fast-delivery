@@ -10,6 +10,9 @@ import {
   InputLabel,
   Container,
 } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import styles from '../../styles/AddPackage.module.css';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -68,14 +71,17 @@ const AddPackage = () => {
           focused
           fullWidth
         />
-        <TextField
+        {/* <TextField
           label="Fecha en la que debe ser repartido"
           InputLabelProps={{ className: styles.labelColor }}
           variant="standard"
           className={styles.input}
           focused
           fullWidth
-        />
+        /> */}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker />
+        </LocalizationProvider>
         <InputLabel
           sx={{ fontSize: '12px', marginTop: '20px' }}
           className={styles.labelColor}
