@@ -55,3 +55,7 @@ width: 100%;
     text-Align: center;
     margin-top:20px;
 }
+
+.errorText{
+    color: red;
+}
