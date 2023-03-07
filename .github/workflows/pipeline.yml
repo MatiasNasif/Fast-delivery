@@ -69,7 +69,7 @@ jobs:
   #       run: npm test
 
   deploy:
-    needs: [test]
+    # needs: [test]
     runs-on: ubuntu-18.04
 
     steps:
