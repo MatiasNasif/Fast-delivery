@@ -1,0 +1,43 @@
+{
+  "name": "fast-delivery",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "client": "",
+    "api": "",
+    "start": "concurrently 'cd api && npm run start:dev' 'cd client && npm run dev'",
+    "install": "concurrently 'cd api && npm i' 'cd client && npm i'",
+    "format": "prettier --write",
+    "pre-commit": "lint-staged",
+    "commit-msg": "npm commitlint --edit",
+    "pre-push": "concurrently \"cd api && npm run test\" \"cd client && npm run test\"",
+    "prepare": "husky install",
+    "test": "exit 0",
+    "lint": "cd api && npm run lint && cd ../client && npm run lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit",
+      "commit-msg": "npm run commitmsg",
+      "pre-push": "npm run pre-push"
+    }
+  },
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.3",
+    "@commitlint/config-conventional": "^17.4.3",
+    "eslint-config-prettier": "^8.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "prettier": "^2.8.4"
+  },
+  "lint-staged": {
+    "!(*eslintrc)*.{js,jsx,ts,tsx}": [
+      "npm run lint:api",
+      "npm run lint:client"
+    ],
+    "*.{js,jsx,ts,tsx,md,html,json,css,scss}": "prettier --write"
+  }
+}
