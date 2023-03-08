@@ -85,7 +85,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-2
+        aws-region: us-east-1
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -99,4 +99,5 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker-compose build 
-        docker push 181744671448.dkr.ecr.us-east-1.amazonaws.com/fast-delivery-app:latest
+        docker-compose push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        
