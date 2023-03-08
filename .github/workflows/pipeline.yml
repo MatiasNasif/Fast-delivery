@@ -94,9 +94,9 @@ jobs:
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: fast-delivery
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: fast-delivery-app
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker-compose build 
-        docker-compose push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker-compose push $REGISTRY/$REPOSITORY:$IMAGE_TAG
