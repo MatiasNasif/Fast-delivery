@@ -91,8 +91,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
+    - name: Build and push Docker image for API
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: fast-delivery-app
@@ -102,6 +101,12 @@ jobs:
         docker build -t $REGISTRY/$REPOSITORY/api:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY/api:$IMAGE_TAG
 
+    - name: Build and push Docker image for client
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: fast-delivery-app
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
         cd client
         docker build -t $REGISTRY/$REPOSITORY/client:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY/client:$IMAGE_TAG
