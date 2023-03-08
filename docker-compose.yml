@@ -21,12 +21,12 @@ services:
       - ./client/public:/client/public
       - ./client/src:/client/src
 
-  mongodb:
-    image: mongo:latest
-    environment: 
-    - MONGODB_USER=admin
-    - MONGODB_PASSWORD=admin
-    ports:
-      - 27017:27017
-    volumes:
-      - ./mongo_data:/data/db
+  # mongodb:
+  #   image: mongo:latest
+  #   environment: 
+  #   - MONGODB_USER=admin
+  #   - MONGODB_PASSWORD=admin
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - ./mongo_data:/data/db

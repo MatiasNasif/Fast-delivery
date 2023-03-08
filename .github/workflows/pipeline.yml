@@ -85,21 +85,21 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: us-east-1 
 
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build and push Docker image for API
-      env:
-        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: fast-delivery
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        cd api
-        docker build -t $REGISTRY/$REPOSITORY/$IMAGE_TAG .
-        docker push $REGISTRY/$REPOSITORY/$IMAGE_TAG
+    # - name: Build and push Docker image for API
+    #   env:
+    #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+    #     REPOSITORY: fast-delivery
+    #     IMAGE_TAG: ${{ github.sha }}
+    #   run: |
+    #     cd api
+    #     docker build -t $REGISTRY/$REPOSITORY/api:$IMAGE_TAG .
+    #     docker push $REGISTRY/$REPOSITORY/api:$IMAGE_TAG
 
     # - name: Build and push Docker image for client
     #   env:
@@ -110,3 +110,21 @@ jobs:
     #     cd client
     #     docker build -t $REGISTRY/$REPOSITORY/client:$IMAGE_TAG .
     #     docker push $REGISTRY/$REPOSITORY/client:$IMAGE_TAG
+
+
+    - name: Build and push Docker image for API
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: fast-delivery-app
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker-compose build
+        docker-compose push
+
+    - name: Deploy to Amazon ECS
+      uses: aws-actions/amazon-ecs-deploy@v2
+      with:
+        cluster: DevClusterApp
+        service: fast-services
+        image: ${{ steps.login-ecr.outputs.registry }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+        wait-for-service-stability: true
