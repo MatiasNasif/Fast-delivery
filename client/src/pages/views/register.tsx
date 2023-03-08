@@ -13,14 +13,12 @@ import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
 
 interface RegisterFormData {
-  fullName:string;
+  fullName: string;
   email: string;
   password: string;
-  
 }
 
 export default function Register() {
-
   const {
     register,
     handleSubmit,
@@ -32,22 +30,17 @@ export default function Register() {
   const onSubmitOfRegister = (data: RegisterFormData) => {
     axios
       .post('http://localhost:5000/users/signup', data)
-      .then((res) => res.data)
+      .then((res: { data: RegisterFormData }) => res.data)
       .then(() => toast.success('Usuario registrado!'))
-       
+
       .then(() => navigate.push('/'))
       .catch(() => toast.error('Datos incorrectos!'));
   };
 
- 
-
   return (
     <>
       <Container maxWidth={'xs'}>
-      <Toaster
-  position="top-center"
-  reverseOrder={false}
-/>
+        <Toaster position="top-center" reverseOrder={false} />
         <Box className={styles.boxspace}></Box>
         <Box className={styles.boxBrand}>
           <Image className={styles.brand} src={brand} alt="Fast Delivery Brand" />

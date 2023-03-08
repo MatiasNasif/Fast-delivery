@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React from 'react'
+import React from 'react';
 import { Inter } from '@next/font/google';
 import styles from '../styles/Login.module.css';
 import { Box, Container, Button, Typography } from '@mui/material';
@@ -35,7 +35,6 @@ export default function Login() {
       .then(() => navigate.push('/views/start-workday'))
       .catch((err) => console.log(err));
   };
-
 
   return (
     <>
