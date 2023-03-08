@@ -1,5 +1,7 @@
 import { TextField } from '@mui/material';
 import styles from '../../../client/src/styles/Register.module.css';
+import React from 'react'
+
 
 export default function InputFullName({ register }) {
   return (

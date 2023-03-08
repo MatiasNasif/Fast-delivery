@@ -16,7 +16,7 @@ export default function InputPassword({ register, errors }) {
   return (
     <>
       <InputLabel
-        sx={{ fontSize: '12px', marginTop: '20px' }}
+        sx={{ fontSize: '12px', marginTop: '10px' }}
         className={styles.textLabelcolor}
         focused={true}
         color="info"
