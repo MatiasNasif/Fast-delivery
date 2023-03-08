@@ -7,7 +7,7 @@
     "api": "",
     "start": "concurrently 'cd api && npm run start:dev' 'cd client && npm run dev'",
     "install": "concurrently 'cd api && npm i' 'cd client && npm i'",
-    "build": "concurrently \"cd api && npm run build\" \"cd client && npm run build\"",
+    "build": "concurrently 'cd api && npm run build' 'cd client && npm run build'",
     "format": "prettier --write",
     "pre-commit": "lint-staged",
     "commit-msg": "npm commitlint --edit",
