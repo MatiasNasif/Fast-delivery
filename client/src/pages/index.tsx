@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import React from 'react'
 import { Inter } from '@next/font/google';
 import styles from '../styles/Login.module.css';
 import { Box, Container, Button, Typography } from '@mui/material';
@@ -13,6 +14,11 @@ import { useRouter } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 export default function Login() {
   const {
     register,
@@ -22,13 +28,14 @@ export default function Login() {
 
   const navigate = useRouter();
 
-  const onSubmitOfLogin = (data: any) => {
+  const onSubmitOfLogin = (data: LoginFormData) => {
     axios
       .post('http://localhost:5000/auth/login', data)
       .then((res) => res.data)
       .then(() => navigate.push('/views/start-workday'))
       .catch((err) => console.log(err));
   };
+
 
   return (
     <>

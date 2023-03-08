@@ -9,6 +9,7 @@ import Header from '../../commons/header';
 import ButtonApp from '../../commons/buttonApp';
 import ArrowApp from '../../commons/arrowApp';
 import { requestGetPackages, Package } from '@/utils/fakerGetPackages';
+import React from 'react'
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
