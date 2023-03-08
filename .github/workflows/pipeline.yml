@@ -98,14 +98,10 @@ jobs:
         REPOSITORY: fast-delivery-app
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        - name: Build and push Docker image for backend
-          run: |
-            cd backend
-            docker build -t $REGISTRY/$REPOSITORY/backend:$IMAGE_TAG .
-            docker push $REGISTRY/$REPOSITORY/backend:$IMAGE_TAG
+        cd api
+        docker build -t $REGISTRY/$REPOSITORY/api:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY/api:$IMAGE_TAG
 
-        - name: Build and push Docker image for frontend
-          run: |
-            cd frontend
-            docker build -t $REGISTRY/$REPOSITORY/frontend:$IMAGE_TAG .
-            docker push $REGISTRY/$REPOSITORY/frontend:$IMAGE_TAG
+        cd client
+        docker build -t $REGISTRY/$REPOSITORY/client:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY/client:$IMAGE_TAG
