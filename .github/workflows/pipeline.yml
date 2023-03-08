@@ -99,4 +99,4 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker-compose build 
-        docker-compose push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        docker push 181744671448.dkr.ecr.us-east-1.amazonaws.com/fast-delivery-app:latest
