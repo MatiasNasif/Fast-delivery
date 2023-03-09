@@ -14,4 +14,31 @@ export class PackagesService {
   createPackage(createPackageDto: CreatePackageDto): Promise<CreatePackageDto> {
     return this.packageModel.create(createPackageDto);
   }
+
+  async getPackage(packageId: string): Promise<CreatePackageDto> {
+    const product = await this.packageModel.findById(packageId);
+    return product;
+  }
+
+  async getPackages(): Promise<CreatePackageDto[]> {
+    const packages = await this.packageModel.find();
+    return packages;
+  }
+
+  async deletePackage(packageId: string): Promise<CreatePackageDto> {
+    const deletePackage = await this.packageModel.findByIdAndDelete(packageId);
+    return deletePackage;
+  }
+
+  async updatePackage(
+    packageId: string,
+    createPackageDto: CreatePackageDto,
+  ): Promise<CreatePackageDto> {
+    const updatePackage = await this.packageModel.findByIdAndUpdate(
+      packageId,
+      createPackageDto,
+      { new: true },
+    );
+    return updatePackage;
+  }
 }
