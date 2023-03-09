@@ -12,10 +12,10 @@ jobs:
   avoid_reduncy:
     runs-on: ubuntu-20.04
     steps:
-      - name: Cancel Previous Redundant Builds
-        uses: styfle/cancel-workflow-action@v1
-        with:
-          access_token: ${{ github.token }}
+    - uses: actions/checkout@v1
+    - uses: n1hility/cancel-previous-runs@v3
+      with: 
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   lint:
     runs-on: ubuntu-20.04
