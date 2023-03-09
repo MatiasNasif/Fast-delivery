@@ -104,13 +104,13 @@ jobs:
       - name: Build and tag Docker image
         run: |
           docker-compose build
-          docker tag client 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_client
-          docker tag api 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_api
+          docker tag client 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_client:latest
+          docker tag api 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_api:latest
 
       - name: Push Docker image to Amazon ECR
         run: |
-          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_client
-          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_api
+          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_client:latest
+          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_api:latest
 
       - name: SSH into AWS EC2 instance
         uses: appleboy/ssh-action@master
