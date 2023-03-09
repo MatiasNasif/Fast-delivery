@@ -10,7 +10,7 @@ on:
 jobs:
 
   avoid_reduncy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Cancel Previous Redundant Builds
         uses: styfle/cancel-workflow-action@0.9.1
@@ -18,9 +18,9 @@ jobs:
           access_token: ${{ github.token }}
 
   lint:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v2
@@ -34,9 +34,9 @@ jobs:
         run: npm run lint
 
   # build:
-  #   runs-on: ubuntu-18.04
+  #   runs-on: ubuntu-20.04
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #       with:
   #         fetch-depth: 0
   #     - uses: actions/setup-node@v2
@@ -55,9 +55,9 @@ jobs:
 
   # test:
   #   needs: [lint, build]
-  #   runs-on: ubuntu-18.04
+  #   runs-on: ubuntu-20.04
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #       with:
   #         fetch-depth: 0
   #     - uses: actions/setup-node@v2
@@ -73,13 +73,13 @@ jobs:
   #       run: npm test
 
   deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Install Docker and Docker Compose
+      - name: Install Docker
         run: |
           sudo apt-get update
           sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
@@ -87,8 +87,6 @@ jobs:
           sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
           sudo apt-get update
           sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -101,15 +99,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and tag Docker image
+      - name: Build and tag Docker image for client
         run: |
-          docker-compose build
-          docker tag client 401180761144.dkr.ecr.us-east-1.amazonaws.com/client:latest
-          docker tag api 401180761144.dkr.ecr.us-east-1.amazonaws.com/api:latest
-
-      - name: Push Docker image to Amazon ECR
-        run: |
+          cd client
+          docker build -t 401180761144.dkr.ecr.us-east-1.amazonaws.com/client:latest .
           docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/client:latest
+
+      - name: Build and tag Docker image for api
+        run: |
+          cd api
+          docker build -t 401180761144.dkr.ecr.us-east-1.amazonaws.com/api:latest .
           docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/api:latest
 
       - name: SSH into AWS EC2 instance
@@ -120,35 +119,15 @@ jobs:
           key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
           port: 22
 
-      - name: Install Docker and Docker Compose on AWS EC2 instance
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-          sudo apt-get update
-          sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-
-      - name: Copy Docker Compose file to AWS EC2 instance
-        uses: appleboy/scp-action@master
-        with:
-          host: 45.180.60.131/32
-          username: fast-delivery-server
-          key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
-          password: ${{ secrets.AWS_EC2_INSTANCE_PASSWORD }}
-          port: 22
-          source: docker-compose.yml
-          target: /home/ubuntu/docker-compose.yml
-
-      - name: SSH into AWS EC2 instance and start Docker Compose
+      - name: Install Docker on AWS EC2 instance
         uses: appleboy/ssh-action@master
         with:
           host: 45.180.60.131/32
           username: fast-delivery-server
           key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
           port: 22
-          script: |
-            cd /home/ubuntu/
-            sudo docker-compose up -d
+          run: |
+            sudo apt-get update
+            sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            sudo add
