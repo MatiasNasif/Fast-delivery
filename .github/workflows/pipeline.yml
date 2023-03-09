@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Cancel Previous Redundant Builds
-        uses: styfle/cancel-workflow-action@v2
+        uses: styfle/cancel-workflow-action@v1
         with:
           access_token: ${{ github.token }}
 
@@ -104,13 +104,13 @@ jobs:
       - name: Build and tag Docker image
         run: |
           docker-compose build
-          docker tag client 401180761144.dkr.ecr.us-east-1.amazonaws.com/client:latest
-          docker tag api 401180761144.dkr.ecr.us-east-1.amazonaws.com/api:latest
+          docker tag client 401180761144.dkr.ecr.us-east-1.amazonaws.com/client
+          docker tag api 401180761144.dkr.ecr.us-east-1.amazonaws.com/api
 
       - name: Push Docker image to Amazon ECR
         run: |
-          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/client:latest
-          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/api:latest
+          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/client
+          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/api
 
       - name: SSH into AWS EC2 instance
         uses: appleboy/ssh-action@master
