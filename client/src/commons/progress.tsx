@@ -29,7 +29,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
     </Box>
   );
 }
-export default function CircularStatic(props) {
+export default function CircularStatic(props: any) {
   const [progress, setProgress] = React.useState(20);
   const deliveryStatusMessages = {
     'Viaje en curso': (

@@ -1,14 +1,14 @@
 import { TextField } from '@mui/material';
 import styles from '../../../client/src/styles/Register.module.css';
+import { Props } from './InputEmail';
 
-export default function InputFullName({ register }) {
+export default function InputFullName({ name, register, errors }: Props) {
   return (
     <>
       <TextField
         label="Full Name"
         InputLabelProps={{ className: styles.textLabelcolor }}
         variant="standard"
-        name="fullName"
         sx={{ fontFamily: 'Roboto' }}
         focused
         fullWidth
