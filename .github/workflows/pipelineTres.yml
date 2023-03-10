@@ -1,0 +1,61 @@
+name: Deploy to Amazon EC2
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./api
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: Deploy to Amazon EC2
+      uses: appleboy/scp-action@master
+      with:
+        host: 45.180.60.131/32
+        username: fast-delivery-server
+        password: ${{ secrets.AWS_EC2_INSTANCE_PASSWORD }}
+        source: "."
+        target: "/home/ubuntu/deploy"
+        port: 22
+        args: "-r"
+
+    - name: Connect to Amazon EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: 45.180.60.131/32
+        username: fast-delivery-server
+        password: ${{ secrets.AWS_EC2_INSTANCE_PASSWORD }}
+        port: 22
+        script: |
+          docker stop fast-delivery_api || true
+          docker rm fast-delivery_api || true
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker run -d -p 80:80 --name fast-delivery_api $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
