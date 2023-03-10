@@ -3,6 +3,7 @@ version: "3.10"
 
 services:
   api:
+    image: api:latest
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -12,6 +13,7 @@ services:
       - ./api/:/api
 
   client:
+    image: client:latest
     build:
       context: ./client
       dockerfile: Dockerfile
