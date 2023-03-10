@@ -1,100 +1,153 @@
-name: Deploy Pipeline
+# name: Deploy Pipeline
 
-on:
-  push:
-    branches: [develop]
-  pull_request:
-    branches: [develop]
-    types: [opened, synchronize]
+# on:
+#   push:
+#     branches: [develop]
+#   pull_request:
+#     branches: [develop]
+#     types: [opened, synchronize]
 
-jobs:
+# jobs:
 
-  avoid_reduncy:
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Cancel Previous Redundant Builds
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          access_token: ${{ github.token }}
+#   avoid_reduncy:
+#     runs-on: ubuntu-20.04
+#     steps:
+#     - uses: actions/checkout@v1
+#     - uses: n1hility/cancel-previous-runs@v3
+#       with: 
+#         token: ${{ secrets.GITHUB_TOKEN }}
 
-  lint:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Intall concurrently
-        run: npm install -g concurrently
-      - name: Install dependencies
-        run: npm run install
-      - name: Lint
-        run: npm run lint
+#   lint:
+#     runs-on: ubuntu-20.04
+#     steps:
+#       - uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
+#       - uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
+#       - name: Intall concurrently
+#         run: npm install -g concurrently
+#       - name: Install dependencies
+#         run: npm run install
+#       - name: Lint
+#         run: npm run lint
 
-  build:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Install dependencies
-        run: npm run install
-      - name: Build
-        run: npm run build
-      - uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: dist
+#   # build:
+#   #   runs-on: ubuntu-20.04
+#   #   steps:
+#   #     - uses: actions/checkout@v3
+#   #       with:
+#   #         fetch-depth: 0
+#   #     - uses: actions/setup-node@v2
+#   #       with:
+#   #         node-version: '14'
+#   #     - name: Intall concurrently
+#   #       run: npm install -g concurrently
+#   #     - name: Install dependencies
+#   #       run: npm run install
+#   #     - name: Build
+#   #       run: npm run build
+#   #     - uses: actions/upload-artifact@v2
+#   #       with:
+#   #         name: dist
+#   #         path: dist
 
-  # test:
-  #   needs: [lint, build]
-  #   runs-on: ubuntu-18.04
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-  #     - uses: actions/setup-node@v2
-  #       with:
-  #         node-version: '14'
-  #     - name: Install dependencies
-  #       run: npm run install
-  #     - uses: actions/download-artifact@v2
-  #       with:
-  #         name: dist
-  #         path: dist
-  #     - name: Test
-  #       run: npm test
+#   # test:
+#   #   needs: [lint, build]
+#   #   runs-on: ubuntu-20.04
+#   #   steps:
+#   #     - uses: actions/checkout@v3
+#   #       with:
+#   #         fetch-depth: 0
+#   #     - uses: actions/setup-node@v2
+#   #       with:
+#   #         node-version: '14'
+#   #     - name: Install dependencies
+#   #       run: npm run install
+#   #     - uses: actions/download-artifact@v2
+#   #       with:
+#   #         name: dist
+#   #         path: dist
+#   #     - name: Test
+#   #       run: npm test
 
-  deploy:
-    # needs: [test]
-    runs-on: ubuntu-18.04
+#   deploy:
+#     runs-on: ubuntu-20.04
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-2
+#       - name: Install Docker and Docker Compose
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+#           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+#           sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+#           sudo apt-get update
+#           sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+#           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#           sudo chmod +x /usr/local/bin/docker-compose
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-1
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: fast-delivery
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v1
+
+#       - name: Build and push Docker image
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: .
+#           file: ./docker-compose.yml
+#           push: true
+#           tags: |
+#             401180761144.dkr.ecr.us-east-1.amazonaws.com/client:latest
+#             401180761144.dkr.ecr.us-east-1.amazonaws.com/api:latest
+
+#       - name: SSH into AWS EC2 instance
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: 45.180.60.131/32
+#           username: fast-delivery-server
+#           key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
+#           port: 22
+
+#       - name: Install Docker and Docker Compose on AWS EC2 instance
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+#           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+#           sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+#           sudo apt-get update
+#           sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+#           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#           sudo chmod +x /usr/local/bin/docker-compose
+
+#       - name: Copy Docker Compose file to AWS EC2 instance
+#         uses: appleboy/scp-action@master
+#         with:
+#           host: 45.180.60.131/32
+#           username: fast-delivery-server
+#           key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
+#           password: ${{ secrets.AWS_EC2_INSTANCE_PASSWORD }}
+#           port: 22
+#           source: docker-compose.yml
+#           target: /home/ubuntu/docker-compose.yml
+
+#       - name: SSH into AWS EC2 instance and start Docker Compose
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: 45.180.60.131/32
+#           username: fast-delivery-server
+#           key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
+#           port: 22
+#           script: |
+#             cd /home/ubuntu/
+#             sudo docker-compose up -d

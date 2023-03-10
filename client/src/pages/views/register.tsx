@@ -10,6 +10,13 @@ import InputEmail from '../../commons/InputEmail';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
+
+interface RegisterFormData {
+  fullName: string;
+  email: string;
+  password: string;
+}
 
 export default function Register() {
   const {
@@ -20,17 +27,20 @@ export default function Register() {
 
   const navigate = useRouter();
 
-  const onSubmitOfRegister = (data: any) => {
+  const onSubmitOfRegister = (data: RegisterFormData) => {
     axios
       .post('http://localhost:5000/users/signup', data)
-      .then((res) => res.data)
+      .then((res: { data: RegisterFormData }) => res.data)
+      .then(() => toast.success('Usuario registrado!'))
+
       .then(() => navigate.push('/'))
-      .catch((err) => console.log(err));
+      .catch(() => toast.error('Datos incorrectos!'));
   };
 
   return (
     <>
       <Container maxWidth={'xs'}>
+        <Toaster position="top-center" reverseOrder={false} />
         <Box className={styles.boxspace}></Box>
         <Box className={styles.boxBrand}>
           <Image className={styles.brand} src={brand} alt="Fast Delivery Brand" />
