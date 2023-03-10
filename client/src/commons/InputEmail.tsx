@@ -14,7 +14,7 @@ export default function InputFullName({ name, register, errors }: Props) {
     <>
       <TextField
         {...register(name)}
-        {...(errors[name] && { error: true, helperText: 'Campo requerido' })}
+        // {...(errors[name] && { error: true, helperText: 'Campo requerido' })}
         margin="normal"
         variant="outlined"
         label="Email"
