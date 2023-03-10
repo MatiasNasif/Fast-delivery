@@ -1,34 +1,25 @@
-name: Deploy to EC2 Instance
+name: Docker Deploy
 
 on:
   push:
-    branches: [develop]
-
-permissions:
-  contents: read
+    branches: [ develop ]
 
 jobs:
-  deploy:
-    name: Deploy
+  EC2-Deploy:
     runs-on: ubuntu-latest
-    environment: production
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
-    - name: Configure SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.AWS_EC2_INSTANCE_PASSWORD }}
-        known_hosts: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
+      - name: Build Docker image
+        run: docker build -t fast-delivery_api:latest ./api
 
-    - name: Build and tag Docker image
-      run: |
-        docker build -t fast-delivery_api:latest ./api
-        docker tag fast-delivery_api:latest 45.180.60.131/32:fast-delivery_api:latest
-
-    - name: Load Docker image into EC2 instance
-      run: |
-        docker save fast-delivery_api:latest | ssh -i ${{ secrets.AWS_EC2_INSTANCE_KEY }} ec2-user@45.180.60.131/32 "docker load"
+      - name: Deploy to EC2
+        uses: bitovi/github-actions-deploy-docker-to-ec2@v0.5.0
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_default_region: us-east-1
+          image_name: fast-delivery_api
+          image_tag: latest
 
