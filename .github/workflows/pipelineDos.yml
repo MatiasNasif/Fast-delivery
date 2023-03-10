@@ -31,7 +31,7 @@ jobs:
         with:
           context: ./api
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}:${{ github.sha }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/matiasnasif:${{ github.sha }}
 
 
       - name: SSH into EC2 instance
@@ -44,5 +44,5 @@ jobs:
           script: |
             sudo docker stop fast-delivery_api || true
             sudo docker rm fast-delivery_api || true
-            sudo docker pull ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}:${{ github.sha }}
-            sudo docker run -d -p 80:80 --name fast-delivery_api ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}:${{ github.sha }}
+            sudo docker pull ${{ steps.login-ecr.outputs.registry }}/matiasnasif:${{ github.sha }}
+            sudo docker run -d -p 80:80 --name fast-delivery_api ${{ steps.login-ecr.outputs.registry }}/matiasnasif:${{ github.sha }}
