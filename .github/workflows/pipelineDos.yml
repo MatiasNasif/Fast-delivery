@@ -37,7 +37,7 @@ jobs:
           aws-region: us-east-1
 
       - name: SSH into EC2 instance
-        uses: appleboy/ssh-action@v1.1.0
+        uses: appleboy/ssh-action@master
         with:
           host: 45.180.60.131/32
           username: fast-delivery-server
