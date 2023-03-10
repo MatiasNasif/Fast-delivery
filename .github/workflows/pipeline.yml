@@ -101,16 +101,15 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and tag Docker image
-        run: |
-          docker-compose build
-          docker tag client 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_client:latest
-          docker tag api 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_api:latest
-
-      - name: Push Docker image to Amazon ECR
-        run: |
-          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_client:latest
-          docker push 401180761144.dkr.ecr.us-east-1.amazonaws.com/fast-delivery_api:latest
+      - name: Build and push Docker image
+        uses: docker/compose-action@v1
+        with:
+          compose-file: docker-compose.yml
+          command: build
+          tags: |
+            401180761144.dkr.ecr.us-east-1.amazonaws.com/client:latest
+            401180761144.dkr.ecr.us-east-1.amazonaws.com/api:latest
+          push: true
 
       - name: SSH into AWS EC2 instance
         uses: appleboy/ssh-action@master
