@@ -39,7 +39,7 @@ jobs:
         with:
           host: 45.180.60.131/32
           username: fast-delivery-server
-          key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
+          key: ${{ secrets.AWS_EC2_INSTANCE_PASSWORD }}
           port: 22
           script: |
             sudo docker stop fast-delivery_api || true
