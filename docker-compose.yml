@@ -1,6 +1,5 @@
 version: "3"
 
-
 services:
   api:
     image: api:latest
@@ -24,6 +23,7 @@ services:
     volumes: 
       - ./client/public:/client/public
       - ./client/src:/client/src
+
 
   # mongodb:
   #   image: mongo:latest

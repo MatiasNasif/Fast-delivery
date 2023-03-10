@@ -2,7 +2,6 @@ import { UsersService } from '../../users/services/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Injectable, NotAcceptableException } from '@nestjs/common';
-import { User } from '../../users/entities/user.entity';
 import { CreateUserDto } from '../../users/dtos/user.dto';
 
 @Injectable()
@@ -28,5 +27,8 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+  async logout(user: CreateUserDto) {
+    return { access_token: null, msg: 'The user session has ended', user };
   }
 }
