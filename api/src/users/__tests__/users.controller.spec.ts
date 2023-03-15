@@ -5,15 +5,10 @@ import { getModelToken } from '@nestjs/mongoose';
 import { UserModule } from '../users.module';
 import { CreateUserDto } from '../dtos/user.dto';
 import { NotFoundException } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
+import { ObjectId } from 'mongoose';
 
 interface CreateUserDtoWithAdditionalProps extends CreateUserDto {
-  fullName: string;
-  email: string;
-  password: string;
-  admin: boolean;
-  status: string;
-  _id?: ObjectId;
+  _id?: ObjectId | string;
 }
 
 describe('UsersController', () => {
@@ -126,6 +121,40 @@ describe('UsersController', () => {
             'Imposible actualizar, usuario con ID 1 no encontrado.',
           ),
         );
+      });
+
+      describe('delete user', () => {
+        it('should delete a user by id', async () => {
+          const deletedUser: any = {
+            _id: '1',
+            fullName: 'John Doe',
+            email: 'john.doe@example.com',
+            password: 'secret',
+            admin: false,
+            status: 'inactivo',
+          };
+          jest.spyOn(userService, 'deleteUser').mockResolvedValue(deletedUser);
+
+          const result = await userController.deleteUser(deletedUser._id);
+          expect(result).toEqual('Usuario eliminado');
+          expect(userService.deleteUser).toHaveBeenCalledWith(deletedUser._id);
+        });
+
+        it('should throw a NotFoundException for non-existing user', async () => {
+          const nonExistingUserId = '1254';
+          jest.spyOn(userService, 'deleteUser').mockResolvedValue(null);
+
+          await expect(
+            userController.deleteUser(nonExistingUserId),
+          ).rejects.toThrowError(
+            new NotFoundException(
+              `user con ID ${nonExistingUserId} no encontrado.`,
+            ),
+          );
+          expect(userService.deleteUser).toHaveBeenCalledWith(
+            nonExistingUserId,
+          );
+        });
       });
     });
   });
