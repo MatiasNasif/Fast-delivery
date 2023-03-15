@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 export type PackageDocument = Package & Document;
 
@@ -20,8 +20,11 @@ export class Package {
   @Prop()
   quantity: number;
 
-  @Prop({ default: 'pendiente' })
+  @Prop({ enum: ['Entregado', 'En curso', 'Pendiente'] })
   deliveryStatus: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  userId: string;
 }
 
 export const PackageSchema = SchemaFactory.createForClass(Package);
