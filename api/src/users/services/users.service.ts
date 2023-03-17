@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDocument } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import * as bcrypt from 'bcrypt';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,14 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<CreateUserDto> {
+    const userExists = await this.userModel.findOne({
+      email: createUserDto.email,
+    });
+    if (userExists) {
+      throw new BadRequestException(
+        'Ya existe un usuario con el correo electrónico proporcionado.',
+      );
+    }
     const saltOrRounds = 10;
     const hashedPassword = await bcrypt.hash(
       createUserDto.password,
@@ -32,8 +41,8 @@ export class UsersService {
     return this.userModel.find();
   }
 
-  async getUserById(id: string) {
-    const user = this.userModel.findById(id);
+  async getUserById(id: string): Promise<CreateUserDto> {
+    const user: CreateUserDto = await this.userModel.findById(id);
     return user;
   }
 
@@ -41,9 +50,19 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<CreateUserDto> {
-    return this.userModel.findOneAndUpdate({ _id: id }, updateUserDto, {
-      new: true,
-    });
+    const updatedUser = await this.userModel.findOneAndUpdate(
+      { _id: id },
+      updateUserDto,
+      {
+        new: true,
+      },
+    );
+    if (!updatedUser) {
+      throw new NotFoundException(
+        `Imposible actualizar, usuario con ID ${id} no encontrado.`,
+      );
+    }
+    return updatedUser;
   }
 
   async deleteUser(id: string) {
