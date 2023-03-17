@@ -2,7 +2,7 @@ name: Deployment Pipeline
 
 on:
   push:
-    branches: [feature/api-auth-testing]
+    branches: [develop]
   # pull_request:
   #   branches: [develop]
   #   types: [opened, synchronize]
@@ -93,7 +93,7 @@ jobs:
 
   EC2-Deploy:
     # needs: [test]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
