@@ -22,10 +22,10 @@ export class User {
   status: string;
 
   @Prop({ enum: ['Viaje en Curso', 'Finalizó'] })
-  statusWorkday: string;
+  statusWorkday?: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Package' })
-  packages: Array<Package>;
+  packages?: Array<Package>;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
