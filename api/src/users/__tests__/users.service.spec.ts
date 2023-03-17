@@ -53,7 +53,6 @@ describe('UsersService', () => {
         admin: createUserDtoWithId.admin,
         status: createUserDtoWithId.status,
       };
-
       jest.spyOn(usersService, 'createUser').mockResolvedValue(expectedUser);
       expect(await usersService.createUser(createUserDtoWithId)).toEqual(
         expectedUser,

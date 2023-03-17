@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { UserDocument } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import * as bcrypt from 'bcrypt';
@@ -41,10 +41,7 @@ export class UsersService {
     return this.userModel.find();
   }
 
-  async getUserById(id: string) {
-    if (isValidObjectId(id)) {
-      return null;
-    }
+  async getUserById(id: string): Promise<CreateUserDto> {
     const user: CreateUserDto = await this.userModel.findById(id);
     return user;
   }
