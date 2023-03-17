@@ -7,7 +7,7 @@ import { CreateUserDto } from '../dtos/user.dto';
 import { NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 
-interface UserDtoWithAdditionalProps extends CreateUserDto {
+interface CreateUserDtoWithId extends CreateUserDto {
   _id?: ObjectId | string;
 }
 
@@ -56,23 +56,25 @@ describe('UsersController', () => {
 
   describe('createUser', () => {
     it('should create a new user', async () => {
-      const createUserDto: UserDtoWithAdditionalProps = {
+      const createUserDtoInstance: CreateUserDtoWithId = {
         fullName: 'Edgar Lagos',
         email: 'edgar@mail.com',
         password: 'secret',
         admin: false,
         status: 'inactivo',
       };
-      jest.spyOn(userService, 'createUser').mockResolvedValue(createUserDto);
-      expect(await userController.createUser(createUserDto)).toBe(
-        createUserDto,
+      jest
+        .spyOn(userService, 'createUser')
+        .mockResolvedValue(createUserDtoInstance);
+      expect(await userController.createUser(createUserDtoInstance)).toBe(
+        createUserDtoInstance,
       );
     });
   });
 
   describe('getUserById', () => {
     it('should return a user by id', async () => {
-      const user: UserDtoWithAdditionalProps = {
+      const user: CreateUserDtoWithId = {
         fullName: 'Edgar Lagos',
         email: 'edgar@mail.com',
         password: 'secret',
@@ -94,7 +96,7 @@ describe('UsersController', () => {
 
   describe('updateUser', () => {
     it('should update a user by id', async () => {
-      const updateUserDto: UserDtoWithAdditionalProps = {
+      const updateUserDto: CreateUserDtoWithId = {
         fullName: 'Edgar Lagos',
         email: 'edgar@mail.com',
         password: 'secret',
@@ -108,7 +110,7 @@ describe('UsersController', () => {
     });
 
     it('should throw a NotFoundException for non-existing user', async () => {
-      const updateUserDto: UserDtoWithAdditionalProps = {
+      const updateUserDto: CreateUserDtoWithId = {
         fullName: 'Julieta Kopp',
         email: 'julieta@mail.com',
         password: 'secret',
