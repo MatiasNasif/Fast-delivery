@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { Package } from '../../packages/entities/packages.entity.';
 
 export type UserDocument = User & Document;
 
@@ -24,8 +23,11 @@ export class User {
   @Prop({ enum: ['Viaje en Curso', 'Finalizó'] })
   statusWorkday?: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Package' })
-  packages?: Array<Package>;
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'package' }],
+    default: [],
+  })
+  packages?: mongoose.Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

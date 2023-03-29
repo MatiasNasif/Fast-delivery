@@ -5,11 +5,15 @@ import { UserDocument } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import * as bcrypt from 'bcrypt';
 import { NotFoundException } from '@nestjs/common';
+import { PackageDocument } from 'src/packages/entities/packages.entity';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel('user') private readonly userModel: Model<UserDocument>,
+    @InjectModel('package')
+    private readonly packageModel: Model<PackageDocument>,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<CreateUserDto> {
@@ -30,7 +34,7 @@ export class UsersService {
       ...createUserDto,
       password: hashedPassword,
     });
-    return createdUser;
+    return createdUser.save();
   }
 
   async getUser(query: object): Promise<CreateUserDto> {
@@ -67,5 +71,57 @@ export class UsersService {
 
   async deleteUser(id: string) {
     return this.userModel.findByIdAndDelete(id);
+  }
+
+  async assignPackageToUser(
+    userId: string,
+    packs: string[],
+  ): Promise<UpdateUserDto> {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const existingPackageIds = user.packages.map((p) => p.toString());
+    const newPackageIds = packs.filter(
+      (id) => !existingPackageIds.includes(id),
+    );
+    if (newPackageIds.length !== packs.length) {
+      const duplicatePackageIds = packs.filter((id) =>
+        existingPackageIds.includes(id),
+      );
+      throw new NotFoundException(
+        `Packages with ids ${duplicatePackageIds.join(
+          ', ',
+        )} are already assigned to user`,
+      );
+    }
+
+    const packages = await this.packageModel
+      .find({ _id: { $in: packs } })
+      .exec();
+    if (packages.length !== packs.length) {
+      const missingPackageIds = packs.filter(
+        (packageId) => !packages.some((p) => p._id.equals(packageId)),
+      );
+      throw new NotFoundException(
+        `Packages with ids ${missingPackageIds.join(', ')} not found`,
+      );
+    }
+
+    packages.map((pack) => {
+      pack.user = new mongoose.Types.ObjectId(userId);
+    });
+
+    user.packages.push(new mongoose.Types.ObjectId(...packs));
+
+    await user.save();
+
+    for (const pack of packages) {
+      await pack.save();
+    }
+
+    return user;
   }
 }

@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import mongoose from 'mongoose';
 
 export class CreatePackageDto {
   @IsNotEmpty()
@@ -24,6 +25,9 @@ export class CreatePackageDto {
 
   @IsString()
   readonly deliveryStatus: string = 'pendiente';
+
+  @IsOptional()
+  user?: mongoose.Types.ObjectId;
 }
 
 export class UpdatePackageDto extends PartialType(CreatePackageDto) {}
