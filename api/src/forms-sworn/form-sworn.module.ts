@@ -1,7 +1,16 @@
+export class FormSwornModule {}
 import { Module } from '@nestjs/common';
-import { ServicesService } from './services/services.service';
+import { FormSwornService } from './services/form-sworn.service';
+import { FormSwornController } from './controllers/forms-sworn.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { FormSwornSchema } from './entities/forms-worn.entity';
 
 @Module({
-  providers: [ServicesService]
+  imports: [
+    MongooseModule.forFeature([{ name: 'FormSworn', schema: FormSwornSchema }]),
+  ],
+  providers: [FormSwornService],
+  controllers: [FormSwornController],
+  exports: [FormSwornService],
 })
 export class FormSwornModule {}
