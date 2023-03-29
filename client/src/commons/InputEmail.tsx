@@ -14,9 +14,11 @@ export default function InputFullName({ name, register, errors }: Props) {
     <>
       <TextField
         {...register(name)}
-        // {...(errors[name] && { error: true, helperText: 'Campo requerido' })}
+        {...(errors && errors[name] && { error: true, helperText: 'Campo requerido' })}
         margin="normal"
-        variant="outlined"
+        variant="standard"
+        focused
+        InputLabelProps={{ className: styles.textLabelcolor }}
         label="Email"
         type="email"
         name="email"
