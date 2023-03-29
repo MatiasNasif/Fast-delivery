@@ -23,8 +23,8 @@ export class Package {
   @Prop({ enum: ['Entregado', 'En curso', 'Pendiente'] })
   deliveryStatus: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  userId: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'user', default: null })
+  user?: mongoose.Types.ObjectId;
 }
 
 export const PackageSchema = SchemaFactory.createForClass(Package);

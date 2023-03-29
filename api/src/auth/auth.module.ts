@@ -8,16 +8,22 @@ import { UsersService } from '../users/services/users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from '../users/entities/user.entity';
 import { LocalStrategy } from './strategies/local.strategy';
+import { PackageSchema } from 'src/packages/entities/packages.entity';
+import { PackagesModule } from 'src/packages/packages.module';
 
 @Module({
   imports: [
     UserModule,
+    PackagesModule,
     PassportModule,
     JwtModule.register({
       secret: 'secret',
       signOptions: { expiresIn: '60s' },
     }),
-    MongooseModule.forFeature([{ name: 'user', schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: 'user', schema: UserSchema },
+      { name: 'package', schema: PackageSchema },
+    ]),
   ],
   providers: [AuthService, UsersService, LocalStrategy],
   controllers: [AuthController],

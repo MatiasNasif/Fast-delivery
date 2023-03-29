@@ -1,5 +1,13 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
+import mongoose from 'mongoose';
 
 export class CreateUserDto {
   @IsString()
@@ -16,8 +24,11 @@ export class CreateUserDto {
   @IsBoolean()
   readonly admin: boolean = false;
 
-  @IsString()
-  readonly status: string = 'inactivo';
+  @IsEnum(['Activo', 'Inactivo'])
+  readonly status: string;
+
+  @IsOptional()
+  packages?: mongoose.Types.ObjectId[];
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}

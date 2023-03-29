@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PackageDocument } from '../entities/packages.entity.';
+import { PackageDocument } from '../entities/packages.entity';
 import { CreatePackageDto } from '../dtos/packages.dto';
 
 @Injectable()
@@ -22,6 +22,11 @@ export class PackagesService {
 
   async getPackages(): Promise<CreatePackageDto[]> {
     const packages = await this.packageModel.find();
+    return packages;
+  }
+
+  async getAllPackagesByUser(userId: string): Promise<CreatePackageDto[]> {
+    const packages = await this.packageModel.find({ user: userId });
     return packages;
   }
 
