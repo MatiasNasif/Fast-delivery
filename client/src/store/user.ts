@@ -57,6 +57,7 @@ export const getAllUsers = createAsyncThunk('GET_ALL_USER', () => {
 const userReducer = createReducer(null, {
   [`${getUserById.fulfilled}`]: (state, action) => action.payload,
   [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
+  [`${userLogin.fulfilled}`]: (state, action) => action.payload,
 });
 
 export default userReducer;
