@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
 import ButtonApp from '@/commons/buttonApp';
@@ -6,6 +6,8 @@ import { Container, Box, Typography } from '@mui/material';
 import styles from '../../styles/SwornStarment.module.css';
 import Checkbox from '@mui/material/Checkbox';
 import SwitchSworn from '../../commons/switchSworn';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const SwornStatement = () => {
   const repetitiveText = [
@@ -24,18 +26,22 @@ const SwornStatement = () => {
   ];
 
   const [answers, setAnswers] = useState({});
+  const navigate = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     console.log('Respuestas:', answers);
+    navigate.push('/views/start-workday');
   };
 
   return (
     <Container maxWidth={'xs'} disableGutters={true}>
       <>
         <Header />
-        <ArrowApp />
+        <Link href="/">
+          <ArrowApp />
+        </Link>
         <form onSubmit={handleSubmit}>
           <Box className={styles.BoxwordAdd}>
             <Typography variant="h6" className={styles.wordTittle}>

@@ -10,6 +10,7 @@ import { UserSchema } from '../users/entities/user.entity';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PackageSchema } from 'src/packages/entities/packages.entity';
 import { PackagesModule } from 'src/packages/packages.module';
+import { FormSwornSchema } from '../forms-sworn/entities/forms-sworn.entity';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PackagesModule } from 'src/packages/packages.module';
     MongooseModule.forFeature([
       { name: 'user', schema: UserSchema },
       { name: 'package', schema: PackageSchema },
+      { name: 'formsworn', schema: FormSwornSchema },
     ]),
   ],
   providers: [AuthService, UsersService, LocalStrategy],

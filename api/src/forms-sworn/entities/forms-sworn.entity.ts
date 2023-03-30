@@ -5,17 +5,20 @@ export type FormSwornDocument = FormSworn & Document;
 
 @Schema()
 export class FormSworn {
-  @Prop()
+  @Prop({ required: true })
   alcohol: string;
 
-  @Prop()
+  @Prop({ required: true })
   medicines: string;
 
-  @Prop()
+  @Prop({ required: true })
   problems: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'user' })
-  user?: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
+
+  @Prop({ default: Date.now })
+  createdAt: Date;
 }
 
 export const FormSwornSchema = SchemaFactory.createForClass(FormSworn);
