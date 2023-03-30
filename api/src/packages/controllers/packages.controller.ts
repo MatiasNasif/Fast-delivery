@@ -42,6 +42,13 @@ export class PackagesController {
     return packagesByUser;
   }
 
+  @Get('/:userId/packagesPendingByUser')
+  async getAllPackagesPendingByUser(@Param('userId') userId) {
+    const packagesPendingByUser =
+      await this.packageService.getAllPackagesPendingByUser(userId);
+    return packagesPendingByUser;
+  }
+
   @Delete('/:packageId')
   async deletePackage(@Param('packageId') packageId) {
     const deletePackage = await this.packageService.deletePackage(packageId);
