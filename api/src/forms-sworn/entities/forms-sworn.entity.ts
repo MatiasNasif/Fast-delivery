@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 
-export type FormswornDocument = Formsworn & Document;
+export type FormSwornDocument = FormSworn & Document;
 
 @Schema()
-export class Formsworn {
+export class FormSworn {
   @Prop()
   alcohol: string;
 
@@ -13,6 +13,9 @@ export class Formsworn {
 
   @Prop()
   problems: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'user' })
+  user?: mongoose.Types.ObjectId;
 }
 
-export const FormswornSchema = SchemaFactory.createForClass(Formsworn);
+export const FormSwornSchema = SchemaFactory.createForClass(FormSworn);

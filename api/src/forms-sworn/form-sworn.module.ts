@@ -1,13 +1,12 @@
-export class FormSwornModule {}
 import { Module } from '@nestjs/common';
 import { FormSwornService } from './services/form-sworn.service';
 import { FormSwornController } from './controllers/forms-sworn.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { FormSwornSchema } from './entities/forms-worn.entity';
+import { FormSwornSchema } from './entities/forms-sworn.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'FormSworn', schema: FormSwornSchema }]),
+    MongooseModule.forFeature([{ name: 'formsworm', schema: FormSwornSchema }]),
   ],
   providers: [FormSwornService],
   controllers: [FormSwornController],
