@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Max } from 'class-validator';
 import mongoose, { Document } from 'mongoose';
 
 export type PackageDocument = Package & Document;
@@ -17,6 +18,7 @@ export class Package {
   @Prop()
   deliveryDate: string;
 
+  @Max(100)
   @Prop()
   quantity: number;
 
