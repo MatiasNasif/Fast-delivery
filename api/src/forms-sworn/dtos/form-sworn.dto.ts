@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 import mongoose from 'mongoose';
 
@@ -8,14 +8,16 @@ export class CreateFormSwornDto {
   readonly alcohol: string;
 
   @IsNotEmpty()
-  @IsEmail()
+  @IsString()
   readonly medicines: string;
 
   @IsNotEmpty()
   @IsString()
   readonly problems: string;
 
-  readonly user?: mongoose.Types.ObjectId;
+  readonly user: mongoose.Types.ObjectId;
+
+  readonly createdAt: Date;
 }
 
 export class UpdateFormSwornDto extends PartialType(CreateFormSwornDto) {}

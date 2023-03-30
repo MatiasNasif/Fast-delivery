@@ -6,38 +6,52 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FormSwornDocument } from '../entities/forms-sworn.entity';
+import { UserDocument } from '../../users/entities/user.entity';
 import { CreateFormSwornDto, UpdateFormSwornDto } from '../dtos/form-sworn.dto';
 
 @Injectable()
 export class FormSwornService {
   constructor(
     @InjectModel('formsworn')
-    private readonly FormSwornModel: Model<FormSwornDocument>,
+    private readonly formSwornModel: Model<FormSwornDocument>,
+    @InjectModel('user')
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   async createFormSworn(
     createFormSwornDto: CreateFormSwornDto,
+    userId: string,
   ): Promise<CreateFormSwornDto> {
-    const formSwornExists = await this.FormSwornModel.findOne({
-      email: createFormSwornDto.email,
+    const userExists = await this.userModel.findById(userId);
+    if (!userExists) {
+      throw new NotFoundException('No se encontró el usuario especificado');
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const count = await this.formSwornModel.countDocuments({
+      user: userId,
+      createdAt: { $gte: today, $lt: tomorrow },
     });
-    if (formSwornExists) {
-      throw new BadRequestException(
-        'Ya existe un formulario con el correo electrónico proporcionado.',
+    if (count >= 1) {
+      throw new NotFoundException(
+        'Solo se permite crear un formulario por día',
       );
     }
-    const createdFormSworn = await this.FormSwornModel.create(
-      createFormSwornDto,
-    );
-    return createdFormSworn;
+    const createdFormSworn = await this.formSwornModel.create({
+      ...createFormSwornDto,
+      user: userId,
+    });
+    return createdFormSworn.save();
   }
 
   async getFormSworn(): Promise<CreateFormSwornDto[]> {
-    return this.FormSwornModel.find();
+    return this.formSwornModel.find();
   }
 
   async getFormSwornById(id: string): Promise<CreateFormSwornDto> {
-    const formSworn: CreateFormSwornDto = await this.FormSwornModel.findById(
+    const formSworn: CreateFormSwornDto = await this.formSwornModel.findById(
       id,
     );
     return formSworn;
@@ -47,7 +61,7 @@ export class FormSwornService {
     id: string,
     updateFormSwornDto: UpdateFormSwornDto,
   ): Promise<CreateFormSwornDto> {
-    const updatedFormSworn = await this.FormSwornModel.findOneAndUpdate(
+    const updatedFormSworn = await this.formSwornModel.findOneAndUpdate(
       { _id: id },
       updateFormSwornDto,
       {
@@ -63,6 +77,6 @@ export class FormSwornService {
   }
 
   async deleteFormSworn(id: string) {
-    return this.FormSwornModel.findByIdAndDelete(id);
+    return this.formSwornModel.findByIdAndDelete(id);
   }
 }

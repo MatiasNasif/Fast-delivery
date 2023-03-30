@@ -11,26 +11,30 @@ import {
 import { FormSwornService } from '../services/form-sworn.service';
 import { CreateFormSwornDto, UpdateFormSwornDto } from '../dtos/form-sworn.dto';
 
-@Controller('form-sworn')
+@Controller('formsworn')
 export class FormSwornController {
   constructor(private readonly formSwornService: FormSwornService) {}
 
-  @Post('createformsworn')
-  async createformSworn(@Body() createFormSwornDto: CreateFormSwornDto) {
-    const createdformSworn = await this.formSwornService.createformSworn(
+  @Post(':userId/createforms')
+  async create(
+    @Body() createFormSwornDto: CreateFormSwornDto,
+    @Param('userId') userId: string,
+  ) {
+    const formSworn = await this.formSwornService.createFormSworn(
       createFormSwornDto,
+      userId,
     );
-    return createdformSworn;
+    return formSworn;
   }
 
   @Get()
-  async getformSworn(): Promise<CreateFormSwornDto[]> {
-    return await this.formSwornService.getformSworn();
+  async getFormSworn(): Promise<CreateFormSwornDto[]> {
+    return await this.formSwornService.getFormSworn();
   }
 
   @Get(':id')
-  async getformSwornById(@Param('id') id: string) {
-    const formSwornById = await this.formSwornService.getformSwornById(id);
+  async getFormSwornById(@Param('id') id: string) {
+    const formSwornById = await this.formSwornService.getFormSwornById(id);
     if (!formSwornById) {
       throw new NotFoundException(`user con ID ${id} no encontrado.`);
     }
@@ -40,11 +44,11 @@ export class FormSwornController {
   @Put(':id')
   async updateFormSworn(
     @Param('id') id: string,
-    @Body() updateformSwornDto: UpdateFormSwornDto,
+    @Body() updateFormSwornDto: UpdateFormSwornDto,
   ) {
     const FormSwornUpdate = await this.formSwornService.updateFormSworn(
       id,
-      updateformSwornDto,
+      updateFormSwornDto,
     );
     if (!FormSwornUpdate) {
       throw new NotFoundException(
@@ -55,8 +59,8 @@ export class FormSwornController {
   }
 
   @Delete(':id')
-  async deleteformSworn(@Param('id') id: string) {
-    const formSwornDelete = await this.formSwornService.deleteformSworn(id);
+  async deleteFormSworn(@Param('id') id: string) {
+    const formSwornDelete = await this.formSwornService.deleteFormSworn(id);
     if (!formSwornDelete) {
       throw new NotFoundException(`user con ID ${id} no encontrado.`);
     }

@@ -34,7 +34,7 @@ export default function Login() {
   const onSubmitOfLogin = (data: LoginFormData) => {
     dispatch(userLogin(data))
       .then(() => {
-        navigate.push('/views/start-workday');
+        navigate.push('/views/sworn-statement');
       })
       .catch((err: Error) => console.log(err));
   };
@@ -52,6 +52,7 @@ export default function Login() {
           <InputEmail name="email" register={register} />
           <InputPassword name="password" register={register} errors={errors} />
           {errors.password && <span className={styles.errorText}>*Contraseña Requerida*</span>}
+
           <Button fullWidth variant="contained" type="submit">
             Ingresar
           </Button>
