@@ -11,6 +11,8 @@ import InputEmail from '../commons/InputEmail';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { userLogin } from '@/store/user';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,15 +29,15 @@ export default function Login() {
   } = useForm();
 
   const navigate = useRouter();
+  const dispatch = useDispatch<any>();
 
   const onSubmitOfLogin = (data: LoginFormData) => {
-    axios
-      .post('http://localhost:5000/auth/login', data)
-      .then((res) => res.data)
-      .then(() => navigate.push('/views/start-workday'))
-      .catch((err) => console.log(err));
+    dispatch(userLogin(data))
+      .then(() => {
+        navigate.push('/views/start-workday');
+      })
+      .catch((err: Error) => console.log(err));
   };
-
   return (
     <>
       <Head>
