@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FormSwornDocument } from '../entities/forms-worn.entity';
+import { FormSwornDocument } from '../entities/forms-sworn.entity';
 import { CreateFormSwornDto, UpdateFormSwornDto } from '../dtos/form-sworn.dto';
 
 @Injectable()
 export class FormSwornService {
   constructor(
-    @InjectModel('FormSworn')
+    @InjectModel('formsworn')
     private readonly FormSwornModel: Model<FormSwornDocument>,
   ) {}
 
