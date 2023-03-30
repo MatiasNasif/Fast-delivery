@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PackagesService } from './packages.service';
-import { PackageDocument } from '../entities/packages.entity.';
+import { PackageDocument } from '../entities/packages.entity';
 import { CreatePackageDto } from '../dtos/packages.dto';
 
 interface CreatePackageDtoInterface extends CreatePackageDto {
