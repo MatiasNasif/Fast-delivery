@@ -57,4 +57,12 @@ export class UsersController {
     }
     return 'Usuario eliminado';
   }
+
+  @Post(':userId/assign')
+  async assignPackageToUser(
+    @Param('userId') userId: string,
+    @Body('packs') packs: string[],
+  ) {
+    return this.usersService.assignPackageToUser(userId, packs);
+  }
 }

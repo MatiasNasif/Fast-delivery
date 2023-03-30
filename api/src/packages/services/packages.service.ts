@@ -32,6 +32,11 @@ export class PackagesService {
     return packages;
   }
 
+  async getAllPackagesByUser(userId: string): Promise<CreatePackageDto[]> {
+    const packages = await this.packageModel.find({ user: userId });
+    return packages;
+  }
+
   async deletePackage(packageId: string): Promise<CreatePackageDto> {
     const deletePackage = await this.packageModel.findByIdAndDelete(packageId);
     return deletePackage;

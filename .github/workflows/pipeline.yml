@@ -1,153 +1,111 @@
-# name: Deploy Pipeline
+name: Deploy Pipeline
 
-# on:
-#   push:
-#     branches: [develop]
-#   pull_request:
-#     branches: [develop]
-#     types: [opened, synchronize]
+on:
+  push:
+    branches: [main]
+  # pull_request:
+  #   branches: [develop]
+  #   types: [opened, synchronize]
 
-# jobs:
+jobs:
 
-#   avoid_reduncy:
-#     runs-on: ubuntu-20.04
-#     steps:
-#     - uses: actions/checkout@v1
-#     - uses: n1hility/cancel-previous-runs@v3
-#       with: 
-#         token: ${{ secrets.GITHUB_TOKEN }}
+  # avoid_reduncy:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: n1hility/cancel-previous-runs@v3
+  #     with: 
+  #       token: ${{ secrets.GITHUB_TOKEN }}
 
-#   lint:
-#     runs-on: ubuntu-20.04
-#     steps:
-#       - uses: actions/checkout@v3
-#         with:
-#           fetch-depth: 0
-#       - uses: actions/setup-node@v2
-#         with:
-#           node-version: '16'
-#       - name: Intall concurrently
-#         run: npm install -g concurrently
-#       - name: Install dependencies
-#         run: npm run install
-#       - name: Lint
-#         run: npm run lint
+  # install:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         cache: 'npm'
+  #         node-version: '16'
+  #     - name: Install dependencies
+  #       run: npm ci
 
-#   # build:
-#   #   runs-on: ubuntu-20.04
-#   #   steps:
-#   #     - uses: actions/checkout@v3
-#   #       with:
-#   #         fetch-depth: 0
-#   #     - uses: actions/setup-node@v2
-#   #       with:
-#   #         node-version: '14'
-#   #     - name: Intall concurrently
-#   #       run: npm install -g concurrently
-#   #     - name: Install dependencies
-#   #       run: npm run install
-#   #     - name: Build
-#   #       run: npm run build
-#   #     - uses: actions/upload-artifact@v2
-#   #       with:
-#   #         name: dist
-#   #         path: dist
+  # lint:
+  #   needs: install
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         cache: 'npm'
+  #         node-version: '16'
+  #     - name: Intall concurrently
+  #       run: npm install -g concurrently
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: Lint
+  #       run: npm run lint
 
-#   # test:
-#   #   needs: [lint, build]
-#   #   runs-on: ubuntu-20.04
-#   #   steps:
-#   #     - uses: actions/checkout@v3
-#   #       with:
-#   #         fetch-depth: 0
-#   #     - uses: actions/setup-node@v2
-#   #       with:
-#   #         node-version: '14'
-#   #     - name: Install dependencies
-#   #       run: npm run install
-#   #     - uses: actions/download-artifact@v2
-#   #       with:
-#   #         name: dist
-#   #         path: dist
-#   #     - name: Test
-#   #       run: npm test
+  # build:
+  #   needs: install
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         cache: 'npm'
+  #         node-version: '16'
+  #     - name: Intall concurrently
+  #       run: npm install -g concurrently
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: Build
+  #       run: npm run build
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: dist
+  #         path: dist
 
-#   deploy:
-#     runs-on: ubuntu-20.04
+  # test:
+  #   # needs: [install, lint, build]
+  #   needs: [install, lint]
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         cache: 'npm'
+  #         node-version: '16'
+  #     - name: Install dependencies
+  #       run: npm run install
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: dist
+  #         path: dist
+  #     - name: Test
+  #       run: npm test
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
+  EC2-Deploy:
+    # needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-#       - name: Install Docker and Docker Compose
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-#           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-#           sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-#           sudo apt-get update
-#           sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-#           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-#           sudo chmod +x /usr/local/bin/docker-compose
+      - name: Build Docker image
+        run: docker build -t fast-delivery_api:latest ./api
 
-#       - name: Configure AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: us-east-1
-
-#       - name: Login to Amazon ECR
-#         id: login-ecr
-#         uses: aws-actions/amazon-ecr-login@v1
-
-#       - name: Build and push Docker image
-#         uses: docker/build-push-action@v2
-#         with:
-#           context: .
-#           file: ./docker-compose.yml
-#           push: true
-#           tags: |
-#             401180761144.dkr.ecr.us-east-1.amazonaws.com/client:latest
-#             401180761144.dkr.ecr.us-east-1.amazonaws.com/api:latest
-
-#       - name: SSH into AWS EC2 instance
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 45.180.60.131/32
-#           username: fast-delivery-server
-#           key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
-#           port: 22
-
-#       - name: Install Docker and Docker Compose on AWS EC2 instance
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-#           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-#           sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-#           sudo apt-get update
-#           sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-#           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-#           sudo chmod +x /usr/local/bin/docker-compose
-
-#       - name: Copy Docker Compose file to AWS EC2 instance
-#         uses: appleboy/scp-action@master
-#         with:
-#           host: 45.180.60.131/32
-#           username: fast-delivery-server
-#           key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
-#           password: ${{ secrets.AWS_EC2_INSTANCE_PASSWORD }}
-#           port: 22
-#           source: docker-compose.yml
-#           target: /home/ubuntu/docker-compose.yml
-
-#       - name: SSH into AWS EC2 instance and start Docker Compose
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 45.180.60.131/32
-#           username: fast-delivery-server
-#           key: ${{ secrets.AWS_EC2_INSTANCE_KEY }}
-#           port: 22
-#           script: |
-#             cd /home/ubuntu/
-#             sudo docker-compose up -d
+      - name: Deploy to EC2
+        uses: bitovi/github-actions-deploy-docker-to-ec2@v0.5.0
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_default_region: us-east-1
+          image_name: fast-delivery_api
+          image_tag: latest
