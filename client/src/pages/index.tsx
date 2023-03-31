@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Inter } from '@next/font/google';
 import styles from '../styles/Login.module.css';
 import { Box, Container, Button, Typography } from '@mui/material';
@@ -11,7 +11,7 @@ import InputEmail from '../commons/InputEmail';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '@/store/user';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -19,6 +19,16 @@ const inter = Inter({ subsets: ['latin'] });
 interface LoginFormData {
   email: string;
   password: string;
+}
+
+const API_URL = 'http://localhost:5000';
+
+async function getAllFormSwornByUser(userId: string) {
+  if (!userId) {
+    return [];
+  }
+  const response = await axios.get(`${API_URL}/formsworn/getAll`, { params: { userId } });
+  return response.data;
 }
 
 export default function Login() {
@@ -30,14 +40,53 @@ export default function Login() {
 
   const navigate = useRouter();
   const dispatch = useDispatch<any>();
+  const userId: string = useSelector((state) => state.user?.id ?? null);
+  const [formsByUser, setFormsByUser] = useState([]);
+  const [hasFormToday, setHasFormToday] = useState(false);
 
   const onSubmitOfLogin = (data: LoginFormData) => {
-    dispatch(userLogin(data))
-      .then(() => {
-        navigate.push('/views/sworn-statement');
-      })
-      .catch((err: Error) => console.log(err));
+    dispatch(userLogin(data)).catch((err: Error) => console.log(err));
   };
+
+  async function loadForms() {
+    try {
+      const formSwornList = await getAllFormSwornByUser(userId);
+      setFormsByUser(formSwornList);
+
+      const today = new Date().toISOString().slice(0, 10); // Obtener la fecha actual en formato ISO
+      const hasForm = formSwornList.some((form) => {
+        return form.user === userId && form.createdAt.slice(0, 10) === today;
+      });
+      setHasFormToday(hasForm);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    if (userId !== null) {
+      getAllFormSwornByUser(userId)
+        .then((formSwornList) => {
+          setFormsByUser(formSwornList);
+
+          const today = new Date().toISOString().slice(0, 10); // Obtener la fecha actual en formato ISO
+          const hasForm = formSwornList.some((form) => {
+            return form.user === userId && form.createdAt.slice(0, 10) === today;
+          });
+          setHasFormToday(hasForm);
+
+          if (hasForm) {
+            navigate.push('/views/start-workday');
+          } else {
+            navigate.push('/views/sworn-statement');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [userId]);
+
   return (
     <>
       <Head>

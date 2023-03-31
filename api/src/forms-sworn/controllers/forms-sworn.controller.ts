@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
   NotFoundException,
 } from '@nestjs/common';
 import { FormSwornService } from '../services/form-sworn.service';
@@ -30,7 +31,7 @@ export class FormSwornController {
 
   @Get('getAll')
   async getAllFormSwornByUser(
-    @Body('userId') userId: string,
+    @Query('userId') userId: string,
   ): Promise<CreateFormSwornDto[]> {
     return await this.formSwornService.getAllFormSwornByUser(userId);
   }
