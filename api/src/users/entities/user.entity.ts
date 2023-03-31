@@ -18,8 +18,8 @@ export class User {
   @Prop({ default: false })
   admin: boolean;
 
-  @Prop({ enum: ['Activo', 'Inactivo'] })
-  status: string;
+  @Prop({ enum: ['Activo', 'Inactivo'], default: 'Activo' })
+  status?: string;
 
   @Prop({ enum: ['Viaje en Curso', 'Finalizó'] })
   statusWorkday?: string;

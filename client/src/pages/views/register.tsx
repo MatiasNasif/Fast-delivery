@@ -8,9 +8,10 @@ import InputPassword from '../../commons/InputPassword';
 import InputFullName from '../../commons/InputFullname';
 import InputEmail from '../../commons/InputEmail';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { userRegister } from '@/store/user';
 
 interface RegisterFormData {
   fullName: string;
@@ -26,17 +27,15 @@ export default function Register() {
   } = useForm();
 
   const navigate = useRouter();
+  const dispatch = useDispatch<any>();
 
   const onSubmitOfRegister = (data: RegisterFormData) => {
-    axios
-      .post('http://localhost:5000/users/signup', data)
+    dispatch(userRegister(data))
       .then((res: { data: RegisterFormData }) => res.data)
       .then(() => toast.success('Usuario registrado!'))
-
       .then(() => navigate.push('/'))
       .catch(() => toast.error('Datos incorrectos!'));
   };
-
   return (
     <>
       <Container maxWidth={'xs'}>
