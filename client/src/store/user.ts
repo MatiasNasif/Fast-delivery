@@ -29,7 +29,7 @@ interface Package {
 const pathApi = 'http://localhost:5000';
 
 export const getUserById = createAsyncThunk('GET_USER', () => {
-  const userId: string = JSON.parse(localStorage.getItem('user') ?? '')._id;
+  const userId: string = JSON.parse(localStorage.getItem('user') ?? '').id;
   return axios.get(`${pathApi}/users/${userId}`).then((user) => user.data);
 });
 

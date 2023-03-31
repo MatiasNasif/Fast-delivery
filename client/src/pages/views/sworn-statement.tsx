@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
 import ButtonApp from '@/commons/buttonApp';
@@ -8,6 +8,8 @@ import Checkbox from '@mui/material/Checkbox';
 import SwitchSworn from '../../commons/switchSworn';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 
 const SwornStatement = () => {
   const repetitiveText = [
@@ -17,21 +19,30 @@ const SwornStatement = () => {
     },
     {
       text: '¿Usted está haciendo uso de medicamentos psicoactivos? (tranquilizantes,antigripales,antialérgicos o para insomnio)',
-      name: 'medicamentos',
+      name: 'medicines',
     },
     {
       text: '¿Tiene usted algún problema familiar emocional o de cualquier tipo que lo distraiga?',
-      name: 'problemas',
+      name: 'problems',
     },
   ];
+
+  const userId = useSelector((state) => state.user?.id ?? null);
 
   const [answers, setAnswers] = useState({});
   const navigate = useRouter();
 
+  const dataForm = {
+    user: userId,
+    ...answers,
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    axios
+      .post('http://localhost:5000/formsworn/createforms', dataForm)
+      .catch((err) => console.log(err));
 
-    console.log('Respuestas:', answers);
     navigate.push('/views/start-workday');
   };
 

@@ -8,7 +8,7 @@ const SwitchSworn = (props) => {
   const [activeButton, setActiveButton] = useState(null);
 
   const handleButtonClick = (button) => {
-    if (button === 'no') {
+    if (button == 'no') {
       setActiveButton('no');
     } else {
       setActiveButton('si');
