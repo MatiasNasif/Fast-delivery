@@ -26,6 +26,11 @@ export class UsersController {
     return await this.usersService.getAllUsers();
   }
 
+  @Get('alldeliveryman')
+  async getAllNonAdminUsers(): Promise<CreateUserDto[]> {
+    return await this.usersService.getAllNonAdminUsers();
+  }
+
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     const user = await this.usersService.getUserById(id);
