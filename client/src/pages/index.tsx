@@ -9,7 +9,6 @@ import Link from 'next/link';
 import InputPassword from '../commons/InputPassword';
 import InputEmail from '../commons/InputEmail';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '@/store/user';

@@ -25,7 +25,8 @@ export class CreateUserDto {
   readonly admin: boolean = false;
 
   @IsEnum(['Activo', 'Inactivo'])
-  readonly status: string;
+  @IsOptional()
+  readonly status?: string = 'Activo';
 
   @IsOptional()
   packages?: mongoose.Types.ObjectId[];
