@@ -27,7 +27,6 @@ const SwitchSworn = (props) => {
         color={activeButton === 'si' ? 'error' : 'error'}
         endIcon={<SentimentDissatisfiedOutlinedIcon />}
         onClick={() => handleButtonClick('si')}
-        checked={props.checked}
       >
         Si
       </Button>
@@ -37,7 +36,6 @@ const SwitchSworn = (props) => {
         color={activeButton === 'no' ? 'success' : 'success'}
         endIcon={<SentimentSatisfiedAltOutlinedIcon />}
         onClick={() => handleButtonClick('no')}
-        checked={props.checked}
       >
         No
       </Button>
