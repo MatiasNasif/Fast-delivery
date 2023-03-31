@@ -15,6 +15,7 @@ export class CreateFormSwornDto {
   @IsString()
   readonly problems: string;
 
+  @IsNotEmpty()
   readonly user: mongoose.Types.ObjectId;
 
   readonly createdAt: Date;

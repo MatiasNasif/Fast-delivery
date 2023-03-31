@@ -3,6 +3,11 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from '../../users/dtos/user.dto';
+import { ObjectId } from 'mongoose';
+
+interface UserDtoWithId extends CreateUserDto {
+  _id?: ObjectId | string;
+}
 
 @Injectable()
 export class AuthService {
@@ -19,13 +24,14 @@ export class AuthService {
     return user;
   }
 
-  async login(user: CreateUserDto) {
+  async login(user: UserDtoWithId) {
     const payload = { email: user.email };
     return {
       access_token: this.jwtService.sign(payload),
       email: user.email,
       admin: user.admin,
       fullName: user.fullName,
+      id: user._id,
     };
   }
 

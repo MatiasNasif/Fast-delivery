@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FormSwornDocument } from '../entities/forms-sworn.entity';
@@ -20,9 +16,8 @@ export class FormSwornService {
 
   async createFormSworn(
     createFormSwornDto: CreateFormSwornDto,
-    userId: string,
   ): Promise<CreateFormSwornDto> {
-    const userExists = await this.userModel.findById(userId);
+    const userExists = await this.userModel.findById(createFormSwornDto.user);
     if (!userExists) {
       throw new NotFoundException('No se encontró el usuario especificado');
     }
@@ -31,7 +26,7 @@ export class FormSwornService {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
     const count = await this.formSwornModel.countDocuments({
-      user: userId,
+      user: createFormSwornDto.user,
       createdAt: { $gte: today, $lt: tomorrow },
     });
     if (count >= 1) {
@@ -41,7 +36,7 @@ export class FormSwornService {
     }
     const createdFormSworn = await this.formSwornModel.create({
       ...createFormSwornDto,
-      user: userId,
+      user: createFormSwornDto.user,
     });
     return createdFormSworn.save();
   }
