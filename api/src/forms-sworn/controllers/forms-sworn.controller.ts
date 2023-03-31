@@ -15,14 +15,10 @@ import { CreateFormSwornDto, UpdateFormSwornDto } from '../dtos/form-sworn.dto';
 export class FormSwornController {
   constructor(private readonly formSwornService: FormSwornService) {}
 
-  @Post(':userId/createforms')
-  async create(
-    @Body() createFormSwornDto: CreateFormSwornDto,
-    @Param('userId') userId: string,
-  ) {
+  @Post('createforms')
+  async create(@Body() createFormSwornDto: CreateFormSwornDto) {
     const formSworn = await this.formSwornService.createFormSworn(
       createFormSwornDto,
-      userId,
     );
     return formSworn;
   }
