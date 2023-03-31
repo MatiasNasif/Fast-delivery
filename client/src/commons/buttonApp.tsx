@@ -1,17 +1,23 @@
 import { Box, Button } from '@mui/material';
 import styles from '../styles/ButtonApp.module.css';
 
-export default function ButtonApp(props: string) {
+interface ButtonAppProps {
+  children: string;
+  isDisable: boolean;
+}
+
+export default function ButtonApp({ variantButton, children, isDisable }: ButtonAppProps) {
   return (
     <Box className={styles.container_button}>
       <Button
         fullWidth
-        type={props.children}
-        variant="contained"
+        type={children}
+        variant={variantButton}
         size="small"
         className={styles.button}
+        disabled={isDisable}
       >
-        {props.children}
+        {children}
       </Button>
     </Box>
   );
