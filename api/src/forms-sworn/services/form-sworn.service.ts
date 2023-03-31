@@ -45,6 +45,10 @@ export class FormSwornService {
     return this.formSwornModel.find();
   }
 
+  async getAllFormSwornByUser(userId: string): Promise<CreateFormSwornDto[]> {
+    return this.formSwornModel.find({ user: userId });
+  }
+
   async getFormSwornById(id: string): Promise<CreateFormSwornDto> {
     const formSworn: CreateFormSwornDto = await this.formSwornModel.findById(
       id,
