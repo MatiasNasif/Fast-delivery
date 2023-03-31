@@ -12,16 +12,6 @@ interface UserCredentials {
   password: string;
 }
 
-interface Package {
-  address: string;
-  receiver: string;
-  weight: number;
-  deliveryDate: string;
-  quantity: number;
-  deliveryStatus: string;
-  userId: string;
-}
-
 const API_URL = 'http://localhost:5000';
 
 export const getUserById = createAsyncThunk('GET_USER', () => {
@@ -55,6 +45,7 @@ const userReducer = createReducer(null, {
   [`${getUserById.fulfilled}`]: (state, action) => action.payload,
   [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
   [`${userLogin.fulfilled}`]: (state, action) => action.payload,
+  [`${userLogout.fulfilled}`]: (state, action) => null,
 });
 
 export default userReducer;
