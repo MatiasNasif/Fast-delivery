@@ -28,6 +28,13 @@ export class FormSwornController {
     return await this.formSwornService.getFormSworn();
   }
 
+  @Get('getAll')
+  async getAllFormSwornByUser(
+    @Body('userId') userId: string,
+  ): Promise<CreateFormSwornDto[]> {
+    return await this.formSwornService.getAllFormSwornByUser(userId);
+  }
+
   @Get(':id')
   async getFormSwornById(@Param('id') id: string) {
     const formSwornById = await this.formSwornService.getFormSwornById(id);
