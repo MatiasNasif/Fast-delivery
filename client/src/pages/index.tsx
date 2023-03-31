@@ -48,21 +48,6 @@ export default function Login() {
     dispatch(userLogin(data)).catch((err: Error) => console.log(err));
   };
 
-  async function loadForms() {
-    try {
-      const formSwornList = await getAllFormSwornByUser(userId);
-      setFormsByUser(formSwornList);
-
-      const today = new Date().toISOString().slice(0, 10); // Obtener la fecha actual en formato ISO
-      const hasForm = formSwornList.some((form) => {
-        return form.user === userId && form.createdAt.slice(0, 10) === today;
-      });
-      setHasFormToday(hasForm);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   useEffect(() => {
     if (userId !== null) {
       getAllFormSwornByUser(userId)
