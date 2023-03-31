@@ -6,7 +6,6 @@ import {
   NotFoundException,
   Param,
   Post,
-  Put,
 } from '@nestjs/common';
 import { CreatePackageDto } from '../dtos/packages.dto';
 import { PackagesService } from '../services/packages.service';
@@ -55,20 +54,4 @@ export class PackagesController {
     if (!deletePackage) throw new NotFoundException('Package does not exists');
     return { message: 'Package deleted succesfully' };
   }
-
-  // @Put('/:packageId')
-  // async updatePackage(
-  //   @Body() createPackageDto: CreatePackageDto,
-  //   @Body('userId') userId: string,
-  //   @Param('packageId') packageId,
-  // ) {
-  //   const user = await this.usersService.getUserById(userId);
-  //   const updatePackage = await this.packageService.updatePackage(
-  //     packageId,
-  //     createPackageDto,
-  //   );
-  //   if (!updatePackage) throw new NotFoundException('Package does not exists');
-  //   user.packages.push(updatePackage);
-  //   return updatePackage;
-  // }
 }

@@ -124,4 +124,8 @@ export class UsersService {
 
     return user;
   }
+
+  async getAllNonAdminUsers(): Promise<CreateUserDto[]> {
+    return this.userModel.find({ admin: false });
+  }
 }

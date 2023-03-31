@@ -65,16 +65,4 @@ export class PackagesService {
     const deletePackage = await this.packageModel.findByIdAndDelete(packageId);
     return deletePackage;
   }
-
-  async updatePackage(
-    packageId: string,
-    createPackageDto: CreatePackageDto,
-  ): Promise<CreatePackageDto> {
-    const updatePackage = await this.packageModel.findByIdAndUpdate(
-      packageId,
-      createPackageDto,
-      { new: true },
-    );
-    return updatePackage;
-  }
 }
