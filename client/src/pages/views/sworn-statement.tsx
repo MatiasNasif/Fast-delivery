@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
 import ButtonApp from '@/commons/buttonApp';
@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SwornStatement = () => {
   const repetitiveText = [
@@ -30,26 +31,45 @@ const SwornStatement = () => {
   const userId = useSelector((state) => state.user?.id ?? null);
 
   const [answers, setAnswers] = useState({});
+  const [buttonValidate, setButtonValidate] = useState(true);
+  const [buttonClicks, setButtonClicks] = useState(0);
   const navigate = useRouter();
 
   const dataForm = {
     user: userId,
     ...answers,
   };
+  const dataformOnJson = JSON.stringify(dataForm);
+
+  const hasRequiredFields = (dataformOnJson) => {
+    const requiredFields = ['alcohol', 'medicines', 'problems'];
+    return requiredFields.every((field) => dataformOnJson.hasOwnProperty(field));
+  };
+  const handleButtonClick = () => {
+    setButtonClicks((prevClicks) => prevClicks + 1);
+  };
+
+  useEffect(() => {
+    setButtonValidate(!hasRequiredFields(answers));
+  }, [answers]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (buttonValidate) {
+      return toast.error('Tienen que completar todos los campos');
+    }
     axios
       .post('http://localhost:5000/formsworn/createforms', dataForm)
+      .then(() => navigate.push('/views/start-workday'))
       .catch((err) => console.log(err));
-
-    navigate.push('/views/start-workday');
   };
 
   return (
     <Container maxWidth={'xs'} disableGutters={true}>
+      <Toaster position="top-center" reverseOrder={false} limit={3} />
       <>
         <Header />
+
         <Link href="/">
           <ArrowApp />
         </Link>
@@ -80,14 +100,21 @@ const SwornStatement = () => {
 
           <Box className={styles.ButtonApp}>
             <Box className={styles.BoxOfCheckbox}>
-              <Checkbox required />
+              <Checkbox required disabled={buttonValidate ? true : false} />
               <Typography variant="p" className={styles.wordText}>
                 Declaro que mis respuestas fueron totalmente verdaderas y que he respondido a todas
                 las preguntas con la mayor honestidad posible.
               </Typography>
             </Box>
 
-            <ButtonApp type="submit">Continuar</ButtonApp>
+            <ButtonApp
+              type="submit"
+              variantButton="contained"
+              disabled={buttonValidate}
+              onClick={handleButtonClick}
+            >
+              Continuar
+            </ButtonApp>
           </Box>
         </form>
       </>
