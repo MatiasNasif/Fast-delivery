@@ -70,7 +70,9 @@ export default function StartWorkday() {
                 </Typography>
               </AccordionSummary>
               {packagesPending.length > 0 ? (
-                packagesPending.map((dummy: any, i: number) => <Card key={i} dummy={dummy} />)
+                packagesPending.map((pendingPackage: Package, i: number) => (
+                  <Card key={i} packageDetail={pendingPackage} />
+                ))
               ) : (
                 <Typography variant="subtitle1" className={styles.subtitle}>
                   No tenés repartos pendientes
@@ -100,8 +102,8 @@ export default function StartWorkday() {
                   Nada en el historial de repartos
                 </Typography>
               )}
-              {packages.map((dummy: any, i: number) => (
-                <Card key={i} dummy={dummy} />
+              {packages.map((pack: Package, i: number) => (
+                <Card key={i} packageDetail={pack} />
               ))}
             </Accordion>
           </Box>
