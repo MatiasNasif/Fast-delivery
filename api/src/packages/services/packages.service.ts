@@ -44,7 +44,7 @@ export class PackagesService {
 
     const packagesByUser = await this.packageModel.find({
       user: userId,
-      deliveryStatus: 'Entregado' || 'En curso',
+      deliveryStatus: { $in: ['Entregado', 'En curso'] },
     });
     return packagesByUser;
   }
