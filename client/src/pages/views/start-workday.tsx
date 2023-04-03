@@ -24,7 +24,7 @@ interface User {
 
 export default function StartWorkday() {
   const [packagesPending, setPackagesPending] = useState<Package[]>([]);
-  const [packagesDelivered, setPackagesDelivered] = useState<Package[]>([]);
+  const [packages, setPackages] = useState<Package[]>([]);
 
   let user: User | null = null;
   if (typeof window !== 'undefined') {
@@ -34,28 +34,20 @@ export default function StartWorkday() {
 
   const userId = user?.id;
 
-  useEffect(() => {
-    if (userId) requestPackagesAll();
-  }, [userId]);
-
   const API_URL = 'http://localhost:5000';
-  const counterPackagesDelivered: number = packagesDelivered.length;
+  const counterPackages: number = packages.length;
 
-  const requestPackagesAll = () => {
+  useEffect(() => {
     fetch(`${API_URL}/packages/${userId}/packagesByUser`)
       .then((response) => response.json())
-      .then((packs) => {
-        const packsDelivered = packs.filter(
-          (pack: Package) =>
-            pack.deliveryStatus === 'Entregado' || pack.deliveryStatus === 'En curso'
-        );
-        setPackagesDelivered(packsDelivered);
+      .then((packs) => setPackages(packs));
+  }, [userId]);
 
-        const packsPending = packs.filter((pack: Package) => pack.deliveryStatus === 'Pendiente');
-        setPackagesPending(packsPending);
-      })
-      .catch((error) => console.error(error));
-  };
+  useEffect(() => {
+    fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
+      .then((response) => response.json())
+      .then((packs) => setPackagesPending(packs));
+  }, [userId]);
 
   return (
     <>
@@ -99,16 +91,16 @@ export default function StartWorkday() {
                 </Typography>
               </AccordionSummary>
 
-              {counterPackagesDelivered !== 0 ? (
+              {counterPackages !== 0 ? (
                 <Typography className={styles.subtitle} variant="subtitle1">
-                  Ya repartiste {counterPackagesDelivered} paquetes
+                  Ya repartiste {counterPackages} paquetes
                 </Typography>
               ) : (
                 <Typography className={styles.subtitle} variant="subtitle1">
                   Nada en el historial de repartos
                 </Typography>
               )}
-              {packagesDelivered.map((dummy: any, i: number) => (
+              {packages.map((dummy: any, i: number) => (
                 <Card key={i} dummy={dummy} />
               ))}
             </Accordion>
