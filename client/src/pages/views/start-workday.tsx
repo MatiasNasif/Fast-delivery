@@ -5,32 +5,56 @@ import Header from '../../commons/header';
 import Card from '../../commons/card';
 import ButtonApp from '../../commons/buttonApp';
 import Link from 'next/link';
-import { Package, requestPackages } from '@/utils/fakerPackages';
 import { useEffect, useState } from 'react';
+
+interface Package {
+  address: string;
+  receiver: string;
+  weight: number;
+  deliveryDate: string;
+  quantity: number;
+  deliveryStatus: string;
+  user?: string;
+}
+
+interface User {
+  email: string;
+  id: string;
+}
 
 export default function StartWorkday() {
   const [packagesPending, setPackagesPending] = useState<Package[]>([]);
   const [packagesDelivered, setPackagesDelivered] = useState<Package[]>([]);
 
-  useEffect(() => {
-    requestPackagesAll();
-  }, []);
+  let user: User | null = null;
+  if (typeof window !== 'undefined') {
+    const userLocalStorage = localStorage.getItem('user');
+    user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
+  }
 
+  const userId = user?.id;
+
+  useEffect(() => {
+    if (userId) requestPackagesAll();
+  }, [userId]);
+
+  const API_URL = 'http://localhost:5000';
   const counterPackagesDelivered: number = packagesDelivered.length;
 
   const requestPackagesAll = () => {
-    requestPackages(5).then((packs) => {
-      const packsDelivered = packs.filter((packs) => {
-        return packs.deliveryStatus == 'Entregado' || packs.deliveryStatus == 'En curso'
-          ? packs
-          : null;
-      });
-      setPackagesDelivered(packsDelivered);
-      const packsPending = packs.filter((packs) => {
-        return packs.deliveryStatus == 'Pendiente' ? packs : null;
-      });
-      setPackagesPending(packsPending);
-    });
+    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+      .then((response) => response.json())
+      .then((packs) => {
+        const packsDelivered = packs.filter(
+          (pack: Package) =>
+            pack.deliveryStatus === 'Entregado' || pack.deliveryStatus === 'En curso'
+        );
+        setPackagesDelivered(packsDelivered);
+
+        const packsPending = packs.filter((pack: Package) => pack.deliveryStatus === 'Pendiente');
+        setPackagesPending(packsPending);
+      })
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -39,7 +63,7 @@ export default function StartWorkday() {
         <Container maxWidth="xs" disableGutters={true}>
           <Header />
           <Link href="/views/get-packages">
-            <ButtonApp>obtener paquetes</ButtonApp>
+            <ButtonApp isDisable={false}>obtener paquetes</ButtonApp>
           </Link>
 
           <Box className={styles.box}>
