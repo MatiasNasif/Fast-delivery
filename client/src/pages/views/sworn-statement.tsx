@@ -8,7 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import SwitchSworn from '../../commons/switchSworn';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 

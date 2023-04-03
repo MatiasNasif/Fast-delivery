@@ -20,7 +20,6 @@ export const getUserById = createAsyncThunk('GET_USER', () => {
 });
 
 export const userRegister = createAsyncThunk('USER_REGISTER', (data: UserRegister) => {
-  console.log(data, 'soy data redux');
   return axios.post(`${API_URL}/users/signup`, data).then((user) => user.data);
 });
 
