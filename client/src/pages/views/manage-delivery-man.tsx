@@ -90,7 +90,7 @@ export default function ManageDeliveryMan() {
                     </Box>
                   </Box>
                   <Link
-                    href={'/views/delivery-man-details'}
+                    href={`/views/delivery-man-details/${data.id}`}
                     style={{ marginLeft: 'auto', marginRight: '20px' }}
                   >
                     <Avatar alt="Remy Sharp" src={data.avatar} />
