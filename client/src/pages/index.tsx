@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import React, { useEffect, useState } from 'react';
 import { Inter } from '@next/font/google';
 import styles from '../styles/Login.module.css';
 import { Box, Container, Button, Typography } from '@mui/material';
@@ -8,10 +9,27 @@ import Link from 'next/link';
 import InputPassword from '../commons/InputPassword';
 import InputEmail from '../commons/InputEmail';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogin } from '@/store/user';
+import axios from 'axios';
 
 const inter = Inter({ subsets: ['latin'] });
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+const API_URL = 'http://localhost:5000';
+
+async function getAllFormSwornByUser(userId: string) {
+  if (!userId) {
+    return [];
+  }
+  const response = await axios.get(`${API_URL}/formsworn/getAll`, { params: { userId } });
+  return response.data;
+}
 
 export default function Login() {
   const {
@@ -21,14 +39,38 @@ export default function Login() {
   } = useForm();
 
   const navigate = useRouter();
+  const dispatch = useDispatch<any>();
+  const userId: string = useSelector((state) => state.user?.id ?? null);
+  const [formsByUser, setFormsByUser] = useState([]);
+  const [hasFormToday, setHasFormToday] = useState(false);
 
-  const onSubmitOfLogin = (data: any) => {
-    axios
-      .post('http://localhost:5000/auth/login', data)
-      .then((res) => res.data)
-      .then(() => navigate.push('/views/start-workday'))
-      .catch((err) => console.log(err));
+  const onSubmitOfLogin = (data: LoginFormData) => {
+    dispatch(userLogin(data)).catch((err: Error) => console.log(err));
   };
+
+  useEffect(() => {
+    if (userId !== null) {
+      getAllFormSwornByUser(userId)
+        .then((formSwornList) => {
+          setFormsByUser(formSwornList);
+
+          const today = new Date().toISOString().slice(0, 10); // Obtener la fecha actual en formato ISO
+          const hasForm = formSwornList.some((form) => {
+            return form.user === userId && form.createdAt.slice(0, 10) === today;
+          });
+          setHasFormToday(hasForm);
+
+          if (hasForm) {
+            navigate.push('/views/start-workday');
+          } else {
+            navigate.push('/views/sworn-statement');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [userId]);
 
   return (
     <>
@@ -44,6 +86,7 @@ export default function Login() {
           <InputEmail name="email" register={register} />
           <InputPassword name="password" register={register} errors={errors} />
           {errors.password && <span className={styles.errorText}>*Contraseña Requerida*</span>}
+
           <Button fullWidth variant="contained" type="submit">
             Ingresar
           </Button>

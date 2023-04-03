@@ -1,0 +1,29 @@
+.BoxwordAdd{
+  align-items: center;
+
+}
+
+.BoxOfCheckbox{
+  display: flex;
+}
+.ButtonApp{
+  margin-top: 5%;
+}
+.wordTittle{
+    
+    text-align: center;
+    font-weight: 300;
+}
+.wordText{
+    margin-top: 22px;
+    margin-bottom: 20px;
+    margin-left: 15px;
+     font-weight: 400;
+  font-size: 17px;
+}
+
+.BoxSwitches{
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}

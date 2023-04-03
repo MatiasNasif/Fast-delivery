@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  api:
+    image: api:latest
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./api/:/api
+
+  client:
+    image: client:latest
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    environment:
+        PORT: 3000
+    ports: 
+        - 3000:3000
+    volumes: 
+      - ./client/public:/client/public
+      - ./client/src:/client/src
+
+
+  # mongodb:
+  #   image: mongo:latest
+  #   environment: 
+  #   - MONGODB_USER=admin
+  #   - MONGODB_PASSWORD=admin
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - ./mongo_data:/data/db

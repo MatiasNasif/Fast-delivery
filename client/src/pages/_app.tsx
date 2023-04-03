@@ -1,6 +1,8 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { Provider } from 'react-redux';
+import { store } from '../store/store';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -15,7 +17,9 @@ export default function App({ Component, pageProps }: AppProps) {
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
       </Head>
-      <Component {...pageProps} />
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
     </>
   );
 }

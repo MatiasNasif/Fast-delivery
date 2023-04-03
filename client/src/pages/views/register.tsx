@@ -8,8 +8,16 @@ import InputPassword from '../../commons/InputPassword';
 import InputFullName from '../../commons/InputFullname';
 import InputEmail from '../../commons/InputEmail';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { userRegister } from '@/store/user';
+
+interface RegisterFormData {
+  fullName: string;
+  email: string;
+  password: string;
+}
 
 export default function Register() {
   const {
@@ -19,18 +27,19 @@ export default function Register() {
   } = useForm();
 
   const navigate = useRouter();
+  const dispatch = useDispatch<any>();
 
-  const onSubmitOfRegister = (data: any) => {
-    axios
-      .post('http://localhost:5000/users/signup', data)
-      .then((res) => res.data)
+  const onSubmitOfRegister = (data: RegisterFormData) => {
+    dispatch(userRegister(data))
+      .then((res: { data: RegisterFormData }) => res.data)
+      .then(() => toast.success('Usuario registrado!'))
       .then(() => navigate.push('/'))
-      .catch((err) => console.log(err));
+      .catch(() => toast.error('Datos incorrectos!'));
   };
-
   return (
     <>
       <Container maxWidth={'xs'}>
+        <Toaster position="top-center" reverseOrder={false} />
         <Box className={styles.boxspace}></Box>
         <Box className={styles.boxBrand}>
           <Image className={styles.brand} src={brand} alt="Fast Delivery Brand" />

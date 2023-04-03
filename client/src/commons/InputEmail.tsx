@@ -1,18 +1,28 @@
 import { TextField } from '@mui/material';
 import styles from '../../../client/src/styles/Register.module.css';
+import React from 'react';
+import { UseFormRegister } from 'react-hook-form';
 
-export default function InputFullName({ register }) {
+export interface Props {
+  name: string;
+  register: UseFormRegister<any>;
+  errors: any;
+}
+
+export default function InputFullName({ name, register, errors }: Props) {
   return (
     <>
       <TextField
-        label="Email"
-        InputLabelProps={{ className: styles.textLabelcolor }}
+        {...register(name)}
+        {...(errors && errors[name] && { error: true, helperText: 'Campo requerido' })}
+        margin="normal"
         variant="standard"
-        name="email"
-        sx={{ fontFamily: 'Roboto', marginTop: '10px' }}
         focused
+        InputLabelProps={{ className: styles.textLabelcolor }}
+        label="Email"
+        type="email"
+        name="email"
         fullWidth
-        {...register('email', { required: true })}
       />
     </>
   );
