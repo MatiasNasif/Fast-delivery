@@ -1,48 +1,63 @@
 import React, { useEffect, useState } from 'react';
+import styles from '../../../styles/DeliveryManDetails.module.css';
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
 import Card from '@/commons/card';
 import { Container, Box, Typography, Accordion, AccordionSummary } from '@mui/material';
-import styles from '../../styles/DeliveryManDetails.module.css';
-import { DeliveryMan, requestDeliveryMen } from '@/utils/fakerDeliveryMen';
-import { Package, requestPackages } from '@/utils/fakerPackages';
-import Avatar from '@mui/material/Avatar';
-import Image from 'next/image';
-import imageAvatar from '../../assets/avatar1.jpeg';
-import Switch from '@mui/material/Switch';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import SwitchOnOff from '../../utils/switchOnOff';
+import Avatar from '@mui/material/Avatar';
+import Switch from '@mui/material/Switch';
+import SwitchOnOff from '../../../utils/switchOnOff';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 import Link from 'next/link';
+import imageAvatar from '../../../assets/avatar1.jpeg';
+
+interface User {
+  fullName: string;
+  status?: 'Activo' | 'Inactivo';
+}
+
+const initialUserState: User = {
+  fullName: '',
+  status: 'Activo',
+};
+
+interface Package {
+  address: string;
+  deliveryStatus: string;
+}
 
 const DeliveryManDetails = () => {
-  const [deliveryMans, setDeliveryMans] = useState<DeliveryMan[]>([]);
+  const [deliveryMan, setDeliveryMan] = useState<User>(initialUserState);
   const [packages, setPackages] = useState<Package[]>([]);
   const [packagesPendig, setPackagesPendig] = useState<Package[]>([]);
-
   const [checked, setChecked] = useState(true);
 
-  useEffect(() => {
-    requestDeliveryMen(1).then((deliveryMan) => {
-      setDeliveryMans(deliveryMan);
-    });
-  }, []);
+  const router = useRouter();
+  // const idDeliveryManParam = router.query.id;
+  const idDeliveryManParam = '642360135795abfd3f5be2f1';
 
   useEffect(() => {
-    requestPackagesAll();
-  }, []);
+    fetch(`http://localhost:5000/users/${idDeliveryManParam}`)
+      .then((response) => response.json())
+      .then((deliveryMan) => setDeliveryMan(deliveryMan))
+      .catch((error) => console.log(error));
+  }, [router.query.id]);
 
-  const requestPackagesAll = () => {
-    requestPackages(10).then((packs) => {
-      const packsDelivered = packs.filter((packs) => {
-        return packs.deliveryStatus == 'Entregado' ? packs : null;
-      });
-      setPackages(packsDelivered);
-      const packsPending = packs.filter((packs) => {
-        return packs.deliveryStatus == 'Pendiente' ? packs : null;
-      });
-      setPackagesPendig(packsPending);
-    });
-  };
+  useEffect(() => {
+    fetch(`http://localhost:5000/packages/${idDeliveryManParam}/packagesByUser`)
+      .then((response) => response.json())
+      .then((packages) => setPackages(packages))
+      .catch((error) => console.log(error));
+  }, [router.query.id]);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/packages/${idDeliveryManParam}/packagesPendingByUser`)
+      .then((response) => response.json())
+      .then((packages) => setPackagesPendig(packages))
+      .catch((error) => console.log(error));
+  }, [router.query.id]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -58,26 +73,22 @@ const DeliveryManDetails = () => {
       </Link>
       <Container className={styles.container_all}>
         <Box className={styles.container_grid}>
-          {deliveryMans?.map((deliveryMan: any, i: number) => (
-            <>
-              <div className={styles.container_avatar_image}>
-                <Avatar className={styles.container_avatar}>
-                  <Image src={imageAvatar} alt="image-avatar" className={styles.image_avatar} />
-                </Avatar>
-              </div>
-              <div className={styles.container_options_and_typography}>
-                <Typography>{deliveryMan.fullName}</Typography>
-                <SwitchOnOff checked={checked} />
-              </div>
-              <div className={styles.container_switch}>
-                <Switch
-                  checked={checked}
-                  onChange={handleChange}
-                  inputProps={{ 'aria-label': 'controlled' }}
-                />
-              </div>
-            </>
-          ))}
+          <div className={styles.container_avatar_image}>
+            <Avatar className={styles.container_avatar}>
+              <Image src={imageAvatar} alt="image-avatar" className={styles.image_avatar} />
+            </Avatar>
+          </div>
+          <div className={styles.container_options_and_typography}>
+            <Typography>{deliveryMan?.fullName}</Typography>
+            <SwitchOnOff checked={checked} />
+          </div>
+          <div className={styles.container_switch}>
+            <Switch
+              checked={checked}
+              onChange={handleChange}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          </div>
         </Box>
 
         <Box className={styles.box}>
