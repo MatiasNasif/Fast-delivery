@@ -6,8 +6,9 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
-import { CreatePackageDto } from '../dtos/packages.dto';
+import { CreatePackageDto, UpdatePackageDto } from '../dtos/packages.dto';
 import { PackagesService } from '../services/packages.service';
 
 @Controller('packages')
@@ -46,6 +47,14 @@ export class PackagesController {
     const packagesPendingByUser =
       await this.packageService.getAllPackagesPendingByUser(userId);
     return packagesPendingByUser;
+  }
+
+  @Put('/:packageId')
+  async packageId(
+    @Param('packageId') packageId: string,
+    @Body() updatePackage: UpdatePackageDto,
+  ) {
+    return this.packageService.updatePackage(packageId, updatePackage);
   }
 
   @Delete('/:packageId')
