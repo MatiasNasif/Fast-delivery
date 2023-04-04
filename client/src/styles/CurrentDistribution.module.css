@@ -15,6 +15,11 @@
 .container_accordion {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+}
+
+.accordion_space {
+  margin-bottom: 10%;
 }
 
 .container_accordion_title {
