@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styles from '../../../styles/DeliveryManDetails.module.css';
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
-import Card from '@/commons/card';
+import PackageDetailsCard from '@/commons/packageDetailsCard';
+import DeliveryStatus from '@/utils/deliveryStatus';
 import { Container, Box, Typography, Accordion, AccordionSummary } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
 import Switch from '@mui/material/Switch';
-import SwitchOnOff from '../../../utils/switchOnOff';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ import imageAvatar from '../../../assets/avatar1.jpeg';
 
 interface User {
   fullName: string;
-  status?: 'Activo' | 'Inactivo';
+  status?: string | undefined;
 }
 
 const initialUserState: User = {
@@ -28,42 +28,63 @@ interface Package {
   deliveryStatus: string;
 }
 
+const urlApi = 'http://localhost:5000';
+
 const DeliveryManDetails = () => {
   const [deliveryMan, setDeliveryMan] = useState<User>(initialUserState);
-  const [packages, setPackages] = useState<Package[]>([]);
-  const [packagesPendig, setPackagesPendig] = useState<Package[]>([]);
-  const [checked, setChecked] = useState(true);
+  const [deliveredPackages, setDeliveredPackages] = useState<Package[]>([]);
+  const [pendingPackages, setPendingPackages] = useState<Package[]>([]);
+  const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(true);
 
   const router = useRouter();
-  // const idDeliveryManParam = router.query.id;
-  const idDeliveryManParam = '642360135795abfd3f5be2f1';
+
+  // const idDeliveryManParam: string = (router.query.id ?? '').toString();
+  const idDeliveryManParam: string = '642360135795abfd3f5be2f1';
 
   useEffect(() => {
-    fetch(`http://localhost:5000/users/${idDeliveryManParam}`)
+    fetch(`${urlApi}/users/${idDeliveryManParam}`)
       .then((response) => response.json())
-      .then((deliveryMan) => setDeliveryMan(deliveryMan))
+      .then((deliveryMan: User) => setDeliveryMan(deliveryMan))
       .catch((error) => console.log(error));
-  }, [router.query.id]);
+  }, [idDeliveryManParam]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/packages/${idDeliveryManParam}/packagesByUser`)
+    fetch(`${urlApi}/packages/${idDeliveryManParam}/packagesByUser`)
       .then((response) => response.json())
-      .then((packages) => setPackages(packages))
+      .then((packages: Package[]) => setDeliveredPackages(packages))
       .catch((error) => console.log(error));
-  }, [router.query.id]);
+  }, [idDeliveryManParam]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/packages/${idDeliveryManParam}/packagesPendingByUser`)
+    fetch(`${urlApi}/packages/${idDeliveryManParam}/packagesPendingByUser`)
       .then((response) => response.json())
-      .then((packages) => setPackagesPendig(packages))
+      .then((packages: Package[]) => setPendingPackages(packages))
       .catch((error) => console.log(error));
-  }, [router.query.id]);
+  }, [idDeliveryManParam]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+  const handleChangeSwitchButton = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setCheckSwitchChange(event.target.checked);
+    const newStatus = deliveryMan.status === 'Activo' ? 'Inactivo' : 'Activo';
+    updateDeliveryManStatus(newStatus)
+      .then((updatedDeliveryMan) => {
+        setDeliveryMan(updatedDeliveryMan);
+      })
+      .catch((error) => console.error(error));
   };
 
-  let contPackages = packages.length;
+  const updateDeliveryManStatus = (newStatus: string) => {
+    return fetch(`${urlApi}/users/${idDeliveryManParam}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: newStatus }),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+  };
+
+  let deliveredPackagesCount: number = deliveredPackages.length;
 
   return (
     <>
@@ -73,22 +94,22 @@ const DeliveryManDetails = () => {
       </Link>
       <Container className={styles.container_all}>
         <Box className={styles.container_grid}>
-          <div className={styles.container_avatar_image}>
+          <section className={styles.container_avatar_image}>
             <Avatar className={styles.container_avatar}>
               <Image src={imageAvatar} alt="image-avatar" className={styles.image_avatar} />
             </Avatar>
-          </div>
-          <div className={styles.container_options_and_typography}>
+          </section>
+          <section className={styles.container_options_and_typography}>
             <Typography>{deliveryMan?.fullName}</Typography>
-            <SwitchOnOff checked={checked} />
-          </div>
-          <div className={styles.container_switch}>
+            <DeliveryStatus checkSwitchChange={deliveryMan?.status} />
+          </section>
+          <section className={styles.container_switch}>
             <Switch
-              checked={checked}
-              onChange={handleChange}
+              checked={checkSwitchChange}
+              onChange={handleChangeSwitchButton}
               inputProps={{ 'aria-label': 'controlled' }}
             />
-          </div>
+          </section>
         </Box>
 
         <Box className={styles.box}>
@@ -102,9 +123,11 @@ const DeliveryManDetails = () => {
                 Repartos pendientes
               </Typography>
             </AccordionSummary>
-            {packagesPendig.map((dummy: any, i: number) => (
-              <Card key={i} dummy={dummy} />
-            ))}
+            {pendingPackages.map(
+              (pendingPackage: Package, i: number): JSX.Element => (
+                <PackageDetailsCard key={i} packageDetail={pendingPackage} />
+              )
+            )}
           </Accordion>
         </Box>
 
@@ -120,11 +143,13 @@ const DeliveryManDetails = () => {
               </Typography>
             </AccordionSummary>
             <Typography className={styles.subtitle} variant="subtitle1">
-              Ya repartiste {contPackages}
+              Ya repartiste {deliveredPackagesCount}
             </Typography>
-            {packages.map((dummy: any, i: number) => (
-              <Card key={i} dummy={dummy} />
-            ))}
+            {deliveredPackages.map(
+              (deliveredPackage: Package, i: number): JSX.Element => (
+                <PackageDetailsCard key={i} packageDetail={deliveredPackage} />
+              )
+            )}
           </Accordion>
         </Box>
       </Container>
