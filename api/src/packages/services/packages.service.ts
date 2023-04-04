@@ -42,7 +42,10 @@ export class PackagesService {
       throw new NotFoundException('No existe el usuario en la base de datos');
     }
 
-    const packagesByUser = await this.packageModel.find({ user: userId });
+    const packagesByUser = await this.packageModel.find({
+      user: userId,
+      deliveryStatus: { $in: ['Entregado', 'En curso'] },
+    });
     return packagesByUser;
   }
 

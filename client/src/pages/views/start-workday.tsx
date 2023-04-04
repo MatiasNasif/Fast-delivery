@@ -2,38 +2,52 @@ import { Box, Accordion, AccordionSummary, Button, Container, Typography } from 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import styles from '../../styles/StartWorkday.module.css';
 import Header from '../../commons/header';
-import Card from '../../commons/card';
-import Timer from '../../commons/Timer';
+import Card from '../../commons/packageDetailsCard';
 import ButtonApp from '../../commons/buttonApp';
 import Link from 'next/link';
-import { Package, requestPackages } from '@/utils/fakerPackages';
 import { useEffect, useState } from 'react';
+
+interface Package {
+  address: string;
+  receiver: string;
+  weight: number;
+  deliveryDate: string;
+  quantity: number;
+  deliveryStatus: string;
+  user?: string;
+}
+
+interface User {
+  email: string;
+  id: string;
+}
 
 export default function StartWorkday() {
   const [packagesPending, setPackagesPending] = useState<Package[]>([]);
-  const [packagesDelivered, setPackagesDelivered] = useState<Package[]>([]);
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [packages, setPackages] = useState<Package[]>([]);
+
+  let user: User | null = null;
+  if (typeof window !== 'undefined') {
+    const userLocalStorage = localStorage.getItem('user');
+    user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
+  }
+
+  const userId = user?.id;
+
+  const API_URL = 'http://localhost:5000';
+  const counterPackages: number = packages.length;
 
   useEffect(() => {
-    requestPackagesAll();
-  }, []);
+    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+      .then((response) => response.json())
+      .then((packs) => setPackages(packs));
+  }, [userId]);
 
-  const counterPackagesDelivered: number = packagesDelivered.length;
-
-  const requestPackagesAll = () => {
-    requestPackages(5).then((packs) => {
-      const packsDelivered = packs.filter((packs) => {
-        return packs.deliveryStatus == 'Entregado' || packs.deliveryStatus == 'En curso'
-          ? packs
-          : null;
-      });
-      setPackagesDelivered(packsDelivered);
-      const packsPending = packs.filter((packs) => {
-        return packs.deliveryStatus == 'Pendiente' ? packs : null;
-      });
-      setPackagesPending(packsPending);
-    });
-  };
+  useEffect(() => {
+    fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
+      .then((response) => response.json())
+      .then((packs) => setPackagesPending(packs));
+  }, [userId]);
 
   return (
     <>
@@ -62,7 +76,9 @@ export default function StartWorkday() {
                 </Typography>
               </AccordionSummary>
               {packagesPending.length > 0 ? (
-                packagesPending.map((dummy: any, i: number) => <Card key={i} dummy={dummy} />)
+                packagesPending.map((pendingPackage: Package, i: number) => (
+                  <Card key={i} packageDetail={pendingPackage} />
+                ))
               ) : (
                 <Typography variant="subtitle1" className={styles.subtitle}>
                   No tenés repartos pendientes
@@ -83,17 +99,17 @@ export default function StartWorkday() {
                 </Typography>
               </AccordionSummary>
 
-              {counterPackagesDelivered !== 0 ? (
+              {counterPackages !== 0 ? (
                 <Typography className={styles.subtitle} variant="subtitle1">
-                  Ya repartiste {counterPackagesDelivered} paquetes
+                  Ya repartiste {counterPackages} paquetes
                 </Typography>
               ) : (
                 <Typography className={styles.subtitle} variant="subtitle1">
                   Nada en el historial de repartos
                 </Typography>
               )}
-              {packagesDelivered.map((dummy: any, i: number) => (
-                <Card key={i} dummy={dummy} />
+              {packages.map((pack: Package, i: number) => (
+                <Card key={i} packageDetail={pack} />
               ))}
             </Accordion>
           </Box>
