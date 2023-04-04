@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './user';
+import formSwornReducer from './formSworn';
 import logger from 'redux-logger';
 
 export const store = configureStore({
@@ -7,5 +8,5 @@ export const store = configureStore({
     getDefaultMiddelware({
       serializableCheck: false,
     }).concat(logger),
-  reducer: { user: userReducer },
+  reducer: { user: userReducer, form: formSwornReducer },
 });

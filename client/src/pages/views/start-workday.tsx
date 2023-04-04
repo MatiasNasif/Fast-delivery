@@ -54,9 +54,15 @@ export default function StartWorkday() {
       <main>
         <Container maxWidth="xs" disableGutters={true}>
           <Header />
-          <Link href="/views/get-packages">
-            <ButtonApp isDisable={false}>obtener paquetes</ButtonApp>
-          </Link>
+
+          {/* <Link href="/views/get-packages">
+              <ButtonApp variantButton="contained">obtener paquetes</ButtonApp>{' '}
+            </Link> */}
+
+          <ButtonApp variantButton="contained" isDisable={true}>
+            {' '}
+            NO PODES LABURAR
+          </ButtonApp>
 
           <Box className={styles.box}>
             <Accordion>
