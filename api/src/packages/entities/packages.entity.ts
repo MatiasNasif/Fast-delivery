@@ -23,7 +23,7 @@ export class Package {
   quantity: number;
 
   @Prop({ enum: ['Entregado', 'En curso', 'Pendiente'] })
-  deliveryStatus: string;
+  deliveryStatus?: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'user', default: null })
   user?: mongoose.Types.ObjectId;
