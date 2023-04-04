@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react';
 import styles from '../../styles/CurrentDistribution.module.css';
+import maps from '../../assets/maps.png';
+import ArrowApp from '@/commons/arrowApp';
+import Header from '@/commons/header';
+import Link from 'next/link';
 import Image from 'next/image';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import maps from '../../assets/maps.png';
 import {
-  Box,
   Container,
   Button,
   Accordion,
@@ -11,10 +14,6 @@ import {
   AccordionDetails,
   Typography,
 } from '@mui/material';
-import ArrowApp from '@/commons/arrowApp';
-import Header from '@/commons/header';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 interface User {
   id: string;
@@ -48,7 +47,23 @@ export default function CurrentDistribution() {
       .then((response) => response.json())
       .then((packagesByUser: Package[]) => setPackagesByUser(packagesByUser))
       .catch((error) => console.log(error));
-  }, [userId]);
+  }, [userId, packagesByUser]);
+
+  const handleUpdatePackageStatus = (
+    packageId: string | undefined,
+    packageStatus: string
+  ): void => {
+    const packageDeliveryStatus = packageStatus == 'En curso' ? 'Entregado' : 'En curso';
+    fetch(`${API_URL}/packages/${packageId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ deliveryStatus: packageDeliveryStatus }),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+  };
 
   return (
     <Container maxWidth="xs" disableGutters={true}>
@@ -57,7 +72,7 @@ export default function CurrentDistribution() {
         <ArrowApp />
       </Link>
 
-      <Box className={styles.container_accordion}>
+      <section className={styles.container_accordion}>
         {packagesByUser?.map((packByUser: Package, i: number) => (
           <Accordion key={i} className={styles.accordion_space}>
             <AccordionSummary
@@ -70,10 +85,10 @@ export default function CurrentDistribution() {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Box>
+              <section>
                 <Image src={maps} alt="maps" className={styles.container_accordion_maps} />
-              </Box>
-              <Box>
+              </section>
+              <section>
                 <Typography className={styles.container_accordion_subtitle}>
                   Destino:{' '}
                   <span className={styles.container_accordion_subtitle_details}>
@@ -92,11 +107,17 @@ export default function CurrentDistribution() {
                     {packByUser.receiver}
                   </span>
                 </Typography>
-              </Box>
+              </section>
             </AccordionDetails>
-            <Box className={styles.container_button}>
+            <section className={styles.container_button}>
               {packByUser.deliveryStatus != 'Entregado' ? (
-                <Button className={styles.button} variant="contained">
+                <Button
+                  className={styles.button}
+                  variant="contained"
+                  onClick={() =>
+                    handleUpdatePackageStatus(packByUser._id, packByUser.deliveryStatus)
+                  }
+                >
                   Finalizar
                 </Button>
               ) : (
@@ -104,10 +125,10 @@ export default function CurrentDistribution() {
                   Finalizado
                 </Button>
               )}
-            </Box>
+            </section>
           </Accordion>
         ))}
-      </Box>
+      </section>
     </Container>
   );
 }
