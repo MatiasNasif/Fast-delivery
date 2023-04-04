@@ -3,6 +3,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import styles from '../../styles/StartWorkday.module.css';
 import Header from '../../commons/header';
 import Card from '../../commons/card';
+import Timer from '../../commons/Timer';
 import ButtonApp from '../../commons/buttonApp';
 import Link from 'next/link';
 import { Package, requestPackages } from '@/utils/fakerPackages';
@@ -11,6 +12,7 @@ import { useEffect, useState } from 'react';
 export default function StartWorkday() {
   const [packagesPending, setPackagesPending] = useState<Package[]>([]);
   const [packagesDelivered, setPackagesDelivered] = useState<Package[]>([]);
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   useEffect(() => {
     requestPackagesAll();
@@ -38,9 +40,15 @@ export default function StartWorkday() {
       <main>
         <Container maxWidth="xs" disableGutters={true}>
           <Header />
-          <Link href="/views/get-packages">
-            <ButtonApp>obtener paquetes</ButtonApp>
-          </Link>
+
+          {/* <Link href="/views/get-packages">
+              <ButtonApp variantButton="contained">obtener paquetes</ButtonApp>{' '}
+            </Link> */}
+
+          <ButtonApp variantButton="contained" isDisable={true}>
+            {' '}
+            NO PODES LABURAR
+          </ButtonApp>
 
           <Box className={styles.box}>
             <Accordion>
