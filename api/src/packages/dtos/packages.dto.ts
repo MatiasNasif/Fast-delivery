@@ -24,7 +24,8 @@ export class CreatePackageDto {
   readonly quantity: number;
 
   @IsString()
-  readonly deliveryStatus: string = 'pendiente';
+  @IsOptional()
+  readonly deliveryStatus?: string = 'Pendiente';
 
   @IsOptional()
   user?: mongoose.Types.ObjectId;

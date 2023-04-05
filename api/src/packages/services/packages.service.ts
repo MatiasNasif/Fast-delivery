@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PackageDocument } from '../entities/packages.entity';
-import { CreatePackageDto } from '../dtos/packages.dto';
+import { CreatePackageDto, UpdatePackageDto } from '../dtos/packages.dto';
 import { UserDocument } from 'src/users/entities/user.entity';
 import { NotFoundException } from '@nestjs/common/exceptions';
 
@@ -42,7 +42,10 @@ export class PackagesService {
       throw new NotFoundException('No existe el usuario en la base de datos');
     }
 
-    const packagesByUser = await this.packageModel.find({ user: userId });
+    const packagesByUser = await this.packageModel.find({
+      user: userId,
+      deliveryStatus: { $in: ['Entregado', 'En curso'] },
+    });
     return packagesByUser;
   }
 
@@ -64,5 +67,17 @@ export class PackagesService {
   async deletePackage(packageId: string): Promise<CreatePackageDto> {
     const deletePackage = await this.packageModel.findByIdAndDelete(packageId);
     return deletePackage;
+  }
+
+  async updatePackage(
+    packageId: string,
+    updatePackageDto: UpdatePackageDto,
+  ): Promise<UpdatePackageDto> {
+    const updatedPackage = await this.packageModel.findByIdAndUpdate(
+      packageId,
+      updatePackageDto,
+      { new: true },
+    );
+    return updatedPackage;
   }
 }

@@ -8,9 +8,9 @@ import Checkbox from '@mui/material/Checkbox';
 import SwitchSworn from '../../commons/switchSworn';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
+import { formCreate } from '../../store/formSworn';
 
 const SwornStatement = () => {
   const repetitiveText = [
@@ -31,20 +31,22 @@ const SwornStatement = () => {
   const userId = useSelector((state) => state.user?.id ?? null);
 
   const [answers, setAnswers] = useState({});
-  const [buttonValidate, setButtonValidate] = useState(true);
-  const [buttonClicks, setButtonClicks] = useState(0);
+  const [buttonValidate, setButtonValidate] = useState<boolean>(true);
+  const [buttonClicks, setButtonClicks] = useState<number>(0);
+
   const navigate = useRouter();
+  const dispatch = useDispatch();
 
   const dataForm = {
     user: userId,
     ...answers,
   };
-  const dataformOnJson = JSON.stringify(dataForm);
 
-  const hasRequiredFields = (dataformOnJson) => {
+  const hasRequiredFields = (dataForm: {}) => {
     const requiredFields = ['alcohol', 'medicines', 'problems'];
-    return requiredFields.every((field) => dataformOnJson.hasOwnProperty(field));
+    return requiredFields.every((field) => dataForm.hasOwnProperty(field));
   };
+
   const handleButtonClick = () => {
     setButtonClicks((prevClicks) => prevClicks + 1);
   };
@@ -53,13 +55,12 @@ const SwornStatement = () => {
     setButtonValidate(!hasRequiredFields(answers));
   }, [answers]);
 
-  const handleSubmit = (event) => {
+  const handleSubmitSwornStatement = (event) => {
     event.preventDefault();
     if (buttonValidate) {
       return toast.error('Tienen que completar todos los campos');
     }
-    axios
-      .post('http://localhost:5000/formsworn/createforms', dataForm)
+    dispatch(formCreate(dataForm))
       .then(() => navigate.push('/views/start-workday'))
       .catch((err) => console.log(err));
   };
@@ -70,10 +71,7 @@ const SwornStatement = () => {
       <>
         <Header />
 
-        <Link href="/">
-          <ArrowApp />
-        </Link>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmitSwornStatement}>
           <Box className={styles.BoxwordAdd}>
             <Typography variant="h6" className={styles.wordTittle}>
               Declaración jurada

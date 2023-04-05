@@ -2,7 +2,7 @@ import { Box, Accordion, AccordionSummary, Container, Typography, Fab } from '@m
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AddIcon from '@mui/icons-material/Add';
 import Header from '../../commons/header';
-import Card from '../../commons/card';
+import Card from '../../commons/packageDetailsCard';
 import React from 'react';
 import Link from 'next/link';
 import ArrowApp from '@/commons/arrowApp';
