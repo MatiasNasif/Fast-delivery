@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   GoogleMap,
   Marker,
@@ -27,12 +27,12 @@ const options = {
 };
 
 const GoogleMaps = ({ destination }: Props) => {
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyBBEGS2JcixdKHGrrkKWUxVn6GoZW13G6E',
-  });
-
   const [response, setResponse] = useState<google.maps.DirectionsResult | null>(null);
   const [origin, setOrigin] = useState<LatitudeAndLongitude | null>(null);
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+  });
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -49,42 +49,42 @@ const GoogleMaps = ({ destination }: Props) => {
         }
       );
     } else {
-      console.error('Geolocation is not supported by this browser.');
+      console.error('Geolocalización no funciona');
     }
-  }, []);
+  }, [setOrigin]);
 
-  const directionsCallback = (res: google.maps.DirectionsResult | null) => {
-    if (res !== null) {
-      setResponse(res);
+  const directionsCallback = (result: google.maps.DirectionsResult | null) => {
+    if (result !== null) {
+      setResponse(result);
     }
   };
 
+  const memoizedMap = useMemo(() => {
+    return (
+      <GoogleMap
+        center={origin || undefined}
+        zoom={15}
+        mapContainerStyle={containerStyle}
+        options={options}
+      >
+        {origin && <Marker position={origin} />}
+        {origin !== null && (
+          <DirectionsService
+            options={{
+              destination,
+              origin,
+              travelMode: google.maps.TravelMode.DRIVING,
+            }}
+            callback={directionsCallback}
+          />
+        )}
+        {response !== null && <DirectionsRenderer options={{ directions: response }} />}
+      </GoogleMap>
+    );
+  }, [destination, origin, response]);
+
   return (
-    <>
-      {isLoaded ? (
-        <GoogleMap
-          center={origin || undefined}
-          zoom={15}
-          mapContainerStyle={containerStyle}
-          options={options}
-        >
-          {origin && <Marker position={origin} />}
-          {origin !== null && (
-            <DirectionsService
-              options={{
-                destination,
-                origin,
-                travelMode: google.maps.TravelMode.DRIVING,
-              }}
-              callback={directionsCallback}
-            />
-          )}
-          {response !== null && <DirectionsRenderer options={{ directions: response }} />}
-        </GoogleMap>
-      ) : (
-        <p>{loadError?.toString() || 'No se pudo cargar el mapa'}</p>
-      )}
-    </>
+    <>{isLoaded ? memoizedMap : <p>{loadError?.toString() || 'No se pudo cargar el mapa'}</p>}</>
   );
 };
 
