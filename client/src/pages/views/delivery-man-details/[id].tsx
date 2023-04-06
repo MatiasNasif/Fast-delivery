@@ -28,7 +28,7 @@ interface Package {
   deliveryStatus: string;
 }
 
-const urlApi = 'http://localhost:5000';
+const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
 const DeliveryManDetails = () => {
   const [deliveryMan, setDeliveryMan] = useState<User>(initialUserState);

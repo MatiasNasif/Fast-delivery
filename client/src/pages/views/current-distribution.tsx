@@ -29,6 +29,8 @@ interface Package {
   _id?: string;
 }
 
+const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
+
 export default function CurrentDistribution() {
   let user: User | null = null;
   if (typeof window !== 'undefined') {
@@ -37,12 +39,11 @@ export default function CurrentDistribution() {
   }
 
   const userId: string | undefined = user?.id;
-  const API_URL: string = 'http://localhost:5000';
 
   const [packagesByUser, setPackagesByUser] = useState<Package[]>([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+    fetch(`${urlApi}/packages/${userId}/packagesByUser`)
       .then((response) => response.json())
       .then((packagesByUser: Package[]) => setPackagesByUser(packagesByUser))
       .catch((error) => console.log(error));
@@ -53,7 +54,7 @@ export default function CurrentDistribution() {
     packageStatus: string
   ): void => {
     const packageDeliveryStatus = packageStatus == 'En curso' ? 'Entregado' : 'En curso';
-    fetch(`${API_URL}/packages/${packageId}`, {
+    fetch(`${urlApi}/packages/${packageId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
