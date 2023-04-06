@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import styles from '../../styles/CurrentDistribution.module.css';
-import maps from '../../assets/maps.png';
+import GoogleMaps from '../../components/google-maps';
 import ArrowApp from '@/commons/arrowApp';
 import Header from '@/commons/header';
 import Link from 'next/link';
-import Image from 'next/image';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   Container,
@@ -86,7 +85,7 @@ export default function CurrentDistribution() {
             </AccordionSummary>
             <AccordionDetails>
               <section>
-                <Image src={maps} alt="maps" className={styles.container_accordion_maps} />
+                <GoogleMaps destination={packByUser.address} />
               </section>
               <section>
                 <Typography className={styles.container_accordion_subtitle}>
