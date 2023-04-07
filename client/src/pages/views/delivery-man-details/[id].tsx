@@ -26,6 +26,7 @@ const initialUserState: User = {
 interface Package {
   address: string;
   deliveryStatus: string;
+  _id: string;
 }
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
@@ -53,14 +54,14 @@ const DeliveryManDetails = () => {
       .then((response) => response.json())
       .then((packages: Package[]) => setDeliveredPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam]);
+  }, [idDeliveryManParam, deliveredPackages]);
 
   useEffect(() => {
     fetch(`${urlApi}/packages/${idDeliveryManParam}/packagesPendingByUser`)
       .then((response) => response.json())
       .then((packages: Package[]) => setPendingPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam]);
+  }, [idDeliveryManParam, pendingPackages]);
 
   const handleChangeSwitchButton = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setCheckSwitchChange(event.target.checked);
@@ -72,7 +73,7 @@ const DeliveryManDetails = () => {
       .catch((error) => console.error(error));
   };
 
-  const updateDeliveryManStatus = (newStatus: string) => {
+  const updateDeliveryManStatus = (newStatus: string): Promise<User> => {
     return fetch(`${urlApi}/users/${idDeliveryManParam}`, {
       method: 'PUT',
       headers: {
