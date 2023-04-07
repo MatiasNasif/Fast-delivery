@@ -5,17 +5,30 @@ import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Delivery, requestDelivery } from '../../utils/fakerDeliverys';
 import styles from '../../styles/ManageDeliveryMan.module.css';
 import SwitchDeliveryStatus from '../../utils/SwitchDeliveryStatus';
 
+const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
+
+interface Package {
+  deliveryStatus?: string;
+}
+
+interface User {
+  fullName: string;
+  status?: string | undefined;
+  _id?: string;
+  packages?: Package[];
+}
+
 export default function ManageDeliveryMan() {
-  const [deliverys, setDeliverys] = useState<Delivery[]>([]);
+  const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
 
   useEffect(() => {
-    requestDelivery(3).then((delivery) => {
-      setDeliverys(delivery);
-    });
+    fetch(`${urlApi}/users/alldeliveryman`)
+      .then((response) => response.json())
+      .then((deliveryMans: User[]) => setDeliveryMans(deliveryMans))
+      .catch((error) => console.log(error));
   }, []);
 
   return (
@@ -35,18 +48,22 @@ export default function ManageDeliveryMan() {
                 Repartidores
               </Typography>
             </AccordionSummary>
-            {deliverys.map((data, i) => (
+            {deliveryMans.map((deliveryMan, i) => (
               <Box key={i}>
                 <Box className={styles.boxOfdeliveryman}>
-                  <Progress value={data.circle} deliveryStatus={data.deliveryStatus} />
+                  <Progress
+                    value={deliveryMan.circle}
+                    deliveryStatus={deliveryMan.status}
+                    deliveryId={deliveryMan._id}
+                  />
                   <Box className={styles.deliveryManContainer}>
                     <Typography className={styles.deliveryName} variant="inherit">
-                      {data.firstname}
+                      {deliveryMan.fullName}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Typography className={styles.deliveryStatus} variant="inherit">
-                        {data.deliveryStatus &&
-                          (data.circle === 100 ? (
+                        {deliveryMan.status &&
+                          (deliveryMan.circle === 100 ? (
                             <>
                               <Box className={styles.boxDeliveryStatus}>
                                 <SwitchDeliveryStatus checked={'Finalizó'} />
@@ -58,7 +75,7 @@ export default function ManageDeliveryMan() {
                                 </Typography>{' '}
                               </Box>
                             </>
-                          ) : data.circle >= 50 && data.circle <= 99 ? (
+                          ) : deliveryMan.circle >= 50 && deliveryMan.circle <= 99 ? (
                             <>
                               <Box className={styles.boxDeliveryStatus}>
                                 <SwitchDeliveryStatus checked={'Viaje en curso'} />
@@ -70,7 +87,7 @@ export default function ManageDeliveryMan() {
                                 </Typography>{' '}
                               </Box>
                             </>
-                          ) : data.circle >= 1 && data.circle <= 49 ? (
+                          ) : deliveryMan.circle >= 1 && deliveryMan.circle <= 49 ? (
                             <>
                               {' '}
                               <Box className={styles.boxDeliveryStatus}>
@@ -90,10 +107,10 @@ export default function ManageDeliveryMan() {
                     </Box>
                   </Box>
                   <Link
-                    href={`/views/delivery-man-details/${data.id}`}
+                    href={`/views/delivery-man-details/${deliveryMan._id}`}
                     style={{ marginLeft: 'auto', marginRight: '20px' }}
                   >
-                    <Avatar alt="Remy Sharp" src={data.avatar} />
+                    <Avatar alt="Remy Sharp" />
                   </Link>
                 </Box>
               </Box>

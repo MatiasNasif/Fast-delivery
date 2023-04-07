@@ -41,8 +41,8 @@ export class UsersService {
     return this.userModel.findOne(query);
   }
 
-  async getAllUsers(): Promise<CreateUserDto[]> {
-    return this.userModel.find();
+  async getAllNonAdminUsers(): Promise<CreateUserDto[]> {
+    return this.userModel.find({ admin: false });
   }
 
   async getUserById(id: string): Promise<CreateUserDto> {
@@ -123,9 +123,5 @@ export class UsersService {
     }
 
     return user;
-  }
-
-  async getAllNonAdminUsers(): Promise<CreateUserDto[]> {
-    return this.userModel.find({ admin: false });
   }
 }
