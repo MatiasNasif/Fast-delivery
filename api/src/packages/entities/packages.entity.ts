@@ -16,14 +16,14 @@ export class Package {
   weight: number;
 
   @Prop()
-  deliveryDate: string;
+  deliveryDate?: string;
 
   @Max(100)
   @Prop()
-  quantity: number;
+  quantity?: number;
 
   @Prop({ enum: ['Entregado', 'En curso', 'Pendiente'] })
-  deliveryStatus: string;
+  deliveryStatus?: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'user', default: null })
   user?: mongoose.Types.ObjectId;
