@@ -27,7 +27,7 @@ export default function InputPassword({ name, register, errors }: Props) {
       </InputLabel>
       <Input
         className="Mui-focused"
-        sx={{ marginBottom: '20px' }}
+        sx={{ marginBottom: '10px' }}
         {...register('password', { required: true })}
         error={!!errors?.password}
         fullWidth={true}
@@ -45,7 +45,7 @@ export default function InputPassword({ name, register, errors }: Props) {
           </InputAdornment>
         }
       />
-      {errors?.password && <FormHelperText error={true}>Contraseña requerida</FormHelperText>}
+      {errors?.password && <FormHelperText error={true}>Contraseña Requerida</FormHelperText>}
     </>
   );
 }

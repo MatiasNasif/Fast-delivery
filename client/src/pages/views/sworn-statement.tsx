@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactEventHandler } from 'react';
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
 import ButtonApp from '@/commons/buttonApp';
@@ -11,6 +11,8 @@ import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 import { formCreate } from '../../store/formSworn';
+import { setPersistence } from '@/store/user';
+import { useSnackbar } from 'notistack';
 
 const SwornStatement = () => {
   const repetitiveText = [
@@ -28,17 +30,22 @@ const SwornStatement = () => {
     },
   ];
 
-  const userId = useSelector((state) => state.user?.id ?? null);
-
   const [answers, setAnswers] = useState({});
   const [buttonValidate, setButtonValidate] = useState<boolean>(true);
   const [buttonClicks, setButtonClicks] = useState<number>(0);
-
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useRouter();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(setPersistence());
+  }, [dispatch]);
+
+  const user = useSelector((state) => state.user);
+
+  console.log(user.id + 'EL USER EN EL FORMULARIO');
   const dataForm = {
-    user: userId,
+    user: user.id,
     ...answers,
   };
 
@@ -55,11 +62,18 @@ const SwornStatement = () => {
     setButtonValidate(!hasRequiredFields(answers));
   }, [answers]);
 
-  const handleSubmitSwornStatement = (event) => {
+  const handleSubmitSwornStatement = (event: ReactEventHandler) => {
     event.preventDefault();
     if (buttonValidate) {
-      return toast.error('Tienen que completar todos los campos');
+      return enqueueSnackbar('Tiene que completar todos los campos', {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'center',
+        },
+      });
     }
+
     dispatch(formCreate(dataForm))
       .then(() => navigate.push('/views/start-workday'))
       .catch((err) => console.log(err));
