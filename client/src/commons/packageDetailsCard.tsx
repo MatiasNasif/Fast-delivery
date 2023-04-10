@@ -11,9 +11,27 @@ interface Props {
 interface Package {
   address: string;
   deliveryStatus: string;
+  _id: string;
 }
 
+const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
+
 export default function PackageDetailsCard({ packageDetail, hideDeliveryStatus }: Props) {
+  const handleDeletePackage = (packageId: string) => {
+    return fetch(`${urlApi}/packages/${packageId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Fallo al querer eliminar el paquete');
+        } else {
+          alert('Paquete eliminado correctamente');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   return (
     <>
       <Box className={styles.card_container}>
@@ -22,7 +40,10 @@ export default function PackageDetailsCard({ packageDetail, hideDeliveryStatus }
           {packageDetail?.address}
         </Typography>
         <Box className={styles.icon_delete}>
-          <DeleteForeverIcon color="error" />
+          <DeleteForeverIcon
+            color="error"
+            onClick={() => handleDeletePackage(packageDetail?._id)}
+          />
         </Box>
       </Box>
       {!hideDeliveryStatus && (

@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '@/store/user';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -43,11 +44,11 @@ export default function Login() {
   const userId: string = useSelector((state) => state.user?.id ?? null);
   const [formsByUser, setFormsByUser] = useState([]);
   const [hasFormToday, setHasFormToday] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const onSubmitOfLogin = (data: LoginFormData) => {
-    dispatch(userLogin(data)).catch((err: Error) => console.log(err));
+    dispatch(userLogin({ data, enqueueSnackbar, navigate }));
   };
-
   useEffect(() => {
     if (userId !== null) {
       getAllFormSwornByUser(userId)
@@ -83,10 +84,8 @@ export default function Login() {
           <Image className={styles.brand} src={brand} alt="Fast Delivery Brand" />
         </Box>
         <form onSubmit={handleSubmit(onSubmitOfLogin)}>
-          <InputEmail name="email" register={register} />
+          <InputEmail name="email" register={register} errors={errors} />
           <InputPassword name="password" register={register} errors={errors} />
-          {errors.password && <span className={styles.errorText}>*Contraseña Requerida*</span>}
-
           <Button fullWidth variant="contained" type="submit">
             Ingresar
           </Button>
