@@ -19,8 +19,21 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import useInput from '@/utils/useInput';
 
 const AddPackage = () => {
+  const address = useInput();
+  const receiver = useInput();
+  const weight = useInput();
+  const [value, setValue] = useState();
+  /*  const fecha = new Date('1/04/23');
+  console.log(fecha, 'fechaa'); */
+  /* const fecha: string | undefined = value?.$d.toDateString();
+  console.log(fecha); */
+
+  const navigate = useRouter();
+
   const [count, setCount] = useState(0);
   const IncNum = () => {
     setCount(count + 1);
@@ -32,80 +45,110 @@ const AddPackage = () => {
       alert('min limit reached');
     }
   };
+
+  const API_URL = 'http://localhost:5000';
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = {
+      address: address.value,
+      receiver: receiver.value,
+      weight: Number(weight.value),
+      deliveryDate: value?.$d.toDateString(),
+      quantity: count,
+    };
+    console.log(data, 'holaa');
+    fetch(`${API_URL}/packages/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(() => alert('Los datos se guardaron correctamente.'))
+      .then(() => navigate.push('/views/manage-packages'));
+  };
+
   return (
     <>
       <Header />
-      <Container maxWidth={'xs'}>
-        <Box className={styles.arrow}>
-          <Link href={'/views/manage-packages'}>
-            <ArrowApp />
-          </Link>
-        </Box>
-        <Box>
-          <Typography variant="h6" className={styles.wordAdd}>
-            Agregar paquetes
-          </Typography>
-        </Box>
-        <FormControl className={styles.formAdd}></FormControl>
-        <TextField
-          label="Dirección"
-          InputLabelProps={{ className: styles.labelColor }}
-          variant="standard"
-          className={styles.input}
-          focused
-          fullWidth
-        />
-        <TextField
-          label="Nombre de quien recibe"
-          InputLabelProps={{ className: styles.labelColor }}
-          variant="standard"
-          className={styles.input}
-          focused
-          fullWidth
-        />
-        <TextField
-          label="Peso(Kg)"
-          InputLabelProps={{ className: styles.labelColor }}
-          variant="standard"
-          className={styles.input}
-          focused
-          fullWidth
-        />
-        {/* <TextField
-          label="Fecha en la que debe ser repartido"
-          InputLabelProps={{ className: styles.labelColor }}
-          variant="standard"
-          className={styles.input}
-          focused
-          fullWidth
-        /> */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker />
-        </LocalizationProvider>
-        <InputLabel
-          sx={{ fontSize: '12px', marginTop: '20px' }}
-          className={styles.labelColor}
-          focused={true}
-        >
-          Cantidad
-        </InputLabel>
-        <Box>
-          <Box className={styles.boxContainIconsPackage}>
-            <Button onClick={DecNum} variant="contained" className={styles.buttonRemovePackage}>
-              <RemoveIcon sx={{ color: 'black' }} />
-            </Button>
-
-            {count}
-
-            <Button onClick={IncNum} variant="contained" className={styles.buttonAddPackage}>
-              <AddIcon sx={{ color: 'black' }} />
-            </Button>
+      <form onSubmit={handleSubmit}>
+        <Container maxWidth={'xs'}>
+          <Box className={styles.arrow}>
+            <Link href={'/views/manage-packages'}>
+              <ArrowApp />
+            </Link>
           </Box>
+          <Box>
+            <Typography variant="h6" className={styles.wordAdd}>
+              Agregar paquetes
+            </Typography>
+          </Box>
+          <FormControl className={styles.formAdd}></FormControl>
+          <TextField
+            label="Dirección"
+            InputLabelProps={{ className: styles.labelColor }}
+            variant="standard"
+            className={styles.input}
+            focused
+            fullWidth
+            {...address}
+          />
+          <TextField
+            label="Nombre de quien recibe"
+            InputLabelProps={{ className: styles.labelColor }}
+            variant="standard"
+            className={styles.input}
+            focused
+            fullWidth
+            {...receiver}
+          />
+          <TextField
+            label="Peso(Kg)"
+            InputLabelProps={{ className: styles.labelColor }}
+            variant="standard"
+            className={styles.input}
+            focused
+            fullWidth
+            {...weight}
+          />
+          <TextField
+            label="Fecha en la que debe ser repartido"
+            InputLabelProps={{ className: styles.labelColor }}
+            variant="standard"
+            className={styles.input}
+            focused
+            fullWidth
+          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker value={value} onChange={(newValue) => setValue(newValue)} />
+          </LocalizationProvider>
+          <InputLabel
+            sx={{ fontSize: '12px', marginTop: '20px' }}
+            className={styles.labelColor}
+            focused={true}
+          >
+            Cantidad
+          </InputLabel>
+          <Box>
+            <Box className={styles.boxContainIconsPackage}>
+              <Button onClick={DecNum} variant="contained" className={styles.buttonRemovePackage}>
+                <RemoveIcon sx={{ color: 'black' }} />
+              </Button>
+
+              {count}
+
+              <Button onClick={IncNum} variant="contained" className={styles.buttonAddPackage}>
+                <AddIcon sx={{ color: 'black' }} />
+              </Button>
+            </Box>
+          </Box>
+        </Container>
+        <Box className={styles.boxContainer}>
+          <ButtonApp type="submit">Agregar</ButtonApp>
+          {/* <button type="submit">Agregar</button> */}
         </Box>
-      </Container>
-      <Box className={styles.boxContainer}>
-        <ButtonApp>Agregar</ButtonApp>
-      </Box>
+      </form>
     </>
   );
 };
