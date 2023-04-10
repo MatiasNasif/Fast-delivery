@@ -15,13 +15,15 @@ export class CreatePackageDto {
   @IsNumber()
   readonly weight: number;
 
-  @IsNotEmpty()
+  /* @IsNotEmpty() */
   @IsString()
-  readonly deliveryDate: string;
+  @IsOptional()
+  readonly deliveryDate?: string;
 
-  @IsNotEmpty()
+  /* @IsNotEmpty() */
   @IsNumber()
-  readonly quantity: number;
+  /* @IsOptional() */
+  readonly quantity?: number;
 
   @IsString()
   @IsOptional()

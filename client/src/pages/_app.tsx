@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Provider } from 'react-redux';
 import { store } from '../store/store';
+import { SnackbarProvider } from 'notistack';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -17,8 +18,11 @@ export default function App({ Component, pageProps }: AppProps) {
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
       </Head>
+
       <Provider store={store}>
-        <Component {...pageProps} />
+        <SnackbarProvider maxSnack={2} autoHideDuration={2000}>
+          <Component {...pageProps} />
+        </SnackbarProvider>
       </Provider>
     </>
   );

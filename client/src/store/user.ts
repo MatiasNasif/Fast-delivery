@@ -1,10 +1,17 @@
 import { createAsyncThunk, createReducer } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
 
 interface UserRegister {
   fullName: string;
   email: string;
   password: string;
+}
+interface User {
+  email: string;
+  id: string;
+  fullName: string;
+  // define el resto de las propiedades del usuario aquí
 }
 
 interface UserCredentials {
@@ -14,20 +21,111 @@ interface UserCredentials {
 
 const API_URL = 'http://localhost:5000';
 
+export const setPersistence = createAsyncThunk('SET_PERSISTENCIA', () => {
+  if (typeof window !== 'undefined') {
+    const userLocalStorage = localStorage.getItem('user');
+    const user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
+    return user;
+  }
+  return null;
+});
+
 export const getUserById = createAsyncThunk('GET_USER', () => {
   const userId: string = JSON.parse(localStorage.getItem('user') ?? '').id;
   return axios.get(`${API_URL}/users/${userId}`).then((user) => user.data);
 });
 
-export const userRegister = createAsyncThunk('USER_REGISTER', (data: UserRegister) => {
-  return axios.post(`${API_URL}/users/signup`, data).then((user) => user.data);
-});
+// export const userRegister = createAsyncThunk('USER_REGISTER', (data: UserRegister) => {
+//   return axios
+//     .post(`${API_URL}/users/signup`, data)
+//     .then((user) => user.data)
+//     .catch((error) => alert('NO PASAS CAPO'));
+// });
+export const userRegister = createAsyncThunk(
+  'USER_REGISTER',
+  async (data: { data: UserRegister; enqueueSnackbar: Function; navigate: Function }) => {
+    try {
+      console.log(data.user);
+      const response = await fetch(`${API_URL}/users/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data.data),
+      });
+      if (!response.ok) {
+        throw new Error('Error al registrarse');
+      }
+      const user = await response.json();
+      data.enqueueSnackbar('Usuario Creado', {
+        variant: 'success',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'center',
+        },
+        style: {
+          fontSize: '16px',
+          color: '#fffff',
+          fontWeight: 'bold',
+        },
+      });
+      data.navigate.push('/');
+      return user;
+    } catch (error) {
+      console.log(error);
+      data.enqueueSnackbar('Usuario Existente', {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'center',
+        },
+        style: {
+          fontSize: '16px',
+          color: '#fffff',
+          fontWeight: 'bold',
+        },
+      });
+    }
+  }
+);
 
-export const userLogin = createAsyncThunk('USER_LOGGED', (data: UserCredentials) => {
-  return axios.post(`${API_URL}/auth/login`, data).then((user) => {
-    localStorage.setItem('user', JSON.stringify({ email: user.data.email, id: user.data.id }));
-    return user.data;
-  });
+export const userLogin = createAsyncThunk<
+  User,
+  { data: UserCredentials; enqueueSnackbar: Function }
+>('USER_LOGGED', async ({ data, enqueueSnackbar }) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error('Error en la respuesta');
+    }
+    const responseData = await response.json();
+    const user: User = {
+      email: responseData.email,
+      id: responseData.id,
+      fullName: responseData.fullName,
+    };
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
+  } catch (error) {
+    enqueueSnackbar('Usuario o Contraseña no existen o son incorrectos', {
+      variant: 'error',
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+      style: {
+        fontSize: '16px',
+        color: '#fffff',
+        fontWeight: 'bold',
+      },
+    });
+  }
 });
 
 export const userLogout = createAsyncThunk('USER_LOGOUT', () => {
@@ -40,11 +138,19 @@ export const getAllUsers = createAsyncThunk('GET_ALL_USER', () => {
   return axios.get(`${API_URL}/users`);
 });
 
-const userReducer = createReducer(null, {
-  [`${getUserById.fulfilled}`]: (state, action) => action.payload,
-  [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
-  [`${userLogin.fulfilled}`]: (state, action) => action.payload,
-  [`${userLogout.fulfilled}`]: (state, action) => null,
-});
+const userReducer = createReducer(
+  setPersistence.fulfilled(null, null, null), // valor inicial
+  {
+    [`${getUserById.fulfilled}`]: (state, action) => action.payload,
+    [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
+    [`${userLogin.fulfilled}`]: (state, action) => action.payload,
+    [`${setPersistence.fulfilled}`]: (state, action) => {
+      return action.payload;
+    },
+    [`${userLogout.fulfilled}`]: (state, action) => {
+      return {};
+    },
+  }
+);
 
 export default userReducer;
