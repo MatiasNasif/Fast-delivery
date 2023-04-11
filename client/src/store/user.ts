@@ -11,6 +11,7 @@ interface User {
   email: string;
   id: string;
   fullName: string;
+  admin: boolean;
 }
 
 interface UserCredentials {
@@ -97,6 +98,7 @@ export const userLogin = createAsyncThunk<
       email: responseData.email,
       id: responseData.id,
       fullName: responseData.fullName,
+      admin: responseData.admin,
     };
     localStorage.setItem('user', JSON.stringify(user));
     return user;
