@@ -4,7 +4,6 @@ import styles from '../../styles/StartWorkday.module.css';
 import Header from '../../commons/header';
 import Card from '../../commons/packageDetailsCard';
 import ButtonApp from '../../commons/buttonApp';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 interface Package {
@@ -41,13 +40,13 @@ export default function StartWorkday() {
     fetch(`${API_URL}/packages/${userId}/packagesByUser`)
       .then((response) => response.json())
       .then((packs) => setPackages(packs));
-  }, [userId]);
+  }, [userId, packages]);
 
   useEffect(() => {
     fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
       .then((response) => response.json())
       .then((packs) => setPackagesPending(packs));
-  }, [userId]);
+  }, [userId, packagesPending]);
 
   return (
     <>
