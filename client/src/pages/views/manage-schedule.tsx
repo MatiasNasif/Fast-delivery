@@ -16,8 +16,18 @@ import Progress from '../../commons/progress';
 import CircleDummy from '../../dummy-data/Circular-Progress.json';
 import PackageDummy from '../../dummy-data/package-progress.json';
 import React, { useEffect, useState } from 'react';
-import { Delivery, requestDelivery } from '../../utils/fakerDeliverys';
 import Link from 'next/link';
+
+const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
+
+interface User {
+  status: string | undefined;
+  avatar?: string;
+}
+
+interface Package {
+  deliveryStatus: string;
+}
 
 export default function ManageSchedule() {
   let date: Date = new Date();
@@ -28,13 +38,47 @@ export default function ManageSchedule() {
 
   PackageDummy;
 
-  const [deliverys, setDeliverys] = useState<Delivery[]>([]);
+  const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
+  const [packages, setPackages] = useState<Package[]>([]);
 
   useEffect(() => {
-    requestDelivery(3).then((delivery) => {
-      setDeliverys(delivery);
-    });
-  }, []);
+    fetch(`${urlApi}/users/alldeliveryman`)
+      .then((response) => response.json())
+      .then((deliveryMans: User[]) => setDeliveryMans(deliveryMans))
+      .catch((error) => console.log(error));
+  }, [deliveryMans]);
+
+  useEffect(() => {
+    fetch(`${urlApi}/packages`)
+      .then((response) => response.json())
+      .then((packages: Package[]) => setPackages(packages))
+      .catch((error) => console.log(error));
+  }, [packages]);
+
+  const activeDeliveryManCounter: number = deliveryMans.filter(
+    (user) => user.status === 'Activo'
+  ).length;
+
+  const inactiveDeliveryManCounter: number = deliveryMans.filter(
+    (user) => user.status === 'Inactivo'
+  ).length;
+
+  const totalDeliveryManCounter: number = activeDeliveryManCounter + inactiveDeliveryManCounter;
+
+  const activeDeliveryManPercentage: number =
+    (activeDeliveryManCounter / totalDeliveryManCounter) * 100;
+
+  const deliveredPackages: number = packages.filter(
+    (pkg) => pkg.deliveryStatus === 'Entregado'
+  ).length;
+
+  const pendingPackages: number = packages.filter(
+    (pkg) => pkg.deliveryStatus === 'En curso' || pkg.deliveryStatus === 'Pendiente'
+  ).length;
+
+  const totalPackages: number = deliveredPackages + pendingPackages;
+
+  const deliveredPackagesPercentage: number = (deliveredPackages / totalPackages) * 100;
 
   return (
     <>
@@ -65,13 +109,13 @@ export default function ManageSchedule() {
             {CircleDummy.map((data, i) => (
               <Box key={i}>
                 <Box className={styles.boxOfdeliveryman}>
-                  <Progress value={data.circle} colorCircle={data.color} />
+                  <Progress value={activeDeliveryManPercentage} colorCircle={data.color} />
                   <Box sx={{ width: '100%' }}>
                     <Typography className={styles.textOfdeliveryman} variant="inherit">
                       Repartidores
                     </Typography>
                     <Typography className={styles.textOfstatus} variant="inherit">
-                      {data.activos} {data.status}
+                      {`${activeDeliveryManCounter}/${inactiveDeliveryManCounter}`} Activos
                     </Typography>
                   </Box>
                   <AvatarGroup max={2} sx={{ marginLeft: 'auto', marginRight: '20px' }}>
@@ -93,14 +137,14 @@ export default function ManageSchedule() {
             {PackageDummy.map((data, i) => (
               <Box key={i}>
                 <Box className={styles.boxOfpackages}>
-                  <Progress value={data.circle} colorCircle={data.color} />
+                  <Progress value={deliveredPackagesPercentage} colorCircle={data.color} />
                   <Box sx={{ width: '100%' }}>
                     <Typography className={styles.textOfdeliveryman} variant="inherit">
                       {data.name}
                     </Typography>
 
                     <Typography className={styles.textOfstatus} variant="inherit">
-                      {data.activos} {data.status}
+                      {`${deliveredPackages}/${pendingPackages}`} Repartidos
                     </Typography>
                   </Box>{' '}
                 </Box>
