@@ -36,24 +36,19 @@ export default function StartWorkday() {
   const counterPackages: number = packages.length;
 
   useEffect(() => {
+    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+      .then((response) => response.json())
+      .then((packs) => setPackages(packs));
+  }, [userId, packages]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
+      .then((response) => response.json())
+      .then((packs) => setPackagesPending(packs));
+  }, [userId, packagesPending]);
+      
     dispatch(setPersistence());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (userId) {
-      fetch(`${API_URL}/packages/${userId}/packagesByUser`)
-        .then((response) => response.json())
-        .then((packs) => setPackages(packs));
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    if (userId) {
-      fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
-        .then((response) => response.json())
-        .then((packs) => setPackagesPending(packs));
-    }
-  }, []);
 
   useEffect(() => {
     if (userId) {
