@@ -29,35 +29,38 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
     </Box>
   );
 }
-export default function CircularStatic(props: any) {
+
+interface Props {
+  value: number;
+  deliveryStatus: string;
+  _id: string;
+}
+
+export default function CircularStatic({ value, deliveryStatus, _id }: Props) {
   const [progress, setProgress] = React.useState(20);
   const deliveryStatusMessages = {
     'Viaje en curso': (
-      <CircularProgressWithLabel size={60} className={styles.travelInCourse} value={props.value} />
+      <CircularProgressWithLabel size={60} className={styles.travelInCourse} value={value} />
     ),
     Finalizó: (
-      <CircularProgressWithLabel
-        size={60}
-        className={styles.travelInFinalization}
-        value={props.value}
-      />
+      <CircularProgressWithLabel size={60} className={styles.travelInFinalization} value={value} />
     ),
     Inactivo: (
-      <CircularProgressWithLabel size={60} className={styles.travelInactive} value={props.value} />
+      <CircularProgressWithLabel size={60} className={styles.travelInactive} value={value} />
     ),
   };
-  let deliveryStatus = props.deliveryStatus;
-  if (props.value == 100) {
-    deliveryStatus = 'Finalizó';
-  } else if (props.value >= 1 && props.value <= 20) {
-    deliveryStatus = 'Inactivo';
-  } else if (props.value >= 21 && props.value <= 99) {
-    deliveryStatus = 'Viaje en curso';
+  let deliveryManStatus = deliveryStatus;
+  if (value == 100) {
+    deliveryManStatus = 'Finalizó';
+  } else if (value >= 1 && value <= 20) {
+    deliveryManStatus = 'Inactivo';
+  } else if (value >= 21 && value <= 99) {
+    deliveryManStatus = 'Viaje en curso';
   }
   return (
     <>
       {' '}
-      <Box sx={{ marginLeft: '2%' }}>{deliveryStatusMessages[deliveryStatus]}</Box>
+      <Box sx={{ marginLeft: '2%' }}>{deliveryStatusMessages[deliveryManStatus]}</Box>
     </>
   );
 }
