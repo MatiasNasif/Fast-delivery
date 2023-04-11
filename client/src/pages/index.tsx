@@ -41,21 +41,24 @@ export default function Login() {
 
   const navigate = useRouter();
   const dispatch = useDispatch<any>();
-  const userId: string = useSelector((state) => state.user?.id ?? null);
+  const userRedux = useSelector((state) => state.user);
+  const userId = userRedux?.id ?? null;
+
+  // const userId: string = useSelector((state) => state.user?.id ?? null);
   const [formsByUser, setFormsByUser] = useState([]);
   const [hasFormToday, setHasFormToday] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmitOfLogin = (data: LoginFormData) => {
-    dispatch(userLogin({ data, enqueueSnackbar, navigate }));
+    dispatch(userLogin({ data, enqueueSnackbar }));
   };
   useEffect(() => {
-    if (userId !== null) {
+    if (userId !== null && userId !== undefined) {
       getAllFormSwornByUser(userId)
         .then((formSwornList) => {
           setFormsByUser(formSwornList);
 
-          const today = new Date().toISOString().slice(0, 10); // Obtener la fecha actual en formato ISO
+          const today = new Date().toISOString().slice(0, 10);
           const hasForm = formSwornList.some((form) => {
             return form.user === userId && form.createdAt.slice(0, 10) === today;
           });
@@ -63,6 +66,8 @@ export default function Login() {
 
           if (hasForm) {
             navigate.push('/views/start-workday');
+          } else if (userRedux.admin) {
+            navigate.push('/views/manage-schedule');
           } else {
             navigate.push('/views/sworn-statement');
           }

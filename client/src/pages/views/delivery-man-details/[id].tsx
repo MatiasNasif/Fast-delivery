@@ -39,8 +39,7 @@ const DeliveryManDetails = () => {
 
   const router = useRouter();
 
-  // const idDeliveryManParam: string = (router.query.id ?? '').toString();
-  const idDeliveryManParam: string = '642360135795abfd3f5be2f1';
+  const idDeliveryManParam: string = (router.query.id ?? '').toString();
 
   useEffect(() => {
     fetch(`${urlApi}/users/${idDeliveryManParam}`)

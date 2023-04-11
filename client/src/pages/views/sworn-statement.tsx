@@ -9,7 +9,6 @@ import SwitchSworn from '../../commons/switchSworn';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import toast, { Toaster } from 'react-hot-toast';
 import { formCreate } from '../../store/formSworn';
 import { setPersistence } from '@/store/user';
 import { useSnackbar } from 'notistack';
@@ -81,7 +80,6 @@ const SwornStatement = () => {
 
   return (
     <Container maxWidth={'xs'} disableGutters={true}>
-      <Toaster position="top-center" reverseOrder={false} limit={3} />
       <>
         <Header />
 
@@ -120,9 +118,9 @@ const SwornStatement = () => {
             </Box>
 
             <ButtonApp
-              type="submit"
+              typeofButton="submit"
               variantButton="contained"
-              disabled={buttonValidate}
+              isDisable={buttonValidate}
               onClick={handleButtonClick}
             >
               Continuar

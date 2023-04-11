@@ -11,7 +11,7 @@ interface User {
   email: string;
   id: string;
   fullName: string;
-  // define el resto de las propiedades del usuario aquí
+  admin: boolean;
 }
 
 interface UserCredentials {
@@ -22,12 +22,7 @@ interface UserCredentials {
 const API_URL = 'http://localhost:5000';
 
 export const setPersistence = createAsyncThunk('SET_PERSISTENCIA', () => {
-  if (typeof window !== 'undefined') {
-    const userLocalStorage = localStorage.getItem('user');
-    const user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
-    return user;
-  }
-  return null;
+  return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
 });
 
 export const getUserById = createAsyncThunk('GET_USER', () => {
@@ -35,12 +30,6 @@ export const getUserById = createAsyncThunk('GET_USER', () => {
   return axios.get(`${API_URL}/users/${userId}`).then((user) => user.data);
 });
 
-// export const userRegister = createAsyncThunk('USER_REGISTER', (data: UserRegister) => {
-//   return axios
-//     .post(`${API_URL}/users/signup`, data)
-//     .then((user) => user.data)
-//     .catch((error) => alert('NO PASAS CAPO'));
-// });
 export const userRegister = createAsyncThunk(
   'USER_REGISTER',
   async (data: { data: UserRegister; enqueueSnackbar: Function; navigate: Function }) => {
@@ -109,6 +98,7 @@ export const userLogin = createAsyncThunk<
       email: responseData.email,
       id: responseData.id,
       fullName: responseData.fullName,
+      admin: responseData.admin,
     };
     localStorage.setItem('user', JSON.stringify(user));
     return user;
@@ -139,7 +129,7 @@ export const getAllUsers = createAsyncThunk('GET_ALL_USER', () => {
 });
 
 const userReducer = createReducer(
-  setPersistence.fulfilled(null, null, null), // valor inicial
+  setPersistence.fulfilled({}), // valor inicial
   {
     [`${getUserById.fulfilled}`]: (state, action) => action.payload,
     [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
