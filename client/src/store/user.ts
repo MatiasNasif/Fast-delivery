@@ -101,6 +101,20 @@ export const userLogin = createAsyncThunk<
       admin: responseData.admin,
     };
     localStorage.setItem('user', JSON.stringify(user));
+    const nameWithCapitalizedFirstLetter =
+      user.fullName.charAt(0).toUpperCase() + user.fullName.slice(1);
+    enqueueSnackbar(`Bienvenido/a  ${nameWithCapitalizedFirstLetter} `, {
+      variant: 'success',
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+      style: {
+        fontSize: '16px',
+        color: '#fffff',
+        fontWeight: 'bold',
+      },
+    });
     return user;
   } catch (error) {
     enqueueSnackbar('Usuario o Contraseña no existen o son incorrectos', {
