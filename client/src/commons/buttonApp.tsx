@@ -7,6 +7,7 @@ interface ButtonAppProps {
   variantButton: string;
   typeofButton: string;
   onClick?: () => void;
+  onMouseDown?: () => void;
 }
 
 export default function ButtonApp({
@@ -15,6 +16,7 @@ export default function ButtonApp({
   children,
   isDisable,
   onClick,
+  onMouseDown,
 }: ButtonAppProps) {
   return (
     <Box className={styles.container_button}>
@@ -26,6 +28,7 @@ export default function ButtonApp({
         className={styles.button}
         disabled={isDisable}
         onClick={onClick}
+        onMouseDown={onMouseDown}
       >
         {children}
       </Button>
