@@ -49,6 +49,19 @@ export class PackagesController {
     return packagesPendingByUser;
   }
 
+  @Get(':deliveryDate/delivery-date')
+  async findByDeliveryDate(@Param('deliveryDate') deliveryDateString: string) {
+    const packages = await this.packageService.findByDeliveryDate(
+      deliveryDateString,
+    );
+    if (!packages.length) {
+      throw new NotFoundException(
+        `No se encontraron paquetes para la fecha de entrega ${deliveryDateString}`,
+      );
+    }
+    return packages;
+  }
+
   @Put('/:packageId')
   async packageId(
     @Param('packageId') packageId: string,
