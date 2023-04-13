@@ -12,7 +12,6 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
 import imageAvatar from '../../../assets/avatar1.jpeg';
-import { createFalse } from 'typescript';
 
 interface User {
   fullName: string;
@@ -36,7 +35,9 @@ const DeliveryManDetails = () => {
   const [deliveryMan, setDeliveryMan] = useState<User>(initialUserState);
   const [deliveredPackages, setDeliveredPackages] = useState<Package[]>([]);
   const [pendingPackages, setPendingPackages] = useState<Package[]>([]);
-  const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(true);
+  const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(
+    deliveryMan.status !== 'Activo' ? false : true
+  );
 
   const router = useRouter();
 
@@ -54,14 +55,14 @@ const DeliveryManDetails = () => {
       .then((response) => response.json())
       .then((packages: Package[]) => setDeliveredPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam, deliveredPackages]);
+  }, [idDeliveryManParam]);
 
   useEffect(() => {
     fetch(`${urlApi}/packages/${idDeliveryManParam}/packagesPendingByUser`)
       .then((response) => response.json())
       .then((packages: Package[]) => setPendingPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam, pendingPackages]);
+  }, [idDeliveryManParam]);
 
   const handleChangeSwitchButton = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setCheckSwitchChange(event.target.checked);
@@ -70,7 +71,10 @@ const DeliveryManDetails = () => {
       .then((updatedDeliveryMan) => {
         setDeliveryMan(updatedDeliveryMan);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setCheckSwitchChange(!event.target.checked);
+      });
   };
 
   const updateDeliveryManStatus = (newStatus: string): Promise<User> => {
@@ -105,11 +109,14 @@ const DeliveryManDetails = () => {
             <DeliveryStatus checkSwitchChange={deliveryMan?.status} />
           </section>
           <section className={styles.container_switch}>
-            <Switch
-              checked={checkSwitchChange}
-              onChange={handleChangeSwitchButton}
-              inputProps={{ 'aria-label': 'controlled' }}
-            />
+            <label className={styles.switch}>
+              <input
+                type="checkbox"
+                checked={deliveryMan.status === 'Activo' ? true : false}
+                onChange={handleChangeSwitchButton}
+              />
+              <span className={styles.slider}></span>
+            </label>
           </section>
         </Box>
 
