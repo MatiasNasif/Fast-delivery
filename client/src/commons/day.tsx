@@ -1,36 +1,64 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import styles from '../styles/DaysOfWeek.module.css';
 
-const DaysOfWeek: React.FC = () => {
-  const today = new Date();
-  const currentDayOfWeek = today.getDay();
-  const [selectedDay, setSelectedDay] = useState(currentDayOfWeek);
-  const [dates, setDates] = useState<Date[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
+const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
-  const handleDayClick = (day: number, date: Date) => {
-    setSelectedDay(day);
-    console.log(date);
+interface Package {
+  deliveryStatus: string;
+}
+
+interface Props {
+  updatePackagesByDate: (newPackages: Package[], date: string) => void;
+}
+
+const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
+  const [today, setToday] = useState(new Date());
+  const currentDayOfWeek: number = today.getDay();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dates, setDates] = useState<Date[]>([]);
+  const [selectedDay, setSelectedDay] = useState<number>(currentDayOfWeek);
+
+  useMemo(() => {
+    setToday(new Date());
+  }, []);
+
+  const handleDayClick = (selectDay: number, selectDate: Date) => {
+    setSelectedDay(selectDay);
+    const day: string = selectDate.getDate().toString().padStart(2, '0');
+    const month: string = (selectDate.getMonth() + 1).toString().padStart(2, '0');
+    const year: string = selectDate.getFullYear().toString().slice(-2);
+    const dateFormatted: string = `${day}-${month}-${year}`;
+
+    fetch(`${urlApi}/packages/${dateFormatted}/delivery-date`)
+      .then((response) => response.json())
+      .then((packageByDate: Package[]) => {
+        updatePackagesByDate(packageByDate, dateFormatted);
+      })
+      .catch((error) => console.log(error));
   };
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const container = event.currentTarget;
-    const scrollPosition = container.scrollLeft;
-    const selectedDay = Math.round((scrollPosition / container.offsetWidth) * 5);
+    const scrollPosition: number = container.scrollLeft;
+    const selectedDay: number = Math.round((scrollPosition / container.offsetWidth) * 5);
     setSelectedDay(selectedDay);
   };
 
   useEffect(() => {
-    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-    const monthEndDayOfWeek = new Date(today.getFullYear(), today.getMonth(), daysInMonth).getDay();
-    const firstDate = new Date(
+    const daysInMonth: number = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const monthEndDayOfWeek: number = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      daysInMonth
+    ).getDay();
+    const firstDate: Date = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate() - currentDayOfWeek
     );
-    const lastDate = new Date(today.getFullYear(), today.getMonth(), daysInMonth);
+    const lastDate: Date = new Date(today.getFullYear(), today.getMonth(), daysInMonth);
     lastDate.setDate(lastDate.getDate() + (6 - monthEndDayOfWeek));
-    const dates = [];
+    const dates: Date[] = [];
     for (let d = new Date(firstDate); d <= lastDate; d.setDate(d.getDate() + 1)) {
       dates.push(new Date(d));
     }
@@ -40,7 +68,7 @@ const DaysOfWeek: React.FC = () => {
       containerRef.current.scrollLeft =
         (currentDayOfWeek - 2) * (containerRef.current.offsetWidth / 5);
     }
-  }, []);
+  }, [currentDayOfWeek, today]);
 
   return (
     <div className={styles.container} ref={containerRef} onScroll={handleScroll}>
