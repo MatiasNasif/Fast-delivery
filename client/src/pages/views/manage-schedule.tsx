@@ -49,16 +49,33 @@ export default function ManageSchedule() {
       .catch((error) => console.log(error));
   }, [deliveryMans]);
 
+  useEffect(() => {
+    fetch(`${urlApi}/packages/${dateFormatted}/delivery-date`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return [];
+        }
+      })
+      .then((packageByDate: Package[]) => {
+        setPackages(packageByDate);
+      })
+      .catch((error) => console.log(error));
+  }, [dateFormatted]);
+
   const updatePackagesByDate = (newPackages: Package[], date: string): void => {
-    setPackages(newPackages);
-    setSelectedDate(date);
+    if (Array.isArray(newPackages)) {
+      setPackages(newPackages);
+      setSelectedDate(date);
+    }
   };
 
-  const activeDeliveryManCounter: number = deliveryMans.filter(
+  const activeDeliveryManCounter: number = (deliveryMans || []).filter(
     (user) => user.status === 'Activo'
   ).length;
 
-  const inactiveDeliveryManCounter: number = deliveryMans.filter(
+  const inactiveDeliveryManCounter: number = (deliveryMans || []).filter(
     (user) => user.status === 'Inactivo'
   ).length;
 
@@ -67,11 +84,11 @@ export default function ManageSchedule() {
   const activeDeliveryManPercentage: number =
     (activeDeliveryManCounter / totalDeliveryManCounter) * 100;
 
-  const deliveredPackages: number = packages.filter(
+  const deliveredPackages: number = (packages || []).filter(
     (pkg) => pkg.deliveryStatus === 'Entregado'
   ).length;
 
-  const pendingPackages: number = packages.filter(
+  const pendingPackages: number = (packages || []).filter(
     (pkg) => pkg.deliveryStatus === 'En curso' || pkg.deliveryStatus === 'Pendiente'
   ).length;
 

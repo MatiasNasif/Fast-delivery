@@ -30,7 +30,13 @@ const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
     const dateFormatted: string = `${day}-${month}-${year}`;
 
     fetch(`${urlApi}/packages/${dateFormatted}/delivery-date`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return [];
+        }
+      })
       .then((packageByDate: Package[]) => {
         updatePackagesByDate(packageByDate, dateFormatted);
       })
