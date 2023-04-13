@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
 import imageAvatar from '../../../assets/avatar1.jpeg';
+import { createFalse } from 'typescript';
 
 interface User {
   fullName: string;
@@ -123,11 +124,10 @@ const DeliveryManDetails = () => {
                 Repartos pendientes
               </Typography>
             </AccordionSummary>
-            {pendingPackages.map(
-              (pendingPackage: Package, i: number): JSX.Element => (
+            {pendingPackages.length > 0 &&
+              pendingPackages.map((pendingPackage: Package, i: number) => (
                 <PackageDetailsCard key={i} packageDetail={pendingPackage} />
-              )
-            )}
+              ))}
           </Accordion>
         </Box>
 
@@ -145,11 +145,10 @@ const DeliveryManDetails = () => {
             <Typography className={styles.subtitle} variant="subtitle1">
               Ya repartiste {deliveredPackagesCount}
             </Typography>
-            {deliveredPackages.map(
-              (deliveredPackage: Package, i: number): JSX.Element => (
+            {deliveredPackages.length > 0 &&
+              deliveredPackages.map((deliveredPackage: Package, i: number) => (
                 <PackageDetailsCard key={i} packageDetail={deliveredPackage} />
-              )
-            )}
+              ))}
           </Accordion>
         </Box>
       </Container>
