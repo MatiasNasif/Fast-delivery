@@ -36,14 +36,8 @@ const DeliveryManDetails = () => {
   const [deliveredPackages, setDeliveredPackages] = useState<Package[]>([]);
   const [pendingPackages, setPendingPackages] = useState<Package[]>([]);
   const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(
-    typeof window !== 'undefined' && localStorage.getItem('switchState') === 'false' ? false : true
+    deliveryMan.status !== 'Activo' ? false : true
   );
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('switchState', checkSwitchChange.toString());
-    }
-  }, [checkSwitchChange]);
 
   const router = useRouter();
 
@@ -115,16 +109,10 @@ const DeliveryManDetails = () => {
             <DeliveryStatus checkSwitchChange={deliveryMan?.status} />
           </section>
           <section className={styles.container_switch}>
-            {/* <Switch
-              // checked={checkSwitchChange}
-              onChange={handleChangeSwitchButton}
-              inputProps={{ 'aria-label': 'controlled' }}
-              defaultChecked={checkSwitchChange}
-            /> */}
             <label className={styles.switch}>
               <input
                 type="checkbox"
-                checked={checkSwitchChange}
+                checked={deliveryMan.status === 'Activo' ? true : false}
                 onChange={handleChangeSwitchButton}
               />
               <span className={styles.slider}></span>

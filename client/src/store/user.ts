@@ -121,6 +121,7 @@ export const userLogin = createAsyncThunk<
 export const userLogout = createAsyncThunk('USER_LOGOUT', () => {
   return axios.post(`${API_URL}/auth/logout`).then(() => {
     localStorage.removeItem('user');
+    localStorage.removeItem('switchState');
   });
 });
 
