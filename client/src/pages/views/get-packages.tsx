@@ -15,6 +15,7 @@ import { setPersistence } from '@/store/user';
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 interface Package {
+  weight: number;
   address: string;
   _id: string;
 }
@@ -55,21 +56,22 @@ export default function GetPackages() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (selectedPackages.length > 0) {
       const body = JSON.stringify({ packs: selectedPackages });
-      try {
-        const response = await fetch(`${API_URL}/users/${userId}/assign`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: body,
+
+      fetch(`${API_URL}/users/${userId}/assign`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      })
+        .then((response) => response.json())
+        .then(() => navigate.push('/views/start-workday'))
+        .catch((error) => {
+          console.error(error);
         });
-        const result = await response.json();
-      } catch (error) {
-        console.error(error);
-      }
     }
   };
 
@@ -111,17 +113,22 @@ export default function GetPackages() {
                       {pack.address}
                     </Typography>
                   </Box>
+                  <Box>
+                    <Typography ml={2} variant="subtitle1" className={styles.boxAddress}>
+                      {pack.weight} Kg
+                    </Typography>
+                  </Box>
                 </Box>
                 <Divider sx={{ m: '5%' }} />
               </>
             );
           })}
+          <Box className={styles.boxContainer}>
+            <ButtonApp typeofButton="submit" variantButton="contained">
+              Iniciar Jornada
+            </ButtonApp>
+          </Box>
         </form>
-        <Box className={styles.boxContainer}>
-          <ButtonApp typeofButton="submit" variantButton="contained">
-            Iniciar Jornada
-          </ButtonApp>
-        </Box>
       </>
     </Container>
   );
