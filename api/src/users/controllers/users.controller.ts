@@ -21,11 +21,6 @@ export class UsersController {
     return createdUser;
   }
 
-  @Get()
-  async getAllUsers(): Promise<CreateUserDto[]> {
-    return await this.usersService.getAllUsers();
-  }
-
   @Get('alldeliveryman')
   async getAllNonAdminUsers(): Promise<CreateUserDto[]> {
     return await this.usersService.getAllNonAdminUsers();

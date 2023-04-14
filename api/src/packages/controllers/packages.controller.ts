@@ -27,6 +27,12 @@ export class PackagesController {
     return packages;
   }
 
+  @Get('/packagesPending')
+  async getAllPackagesPending() {
+    const packages = await this.packageService.getAllPackagesPending();
+    return packages;
+  }
+
   @Get('/:packageId')
   async getPackage(@Param('packageId') packageId) {
     const packageid = await this.packageService.getPackage(packageId);
@@ -47,6 +53,19 @@ export class PackagesController {
     const packagesPendingByUser =
       await this.packageService.getAllPackagesPendingByUser(userId);
     return packagesPendingByUser;
+  }
+
+  @Get(':deliveryDate/delivery-date')
+  async findByDeliveryDate(@Param('deliveryDate') deliveryDateString: string) {
+    const packages = await this.packageService.findByDeliveryDate(
+      deliveryDateString,
+    );
+    if (!packages.length) {
+      throw new NotFoundException(
+        `No se encontraron paquetes para la fecha de entrega ${deliveryDateString}`,
+      );
+    }
+    return packages;
   }
 
   @Put('/:packageId')

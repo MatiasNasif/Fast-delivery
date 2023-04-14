@@ -49,10 +49,10 @@ export class FormSwornService {
     return this.formSwornModel.find({ user: userId });
   }
 
-  async getFormSwornById(id: string): Promise<CreateFormSwornDto> {
-    const formSworn: CreateFormSwornDto = await this.formSwornModel.findById(
-      id,
-    );
+  async getFormSwornByUserId(userId: string): Promise<CreateFormSwornDto> {
+    const formSworn: CreateFormSwornDto = await this.formSwornModel.findOne({
+      user: userId,
+    });
     return formSworn;
   }
 

@@ -73,7 +73,7 @@ export default function ManagePackages() {
         <Box className={styles.addIconContainer}>
           <Fab color="primary" aria-label="add">
             <Link href={'/views/add-package'}>
-              <AddIcon />
+              <AddIcon className={styles.addIcon} />
             </Link>
           </Fab>
         </Box>

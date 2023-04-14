@@ -20,3 +20,9 @@
   font-weight: bold;
   font-size: 16px;
 }
+
+.addIcon{
+display: flex;
+align-items: center;
+justify-content: center;
+}
