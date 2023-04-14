@@ -35,7 +35,7 @@ interface Package {
 const ManageSchedule = () => {
   const today = new Date();
   const day: string = today.getDate().toString().padStart(2, '0');
-  const month: string = (today.getMonth() + 1).toString();
+  const month: string = (today.getMonth() + 1).toString().padStart(2, '0');
   const year: string = today.getFullYear().toString().slice(-2);
   const dateFormatted: string = `${day}-${month}-${year}`;
 
@@ -48,7 +48,7 @@ const ManageSchedule = () => {
       .then((response) => response.json())
       .then((deliveryMans: User[]) => setDeliveryMans(deliveryMans))
       .catch((error) => console.log(error));
-  }, []);
+  }, [deliveryMans]);
 
   useEffect(() => {
     fetch(`${urlApi}/packages/${dateFormatted}/delivery-date`)
