@@ -56,6 +56,7 @@ export default function StartWorkday() {
   useEffect(() => {
     dispatch(setPersistence());
   }, [dispatch]);
+
   useEffect(() => {
     if (userId) {
       dispatch(getFormById(userId));
