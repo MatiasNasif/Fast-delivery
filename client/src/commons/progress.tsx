@@ -52,7 +52,7 @@ export default function CircularStatic({ value, deliveryStatus, _id }: Props) {
   let deliveryManStatus = deliveryStatus;
   if (value == 100) {
     deliveryManStatus = 'Finalizó';
-  } else if (value >= 1 && value <= 20) {
+  } else if (value >= 0 && value <= 20) {
     deliveryManStatus = 'Inactivo';
   } else if (value >= 21 && value <= 99) {
     deliveryManStatus = 'Viaje en curso';

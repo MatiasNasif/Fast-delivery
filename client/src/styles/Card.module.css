@@ -27,3 +27,7 @@
 .divider {
   margin: 5%;
 }
+
+.deleteButton{
+  cursor: pointer;
+}

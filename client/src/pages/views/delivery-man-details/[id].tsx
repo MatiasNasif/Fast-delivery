@@ -7,20 +7,20 @@ import DeliveryStatus from '@/utils/deliveryStatus';
 import { Container, Box, Typography, Accordion, AccordionSummary } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
-import Switch from '@mui/material/Switch';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import Link from 'next/link';
-import imageAvatar from '../../../assets/avatar1.jpeg';
+import withAdminAuth from '@/commons/withAdminAuth';
 
 interface User {
   fullName: string;
   status?: string | undefined;
+  admin: boolean;
 }
 
 const initialUserState: User = {
   fullName: '',
   status: 'Activo',
+  admin: true,
 };
 
 interface Package {
@@ -35,10 +35,11 @@ const DeliveryManDetails = () => {
   const [deliveryMan, setDeliveryMan] = useState<User>(initialUserState);
   const [deliveredPackages, setDeliveredPackages] = useState<Package[]>([]);
   const [pendingPackages, setPendingPackages] = useState<Package[]>([]);
-  const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(true);
+  const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(
+    deliveryMan.status !== 'Activo' ? false : true
+  );
 
   const router = useRouter();
-
   const idDeliveryManParam: string = (router.query.id ?? '').toString();
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const DeliveryManDetails = () => {
       .then((response) => response.json())
       .then((packages: Package[]) => setPendingPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam, pendingPackages]);
+  }, [idDeliveryManParam, setPendingPackages]);
 
   const handleChangeSwitchButton = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setCheckSwitchChange(event.target.checked);
@@ -69,7 +70,10 @@ const DeliveryManDetails = () => {
       .then((updatedDeliveryMan) => {
         setDeliveryMan(updatedDeliveryMan);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setCheckSwitchChange(!event.target.checked);
+      });
   };
 
   const updateDeliveryManStatus = (newStatus: string): Promise<User> => {
@@ -95,20 +99,21 @@ const DeliveryManDetails = () => {
       <Container className={styles.container_all}>
         <Box className={styles.container_grid}>
           <section className={styles.container_avatar_image}>
-            <Avatar className={styles.container_avatar}>
-              <Image src={imageAvatar} alt="image-avatar" className={styles.image_avatar} />
-            </Avatar>
+            <Avatar className={styles.container_avatar}></Avatar>
           </section>
           <section className={styles.container_options_and_typography}>
-            <Typography>{deliveryMan?.fullName}</Typography>
+            <Typography className={styles.typography_name}>{deliveryMan?.fullName}</Typography>
             <DeliveryStatus checkSwitchChange={deliveryMan?.status} />
           </section>
           <section className={styles.container_switch}>
-            <Switch
-              checked={checkSwitchChange}
-              onChange={handleChangeSwitchButton}
-              inputProps={{ 'aria-label': 'controlled' }}
-            />
+            <label className={styles.switch}>
+              <input
+                type="checkbox"
+                checked={deliveryMan.status === 'Activo' ? true : false}
+                onChange={handleChangeSwitchButton}
+              />
+              <span className={styles.slider}></span>
+            </label>
           </section>
         </Box>
 
@@ -123,11 +128,10 @@ const DeliveryManDetails = () => {
                 Repartos pendientes
               </Typography>
             </AccordionSummary>
-            {pendingPackages.map(
-              (pendingPackage: Package, i: number): JSX.Element => (
+            {pendingPackages.length > 0 &&
+              pendingPackages.map((pendingPackage: Package, i: number) => (
                 <PackageDetailsCard key={i} packageDetail={pendingPackage} />
-              )
-            )}
+              ))}
           </Accordion>
         </Box>
 
@@ -145,11 +149,10 @@ const DeliveryManDetails = () => {
             <Typography className={styles.subtitle} variant="subtitle1">
               Ya repartiste {deliveredPackagesCount}
             </Typography>
-            {deliveredPackages.map(
-              (deliveredPackage: Package, i: number): JSX.Element => (
+            {deliveredPackages.length > 0 &&
+              deliveredPackages.map((deliveredPackage: Package, i: number) => (
                 <PackageDetailsCard key={i} packageDetail={deliveredPackage} />
-              )
-            )}
+              ))}
           </Accordion>
         </Box>
       </Container>
@@ -157,4 +160,4 @@ const DeliveryManDetails = () => {
   );
 };
 
-export default DeliveryManDetails;
+export default withAdminAuth(DeliveryManDetails);

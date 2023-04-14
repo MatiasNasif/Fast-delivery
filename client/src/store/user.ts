@@ -101,6 +101,18 @@ export const userLogin = createAsyncThunk<
       admin: responseData.admin,
     };
     localStorage.setItem('user', JSON.stringify(user));
+    enqueueSnackbar(`Bienvenido/a  ${user.fullName} `, {
+      variant: 'success',
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+      style: {
+        fontSize: '16px',
+        color: '#fffff',
+        fontWeight: 'bold',
+      },
+    });
     return user;
   } catch (error) {
     enqueueSnackbar('Usuario o Contraseña no existen o son incorrectos', {
@@ -121,6 +133,7 @@ export const userLogin = createAsyncThunk<
 export const userLogout = createAsyncThunk('USER_LOGOUT', () => {
   return axios.post(`${API_URL}/auth/logout`).then(() => {
     localStorage.removeItem('user');
+    localStorage.removeItem('switchState');
   });
 });
 

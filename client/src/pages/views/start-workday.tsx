@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { setPersistence } from '@/store/user';
 import { getFormById } from '@/store/formSworn';
+import { useSnackbar } from 'notistack';
 
 interface Package {
   address: string;
@@ -33,18 +34,23 @@ export default function StartWorkday() {
   const userRedux = useSelector((state) => state.user);
   const userId = userRedux.id;
   const API_URL = 'http://localhost:5000';
+  const { enqueueSnackbar } = useSnackbar();
   const counterPackages: number = packages.length;
 
   useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
-      .then((response) => response.json())
-      .then((packs) => setPackages(packs));
+    if (userId) {
+      fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+        .then((response) => response.json())
+        .then((packs) => setPackages(packs));
+    }
   }, [userId, packages]);
 
   useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
-      .then((response) => response.json())
-      .then((packs) => setPackagesPending(packs));
+    if (userId) {
+      fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
+        .then((response) => response.json())
+        .then((packs) => setPackagesPending(packs));
+    }
   }, [userId, packagesPending]);
 
   useEffect(() => {
@@ -56,6 +62,23 @@ export default function StartWorkday() {
       dispatch(getFormById(userId));
     }
   }, [dispatch, userId]);
+  const messageOfalcoholYesButton = () => {
+    const messageOfalcoholYes =
+      'En tu declaración jurada haz seleccionado que haz bebido alcohol en las ultimas 24 horas, por lo tanto tienes denegado el acceso. Vuelve mañana por favor';
+
+    enqueueSnackbar(`${messageOfalcoholYes}`, {
+      variant: 'info',
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+      style: {
+        fontSize: '16px',
+        color: '#fffff',
+        fontWeight: 'bold',
+      },
+    });
+  };
 
   return (
     <>
@@ -63,10 +86,12 @@ export default function StartWorkday() {
         <Container maxWidth="xs" disableGutters={true}>
           <Header />
           {form.alcohol === 'si' ? (
-            <ButtonApp variantButton="contained" isDisable={true}>
-              {' '}
-              NO PODES LABURAR POR 24 HORAS
-            </ButtonApp>
+            <span onClick={messageOfalcoholYesButton}>
+              <ButtonApp variantButton="contained" isDisable={true}>
+                {' '}
+                NO PODES LABURAR POR 24 HORAS
+              </ButtonApp>
+            </span>
           ) : (
             <Link href="/views/get-packages">
               <ButtonApp variantButton="contained">obtener paquetes</ButtonApp>{' '}

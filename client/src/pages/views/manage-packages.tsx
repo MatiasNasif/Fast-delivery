@@ -8,6 +8,7 @@ import Link from 'next/link';
 import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 interface User {
   email: string;
@@ -26,7 +27,6 @@ interface Package {
 }
 
 export default function ManagePackages() {
-  const [packagesPending, setPackagesPending] = useState<Package[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
 
   let user: User | null = null;
@@ -35,22 +35,18 @@ export default function ManagePackages() {
     user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
   }
 
-  const userId = user?.id;
+  const dateSelected = useSelector((state) => state.date);
+  console.log(dateSelected, 'date redux');
+
   const API_URL = 'http://localhost:5000';
 
   useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+    fetch(`${API_URL}/packages/${dateSelected}/delivery-date`)
       .then((response) => response.json())
       .then((packs) => setPackages(packs));
-  }, [userId]);
+  }, [dateSelected]);
 
-  useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
-      .then((response) => response.json())
-      .then((packs) => setPackagesPending(packs));
-  }, [userId]);
-
-  let countPackages = packages.length + packagesPending.length;
+  let countPackages = packages.length;
 
   return (
     <>
@@ -73,22 +69,17 @@ export default function ManagePackages() {
             <Typography className={styles.subtitle} variant="subtitle1">
               Hay {countPackages} paquetes con el criterio de filtrado seleccionado.
             </Typography>
-            {packages.map((pack: Package, i: number) => {
-              if (pack.deliveryStatus) {
-                return <Card key={i} packageDetail={pack} hideDeliveryStatus />;
-              }
-            })}
-            {packagesPending.map((pack: Package, i: number) => {
-              if (pack.deliveryStatus) {
-                return <Card key={i} packageDetail={pack} hideDeliveryStatus />;
-              }
-            })}
+            {packages && packages.length > 0
+              ? packages.map((pack: Package, i: number) => {
+                  return <Card key={i} packageDetail={pack} />;
+                })
+              : null}
           </Accordion>
         </Box>
         <Box className={styles.addIconContainer}>
           <Fab color="primary" aria-label="add">
             <Link href={'/views/add-package'}>
-              <AddIcon />
+              <AddIcon className={styles.addIcon} />
             </Link>
           </Fab>
         </Box>

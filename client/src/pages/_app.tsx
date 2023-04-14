@@ -4,6 +4,8 @@ import Head from 'next/head';
 import { Provider } from 'react-redux';
 import { store } from '../store/store';
 import { SnackbarProvider } from 'notistack';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -20,7 +22,16 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
 
       <Provider store={store}>
-        <SnackbarProvider maxSnack={2} autoHideDuration={2000}>
+        <SnackbarProvider
+          maxSnack={2}
+          autoHideDuration={2000}
+          iconVariant={{
+            success: <SentimentSatisfiedAltOutlinedIcon />,
+            error: <SentimentVeryDissatisfiedIcon />,
+            warning: '⚠️',
+            info: 'ℹ️',
+          }}
+        >
           <Component {...pageProps} />
         </SnackbarProvider>
       </Provider>
