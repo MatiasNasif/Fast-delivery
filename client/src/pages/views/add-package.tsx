@@ -21,6 +21,7 @@ import ButtonApp from '@/commons/buttonApp';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useInput from '@/utils/useInput';
+import withAdminAuth from '@/commons/withAdminAuth';
 
 const AddPackage = () => {
   const address = useInput();
@@ -154,4 +155,4 @@ const AddPackage = () => {
   );
 };
 
-export default AddPackage;
+export default withAdminAuth(AddPackage);
