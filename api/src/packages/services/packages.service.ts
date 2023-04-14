@@ -49,6 +49,13 @@ export class PackagesService {
     return packagesByUser;
   }
 
+  async getAllPackagesPending(): Promise<CreatePackageDto[]> {
+    const packages = await this.packageModel.find({
+      deliveryStatus: 'Pendiente',
+    });
+    return packages;
+  }
+
   async getAllPackagesPendingByUser(
     userId: string,
   ): Promise<CreatePackageDto[]> {

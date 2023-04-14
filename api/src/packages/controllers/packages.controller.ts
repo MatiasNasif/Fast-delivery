@@ -27,6 +27,12 @@ export class PackagesController {
     return packages;
   }
 
+  @Get('/packagesPending')
+  async getAllPackagesPending() {
+    const packages = await this.packageService.getAllPackagesPending();
+    return packages;
+  }
+
   @Get('/:packageId')
   async getPackage(@Param('packageId') packageId) {
     const packageid = await this.packageService.getPackage(packageId);
