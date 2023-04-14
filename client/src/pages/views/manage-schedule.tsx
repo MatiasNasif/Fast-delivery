@@ -94,7 +94,13 @@ export default function ManageSchedule() {
 
   const totalPackages: number = deliveredPackages + pendingPackages;
 
-  const deliveredPackagesPercentage: number = (deliveredPackages / totalPackages) * 100;
+  let deliveredPackagesPercentage: number;
+
+  if (deliveredPackages === 0 && totalPackages === 0) {
+    deliveredPackagesPercentage = 0;
+  } else {
+    deliveredPackagesPercentage = (deliveredPackages / totalPackages) * 100;
+  }
 
   return (
     <>
@@ -125,7 +131,7 @@ export default function ManageSchedule() {
             {CircleDummy.map((data, i) => (
               <Box key={i}>
                 <Box className={styles.boxOfdeliveryman}>
-                  <Progress value={activeDeliveryManPercentage} colorCircle={data.color} />
+                  <Progress value={activeDeliveryManPercentage} />
                   <Box sx={{ width: '100%' }}>
                     <Typography className={styles.textOfdeliveryman} variant="inherit">
                       Repartidores
@@ -153,7 +159,7 @@ export default function ManageSchedule() {
             {PackageDummy.map((data, i) => (
               <Box key={i}>
                 <Box className={styles.boxOfpackages}>
-                  <Progress value={deliveredPackagesPercentage} colorCircle={data.color} />
+                  <Progress value={deliveredPackagesPercentage} />
                   <Box sx={{ width: '100%' }}>
                     <Typography className={styles.textOfdeliveryman} variant="inherit">
                       Paquetes
