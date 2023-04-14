@@ -8,6 +8,7 @@ import Link from 'next/link';
 import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 interface User {
   email: string;
@@ -34,13 +35,16 @@ export default function ManagePackages() {
     user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
   }
 
+  const dateSelected = useSelector((state) => state.date);
+  console.log(dateSelected, 'date redux');
+
   const API_URL = 'http://localhost:5000';
 
   useEffect(() => {
-    fetch(`${API_URL}/packages`)
+    fetch(`${API_URL}/packages/${dateSelected}/delivery-date`)
       .then((response) => response.json())
       .then((packs) => setPackages(packs));
-  }, [packages]);
+  }, [dateSelected]);
 
   let countPackages = packages.length;
 
@@ -65,9 +69,11 @@ export default function ManagePackages() {
             <Typography className={styles.subtitle} variant="subtitle1">
               Hay {countPackages} paquetes con el criterio de filtrado seleccionado.
             </Typography>
-            {packages.map((pack: Package, i: number) => {
-              return <Card key={i} packageDetail={pack} />;
-            })}
+            {packages && packages.length > 0
+              ? packages.map((pack: Package, i: number) => {
+                  return <Card key={i} packageDetail={pack} />;
+                })
+              : null}
           </Accordion>
         </Box>
         <Box className={styles.addIconContainer}>
