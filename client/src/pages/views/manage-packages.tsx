@@ -9,6 +9,7 @@ import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import withAdminAuth from '@/commons/withAdminAuth';
 
 interface User {
   email: string;
@@ -26,7 +27,7 @@ interface Package {
   user?: string;
 }
 
-export default function ManagePackages() {
+const ManagePackages = () => {
   const [packages, setPackages] = useState<Package[]>([]);
 
   let user: User | null = null;
@@ -86,4 +87,6 @@ export default function ManagePackages() {
       </Container>
     </>
   );
-}
+};
+
+export default withAdminAuth(ManagePackages);
