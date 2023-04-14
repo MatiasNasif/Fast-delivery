@@ -26,7 +26,6 @@ interface Package {
 }
 
 export default function ManagePackages() {
-  const [packagesPending, setPackagesPending] = useState<Package[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
 
   let user: User | null = null;
@@ -35,22 +34,15 @@ export default function ManagePackages() {
     user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
   }
 
-  const userId = user?.id;
   const API_URL = 'http://localhost:5000';
 
   useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+    fetch(`${API_URL}/packages`)
       .then((response) => response.json())
       .then((packs) => setPackages(packs));
-  }, [userId]);
+  }, [packages]);
 
-  useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
-      .then((response) => response.json())
-      .then((packs) => setPackagesPending(packs));
-  }, [userId]);
-
-  let countPackages = packages.length + packagesPending.length;
+  let countPackages = packages.length;
 
   return (
     <>
@@ -74,14 +66,7 @@ export default function ManagePackages() {
               Hay {countPackages} paquetes con el criterio de filtrado seleccionado.
             </Typography>
             {packages.map((pack: Package, i: number) => {
-              if (pack.deliveryStatus) {
-                return <Card key={i} packageDetail={pack} hideDeliveryStatus />;
-              }
-            })}
-            {packagesPending.map((pack: Package, i: number) => {
-              if (pack.deliveryStatus) {
-                return <Card key={i} packageDetail={pack} hideDeliveryStatus />;
-              }
+              return <Card key={i} packageDetail={pack} />;
             })}
           </Accordion>
         </Box>
