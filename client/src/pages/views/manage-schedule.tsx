@@ -17,6 +17,7 @@ import CircleDummy from '../../dummy-data/Circular-Progress.json';
 import PackageDummy from '../../dummy-data/package-progress.json';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import withAdminAuth from '@/commons/withAdminAuth';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -31,7 +32,7 @@ interface Package {
   deliveryStatus: string;
 }
 
-export default function ManageSchedule() {
+const ManageSchedule = () => {
   const today = new Date();
   const day: string = today.getDate().toString().padStart(2, '0');
   const month: string = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -187,4 +188,6 @@ export default function ManageSchedule() {
       </Container>
     </>
   );
-}
+};
+
+export default withAdminAuth(ManageSchedule);
