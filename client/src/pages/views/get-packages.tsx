@@ -7,6 +7,7 @@ import Header from '../../commons/header';
 import ButtonApp from '../../commons/buttonApp';
 import ArrowApp from '../../commons/arrowApp';
 import React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPersistence } from '@/store/user';
@@ -21,8 +22,7 @@ interface Package {
 export default function GetPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
-  const userRedux = useSelector((state) => state.user);
-  const userId = userRedux.id;
+
   const dispatch = useDispatch();
 
   const API_URL = 'http://localhost:5000';
@@ -39,6 +39,8 @@ export default function GetPackages() {
   useEffect(() => {
     dispatch(setPersistence());
   }, [dispatch]);
+  const userRedux = useSelector((state) => state.user);
+  const userId = userRedux.id;
 
   const handleChange = (packageId: string) => {
     const index = selectedPackages.indexOf(packageId);
@@ -75,7 +77,9 @@ export default function GetPackages() {
     <Container maxWidth={'xs'} disableGutters={true}>
       <>
         <Header />
-        <ArrowApp />
+        <Link href={'/views/start-workday'}>
+          <ArrowApp />
+        </Link>
         <form onSubmit={handleSubmit}>
           <Box className={styles.boxGetAndHowMany}>
             <Box>
@@ -87,7 +91,6 @@ export default function GetPackages() {
               </Typography>
             </Box>
           </Box>
-          {/* Recorrer el conjunto de direcciones únicas */}
           {packages?.map((pack) => {
             return (
               <>
@@ -113,10 +116,12 @@ export default function GetPackages() {
               </>
             );
           })}
-          <Box className={styles.boxContainer}>
-            <button type="submit">HOLA{/* <ButtonApp>Iniciar Jornada</ButtonApp> */}</button>
-          </Box>
         </form>
+        <Box className={styles.boxContainer}>
+          <ButtonApp typeofButton="submit" variantButton="contained">
+            Iniciar Jornada
+          </ButtonApp>
+        </Box>
       </>
     </Container>
   );

@@ -145,9 +145,9 @@ const AddPackage = () => {
           </Box> */}
         </Container>
         <Box className={styles.boxContainer}>
-          <button type="submit">
-            <ButtonApp>Agregar</ButtonApp>
-          </button>
+          <ButtonApp typeofButton="submit" variantButton="contained">
+            Agregar
+          </ButtonApp>
         </Box>
       </form>
     </>
