@@ -73,7 +73,7 @@ const GoogleMaps = ({ destination }: Props) => {
             options={{
               destination,
               origin,
-              travelMode: google.maps.TravelMode.DRIVING,
+              travelMode: 'DRIVING',
             }}
             callback={directionsCallback}
           />
