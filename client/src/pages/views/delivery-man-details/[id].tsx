@@ -13,11 +13,13 @@ import Link from 'next/link';
 interface User {
   fullName: string;
   status?: string | undefined;
+  admin: boolean;
 }
 
 const initialUserState: User = {
   fullName: '',
   status: 'Activo',
+  admin: true,
 };
 
 interface Package {
@@ -36,8 +38,13 @@ const DeliveryManDetails = () => {
     deliveryMan.status !== 'Activo' ? false : true
   );
 
-  const router = useRouter();
+  let user: User | null = null;
+  if (typeof window !== 'undefined') {
+    const userLocalStorage: string | null = localStorage.getItem('user');
+    user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
+  }
 
+  const router = useRouter();
   const idDeliveryManParam: string = (router.query.id ?? '').toString();
 
   useEffect(() => {
