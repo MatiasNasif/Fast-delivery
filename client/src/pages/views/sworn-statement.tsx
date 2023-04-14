@@ -69,7 +69,7 @@ const SwornStatement = () => {
         fontSize: '16px',
         color: '#fffff',
         fontWeight: 'bold',
-      },
+      }, 
     });
   };
   useEffect(() => {
