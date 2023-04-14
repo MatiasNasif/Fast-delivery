@@ -7,21 +7,50 @@ import React from 'react';
 import Link from 'next/link';
 import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
-import { Package, requestPackages } from '@/utils/fakerPackages';
 import { useState, useEffect } from 'react';
 
+interface User {
+  email: string;
+  id: string;
+}
+
+interface Package {
+  _id?: string;
+  address: string;
+  receiver: string;
+  weight: number;
+  deliveryDate: string;
+  quantity: number;
+  deliveryStatus: string;
+  user?: string;
+}
+
 export default function ManagePackages() {
+  const [packagesPending, setPackagesPending] = useState<Package[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
 
+  let user: User | null = null;
+  if (typeof window !== 'undefined') {
+    const userLocalStorage = localStorage.getItem('user');
+    user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
+  }
+
+  const userId = user?.id;
+  const API_URL = 'http://localhost:5000';
+
   useEffect(() => {
-    requestPackagesAll();
-  }, []);
+    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+      .then((response) => response.json())
+      .then((packs) => setPackages(packs));
+  }, [userId]);
 
-  const requestPackagesAll = () => {
-    requestPackages(3).then((pack) => setPackages(pack));
-  };
+  useEffect(() => {
+    fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
+      .then((response) => response.json())
+      .then((packs) => setPackagesPending(packs));
+  }, [userId]);
 
-  let countPackages = packages.length;
+  let countPackages = packages.length + packagesPending.length;
 
   return (
     <>
@@ -42,11 +71,16 @@ export default function ManagePackages() {
               </Typography>
             </AccordionSummary>
             <Typography className={styles.subtitle} variant="subtitle1">
-              Ya repartiste {countPackages} paquetes.
+              Hay {countPackages} paquetes con el criterio de filtrado seleccionado.
             </Typography>
-            {packages.map((dummy: any, i: number) => {
-              if (dummy.deliveryStatus) {
-                return <Card key={i} dummy={dummy} hideDeliveryStatus />;
+            {packages.map((pack: Package, i: number) => {
+              if (pack.deliveryStatus) {
+                return <Card key={i} packageDetail={pack} hideDeliveryStatus />;
+              }
+            })}
+            {packagesPending.map((pack: Package, i: number) => {
+              if (pack.deliveryStatus) {
+                return <Card key={i} packageDetail={pack} hideDeliveryStatus />;
               }
             })}
           </Accordion>
@@ -54,7 +88,7 @@ export default function ManagePackages() {
         <Box className={styles.addIconContainer}>
           <Fab color="primary" aria-label="add">
             <Link href={'/views/add-package'}>
-              <AddIcon />
+              <AddIcon className={styles.addIcon} />
             </Link>
           </Fab>
         </Box>

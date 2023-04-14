@@ -36,13 +36,15 @@ export class FormSwornController {
     return await this.formSwornService.getAllFormSwornByUser(userId);
   }
 
-  @Get(':id')
-  async getFormSwornById(@Param('id') id: string) {
-    const formSwornById = await this.formSwornService.getFormSwornById(id);
-    if (!formSwornById) {
-      throw new NotFoundException(`user con ID ${id} no encontrado.`);
+  @Get(':userId')
+  async getFormSwornByUserId(@Param('userId') userId: string) {
+    const formSwornByUserId = await this.formSwornService.getFormSwornByUserId(
+      userId,
+    );
+    if (!formSwornByUserId) {
+      throw new NotFoundException(`Usuario con ID ${userId} no encontrado.`);
     }
-    return formSwornById;
+    return formSwornByUserId;
   }
 
   @Put(':id')

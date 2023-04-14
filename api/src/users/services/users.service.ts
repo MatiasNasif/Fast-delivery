@@ -41,8 +41,8 @@ export class UsersService {
     return this.userModel.findOne(query);
   }
 
-  async getAllUsers(): Promise<CreateUserDto[]> {
-    return this.userModel.find();
+  async getAllNonAdminUsers(): Promise<CreateUserDto[]> {
+    return this.userModel.find({ admin: false });
   }
 
   async getUserById(id: string): Promise<CreateUserDto> {
@@ -82,6 +82,9 @@ export class UsersService {
     if (!user) {
       throw new Error('User not found');
     }
+    if (!packs) {
+      throw new Error('Packs is undefined');
+    }
 
     const existingPackageIds = user.packages.map((p) => p.toString());
     const newPackageIds = packs.filter(
@@ -113,8 +116,7 @@ export class UsersService {
     packages.map((pack) => {
       pack.user = new mongoose.Types.ObjectId(userId);
     });
-
-    user.packages.push(new mongoose.Types.ObjectId(...packs));
+    user.packages.push(...packs.map((id) => new mongoose.Types.ObjectId(id)));
 
     await user.save();
 
@@ -123,9 +125,5 @@ export class UsersService {
     }
 
     return user;
-  }
-
-  async getAllNonAdminUsers(): Promise<CreateUserDto[]> {
-    return this.userModel.find({ admin: false });
   }
 }

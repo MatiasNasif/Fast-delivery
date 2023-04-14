@@ -9,7 +9,6 @@ import SwitchSworn from '../../commons/switchSworn';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import toast, { Toaster } from 'react-hot-toast';
 import { formCreate } from '../../store/formSworn';
 import { setPersistence } from '@/store/user';
 import { useSnackbar } from 'notistack';
@@ -33,6 +32,7 @@ const SwornStatement = () => {
   const [answers, setAnswers] = useState({});
   const [buttonValidate, setButtonValidate] = useState<boolean>(true);
   const [buttonClicks, setButtonClicks] = useState<number>(0);
+
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useRouter();
   const dispatch = useDispatch();
@@ -58,22 +58,26 @@ const SwornStatement = () => {
     setButtonClicks((prevClicks) => prevClicks + 1);
   };
 
+  const handleButtonClickDesactivate = () => {
+    return enqueueSnackbar('Tiene que completar todos los campos', {
+      variant: 'error',
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+      style: {
+        fontSize: '16px',
+        color: '#fffff',
+        fontWeight: 'bold',
+      }, 
+    });
+  };
   useEffect(() => {
     setButtonValidate(!hasRequiredFields(answers));
   }, [answers]);
 
   const handleSubmitSwornStatement = (event: ReactEventHandler) => {
     event.preventDefault();
-    if (buttonValidate) {
-      return enqueueSnackbar('Tiene que completar todos los campos', {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'center',
-        },
-      });
-    }
-
     dispatch(formCreate(dataForm))
       .then(() => navigate.push('/views/start-workday'))
       .catch((err) => console.log(err));
@@ -81,7 +85,6 @@ const SwornStatement = () => {
 
   return (
     <Container maxWidth={'xs'} disableGutters={true}>
-      <Toaster position="top-center" reverseOrder={false} limit={3} />
       <>
         <Header />
 
@@ -112,21 +115,40 @@ const SwornStatement = () => {
 
           <Box className={styles.ButtonApp}>
             <Box className={styles.BoxOfCheckbox}>
-              <Checkbox required disabled={buttonValidate ? true : false} />
+              {buttonValidate ? (
+                <span className={styles.BoxOfCheckbox} onClick={handleButtonClickDesactivate}>
+                  <Checkbox required disabled={true} />
+                </span>
+              ) : (
+                <Checkbox required disabled={false} />
+              )}
+
               <Typography variant="p" className={styles.wordText}>
                 Declaro que mis respuestas fueron totalmente verdaderas y que he respondido a todas
                 las preguntas con la mayor honestidad posible.
               </Typography>
             </Box>
-
-            <ButtonApp
-              type="submit"
-              variantButton="contained"
-              disabled={buttonValidate}
-              onClick={handleButtonClick}
-            >
-              Continuar
-            </ButtonApp>
+            {buttonValidate ? (
+              <span onClick={handleButtonClickDesactivate}>
+                <ButtonApp
+                  typeofButton="submit"
+                  variantButton="contained"
+                  isDisable={true}
+                  onClick={handleButtonClick}
+                >
+                  No Puedes Continuar
+                </ButtonApp>
+              </span>
+            ) : (
+              <ButtonApp
+                typeofButton="submit"
+                variantButton="contained"
+                isDisable={false}
+                onClick={handleButtonClick}
+              >
+                Continuar
+              </ButtonApp>
+            )}
           </Box>
         </form>
       </>

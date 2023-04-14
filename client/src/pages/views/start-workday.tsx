@@ -5,7 +5,11 @@ import Header from '../../commons/header';
 import Card from '../../commons/packageDetailsCard';
 import ButtonApp from '../../commons/buttonApp';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import { setPersistence } from '@/store/user';
+import { getFormById } from '@/store/formSworn';
+import { useSnackbar } from 'notistack';
 
 interface Package {
   address: string;
@@ -17,7 +21,7 @@ interface Package {
   user?: string;
 }
 
-interface User {
+interface userRedux {
   email: string;
   id: string;
 }
@@ -25,44 +29,74 @@ interface User {
 export default function StartWorkday() {
   const [packagesPending, setPackagesPending] = useState<Package[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
-
-  let user: User | null = null;
-  if (typeof window !== 'undefined') {
-    const userLocalStorage = localStorage.getItem('user');
-    user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
-  }
-
-  const userId = user?.id;
-
+  const dispatch = useDispatch();
+  const form = useSelector((state) => state.form);
+  const userRedux = useSelector((state) => state.user);
+  const userId = userRedux.id;
   const API_URL = 'http://localhost:5000';
+  const { enqueueSnackbar } = useSnackbar();
   const counterPackages: number = packages.length;
 
   useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesByUser`)
-      .then((response) => response.json())
-      .then((packs) => setPackages(packs));
-  }, [userId]);
+    if (userId) {
+      fetch(`${API_URL}/packages/${userId}/packagesByUser`)
+        .then((response) => response.json())
+        .then((packs) => setPackages(packs));
+    }
+  }, [userId, packages]);
 
   useEffect(() => {
-    fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
-      .then((response) => response.json())
-      .then((packs) => setPackagesPending(packs));
-  }, [userId]);
+    if (userId) {
+      fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
+        .then((response) => response.json())
+        .then((packs) => setPackagesPending(packs));
+    }
+  }, [userId, packagesPending]);
+
+  useEffect(() => {
+    dispatch(setPersistence());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(getFormById(userId));
+    }
+  }, [dispatch, userId]);
+  const messageOfalcoholYesButton = () => {
+    const messageOfalcoholYes =
+      'En tu declaración jurada haz seleccionado que haz bebido alcohol en las ultimas 24 horas, por lo tanto tienes denegado el acceso. Vuelve mañana por favor';
+
+    enqueueSnackbar(`${messageOfalcoholYes}`, {
+      variant: 'info',
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+      style: {
+        fontSize: '16px',
+        color: '#fffff',
+        fontWeight: 'bold',
+      },
+    });
+  };
 
   return (
     <>
       <main>
         <Container maxWidth="xs" disableGutters={true}>
           <Header />
-
-          {/* <Link href="/views/get-packages">
+          {form.alcohol === 'si' ? (
+            <span onClick={messageOfalcoholYesButton}>
+              <ButtonApp variantButton="contained" isDisable={true}>
+                {' '}
+                NO PODES LABURAR POR 24 HORAS
+              </ButtonApp>
+            </span>
+          ) : (
+            <Link href="/views/get-packages">
               <ButtonApp variantButton="contained">obtener paquetes</ButtonApp>{' '}
-            </Link> */}
-
-          <ButtonApp variantButton="contained" isDisable={true}>
-            {' '}
-            NO PODES LABURAR
-          </ButtonApp>
+            </Link>
+          )}
 
           <Box className={styles.box}>
             <Accordion>

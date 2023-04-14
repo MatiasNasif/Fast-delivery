@@ -49,6 +49,13 @@ export class PackagesService {
     return packagesByUser;
   }
 
+  async getAllPackagesPending(): Promise<CreatePackageDto[]> {
+    const packages = await this.packageModel.find({
+      deliveryStatus: 'Pendiente',
+    });
+    return packages;
+  }
+
   async getAllPackagesPendingByUser(
     userId: string,
   ): Promise<CreatePackageDto[]> {
@@ -62,6 +69,19 @@ export class PackagesService {
       user: userId,
     });
     return packagesPendingByUser;
+  }
+
+  async findByDeliveryDate(
+    deliveryDateString: string,
+  ): Promise<CreatePackageDto[]> {
+    const deliveryDate = deliveryDateString.replace(/-/g, '/');
+    const packagesByDate = await this.packageModel
+      .find({
+        deliveryDate: deliveryDate,
+      })
+      .exec();
+
+    return packagesByDate;
   }
 
   async deletePackage(packageId: string): Promise<CreatePackageDto> {

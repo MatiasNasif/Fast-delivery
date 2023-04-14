@@ -1,120 +1,122 @@
 import { Container, Box, Typography, Button } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
 import { useEffect, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import styles from '../../styles/GetPackages.module.css';
 import Header from '../../commons/header';
 import ButtonApp from '../../commons/buttonApp';
 import ArrowApp from '../../commons/arrowApp';
-import { requestGetPackages, Package } from '@/utils/fakerGetPackages';
 import React from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPersistence } from '@/store/user';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
+interface Package {
+  address: string;
+  _id: string;
+}
+
 export default function GetPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
-  const [packageCounts, setPackageCounts] = useState<{ [key: string]: number }>({});
+  const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
+  const userRedux = useSelector((state) => state.user);
+  const userId = userRedux.id;
+  const dispatch = useDispatch();
 
-  const uniqueAddresses = new Set(packages.map((pack) => pack.address));
+  const API_URL = 'http://localhost:5000';
+
+  const navigate = useRouter();
+
   useEffect(() => {
-    requestGetPackages(12).then((packs) => {
-      setPackages(packs);
-      // Inicializar el contador de paquetes por dirección en 0
-      const counts = Array.from(uniqueAddresses).reduce((acc, address) => {
-        acc[address] = 0;
-        return acc;
-      }, {} as { [key: string]: number });
-      setPackageCounts(counts);
-    });
+    fetch(`${API_URL}/packages/packagesPending`)
+      .then((response) => response.json())
+      .then((packages) => setPackages(packages))
+      .catch((error) => console.error(error));
   }, []);
 
-  // Agrupar los paquetes por dirección
-  const packagesByAddress = packages.reduce((acc, pack) => {
-    if (!acc[pack.address]) {
-      // Si todavía no hay un arreglo para esta dirección, se crea uno vacío
-      acc[pack.address] = [];
-    }
+  useEffect(() => {
+    dispatch(setPersistence());
+  }, [dispatch]);
 
-    // Se agrega el paquete al arreglo correspondiente
-    acc[pack.address].push(pack);
-    return acc;
-  }, {} as { [key: string]: Package[] });
+  const handleChange = (packageId: string) => {
+    const index = selectedPackages.indexOf(packageId);
+
+    if (index === -1) {
+      setSelectedPackages([...selectedPackages, packageId]);
+    } else {
+      setSelectedPackages([
+        ...selectedPackages.slice(0, index),
+        ...selectedPackages.slice(index + 1),
+      ]);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (selectedPackages.length > 0) {
+      const body = JSON.stringify({ packs: selectedPackages });
+      try {
+        const response = await fetch(`${API_URL}/users/${userId}/assign`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: body,
+        });
+        const result = await response.json();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <Container maxWidth={'xs'} disableGutters={true}>
       <>
         <Header />
         <ArrowApp />
-
-        <Box className={styles.boxGetAndHowMany}>
-          <Box>
-            <Typography className={styles.wordGet} variant="h6">
-              Obtener paquetes
-            </Typography>
-            <Typography className={styles.wordHowMany}>
-              ¿Cuántos paquetes más vas a repartir hoy?
-            </Typography>
+        <form onSubmit={handleSubmit}>
+          <Box className={styles.boxGetAndHowMany}>
+            <Box>
+              <Typography className={styles.wordGet} variant="h6">
+                Obtener paquetes
+              </Typography>
+              <Typography className={styles.wordHowMany}>
+                ¿Cuántos paquetes más vas a repartir hoy?
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-        {/* Recorrer el conjunto de direcciones únicas */}
-        {Array.from(uniqueAddresses).map((address) => {
-          // Filtrar los paquetes que corresponden a esta dirección
-          const packagesForAddress = packages.filter((pack) => pack.address === address);
-          return (
-            <>
-              <Box sx={{ display: 'flex' }}>
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{
-                    '& .MuiSvgIcon-root': { fontSize: 28 },
-                    marginLeft: '10%',
-                    marginTop: '2%',
-                  }}
-                  color="info"
-                />
-                <Box>
-                  <Typography ml={2} variant="subtitle1" className={styles.boxAddress}>
-                    {address}
-                  </Typography>
-                  <Box className={styles.boxContainIcons}>
-                    <Button
-                      variant="contained"
-                      className={styles.buttonRemove}
-                      onClick={() => {
-                        setPackageCounts((prevCounts) => ({
-                          ...prevCounts,
-                          [address]: Math.max(prevCounts[address] - 1, 0),
-                        }));
-                      }}
-                    >
-                      <RemoveIcon sx={{ color: 'black' }} />
-                    </Button>
-                    {packageCounts[address]}
-                    <Button
-                      variant="contained"
-                      className={styles.buttonAdd}
-                      onClick={() => {
-                        setPackageCounts((prevCounts) => ({
-                          ...prevCounts,
-                          [address]: Math.min(prevCounts[address] + 1, packagesForAddress.length),
-                        }));
-                      }}
-                    >
-                      <AddIcon sx={{ color: 'black' }} />
-                    </Button>
+          {/* Recorrer el conjunto de direcciones únicas */}
+          {packages?.map((pack) => {
+            return (
+              <>
+                <Box sx={{ display: 'flex' }}>
+                  <Checkbox
+                    {...label}
+                    checked={selectedPackages.includes(pack._id)}
+                    onChange={() => handleChange(pack._id)}
+                    sx={{
+                      '& .MuiSvgIcon-root': { fontSize: 28 },
+                      marginLeft: '10%',
+                      marginTop: '2%',
+                    }}
+                    color="info"
+                  />
+                  <Box>
+                    <Typography ml={2} variant="subtitle1" className={styles.boxAddress}>
+                      {pack.address}
+                    </Typography>
                   </Box>
                 </Box>
-              </Box>
-              <Divider sx={{ m: '5%' }} />
-            </>
-          );
-        })}
-        <Box className={styles.boxContainer}>
-          <ButtonApp>Iniciar Jornada</ButtonApp>
-        </Box>
+                <Divider sx={{ m: '5%' }} />
+              </>
+            );
+          })}
+          <Box className={styles.boxContainer}>
+            <button type="submit">HOLA{/* <ButtonApp>Iniciar Jornada</ButtonApp> */}</button>
+          </Box>
+        </form>
       </>
     </Container>
   );
