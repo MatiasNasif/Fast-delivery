@@ -57,7 +57,7 @@ const AddPackage = () => {
       deliveryDate: value?.$d.toDateString(),
       quantity: count,
     };
-    console.log(data, 'holaa');
+
     fetch(`${API_URL}/packages/create`, {
       method: 'POST',
       headers: {
@@ -123,7 +123,7 @@ const AddPackage = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker value={value} onChange={(newValue) => setValue(newValue)} />
           </LocalizationProvider>
-          <InputLabel
+          {/* <InputLabel
             sx={{ fontSize: '12px', marginTop: '20px' }}
             className={styles.labelColor}
             focused={true}
@@ -142,11 +142,12 @@ const AddPackage = () => {
                 <AddIcon sx={{ color: 'black' }} />
               </Button>
             </Box>
-          </Box>
+          </Box> */}
         </Container>
         <Box className={styles.boxContainer}>
-          <ButtonApp type="submit">Agregar</ButtonApp>
-          {/* <button type="submit">Agregar</button> */}
+          <button type="submit">
+            <ButtonApp>Agregar</ButtonApp>
+          </button>
         </Box>
       </form>
     </>

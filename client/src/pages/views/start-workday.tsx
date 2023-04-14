@@ -46,7 +46,8 @@ export default function StartWorkday() {
       .then((response) => response.json())
       .then((packs) => setPackagesPending(packs));
   }, [userId, packagesPending]);
-      
+
+  useEffect(() => {
     dispatch(setPersistence());
   }, [dispatch]);
 
