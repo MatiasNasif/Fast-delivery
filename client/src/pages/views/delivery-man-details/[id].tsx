@@ -9,6 +9,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import withAdminAuth from '@/commons/withAdminAuth';
 
 interface User {
   fullName: string;
@@ -37,12 +38,6 @@ const DeliveryManDetails = () => {
   const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(
     deliveryMan.status !== 'Activo' ? false : true
   );
-
-  let user: User | null = null;
-  if (typeof window !== 'undefined') {
-    const userLocalStorage: string | null = localStorage.getItem('user');
-    user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
-  }
 
   const router = useRouter();
   const idDeliveryManParam: string = (router.query.id ?? '').toString();
@@ -165,4 +160,4 @@ const DeliveryManDetails = () => {
   );
 };
 
-export default DeliveryManDetails;
+export default withAdminAuth(DeliveryManDetails);
