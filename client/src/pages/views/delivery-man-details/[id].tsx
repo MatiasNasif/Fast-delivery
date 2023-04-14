@@ -7,11 +7,8 @@ import DeliveryStatus from '@/utils/deliveryStatus';
 import { Container, Box, Typography, Accordion, AccordionSummary } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
-import Switch from '@mui/material/Switch';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import Link from 'next/link';
-import imageAvatar from '../../../assets/avatar1.jpeg';
 
 interface User {
   fullName: string;
@@ -55,14 +52,14 @@ const DeliveryManDetails = () => {
       .then((response) => response.json())
       .then((packages: Package[]) => setDeliveredPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam]);
+  }, [idDeliveryManParam, deliveredPackages]);
 
   useEffect(() => {
     fetch(`${urlApi}/packages/${idDeliveryManParam}/packagesPendingByUser`)
       .then((response) => response.json())
       .then((packages: Package[]) => setPendingPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam]);
+  }, [idDeliveryManParam, setPendingPackages]);
 
   const handleChangeSwitchButton = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setCheckSwitchChange(event.target.checked);
@@ -100,12 +97,10 @@ const DeliveryManDetails = () => {
       <Container className={styles.container_all}>
         <Box className={styles.container_grid}>
           <section className={styles.container_avatar_image}>
-            <Avatar className={styles.container_avatar}>
-              <Image src={imageAvatar} alt="image-avatar" className={styles.image_avatar} />
-            </Avatar>
+            <Avatar className={styles.container_avatar}></Avatar>
           </section>
           <section className={styles.container_options_and_typography}>
-            <Typography>{deliveryMan?.fullName}</Typography>
+            <Typography className={styles.typography_name}>{deliveryMan?.fullName}</Typography>
             <DeliveryStatus checkSwitchChange={deliveryMan?.status} />
           </section>
           <section className={styles.container_switch}>
