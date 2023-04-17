@@ -34,7 +34,7 @@ interface Package {
 export default function ManageSchedule() {
   const today = new Date();
   const day: string = today.getDate().toString().padStart(2, '0');
-  const month: string = (today.getMonth() + 1).toString().padStart(2, '0');
+  const month: string = (today.getMonth() + 1).toString();
   const year: string = today.getFullYear().toString().slice(-2);
   const dateFormatted: string = `${day}-${month}-${year}`;
 
@@ -119,7 +119,7 @@ export default function ManageSchedule() {
         </Box>
         <Calendar updatePackagesByDate={updatePackagesByDate} />
         <Box mt={2}>
-          <Accordion>
+          <Accordion defaultExpanded>
             <AccordionSummary
               expandIcon={<ArrowDropDownSharpIcon />}
               aria-controls="panel1a-content"

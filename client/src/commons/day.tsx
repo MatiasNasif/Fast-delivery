@@ -25,7 +25,7 @@ const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
   const handleDayClick = (selectDay: number, selectDate: Date) => {
     setSelectedDay(selectDay);
     const day: string = selectDate.getDate().toString().padStart(2, '0');
-    const month: string = (selectDate.getMonth() + 1).toString().padStart(2, '0');
+    const month: string = (selectDate.getMonth() + 1).toString();
     const year: string = selectDate.getFullYear().toString().slice(-2);
     const dateFormatted: string = `${day}-${month}-${year}`;
 

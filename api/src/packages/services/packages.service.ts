@@ -74,7 +74,11 @@ export class PackagesService {
   async findByDeliveryDate(
     deliveryDateString: string,
   ): Promise<CreatePackageDto[]> {
+    console.log(deliveryDateString);
+
     const deliveryDate = deliveryDateString.replace(/-/g, '/');
+    console.log(deliveryDate, 'deluvery date transform');
+
     const packagesByDate = await this.packageModel
       .find({
         deliveryDate: deliveryDate,

@@ -48,15 +48,22 @@ const AddPackage = () => {
 
   const API_URL = 'http://localhost:5000';
 
+  const date = new Date(value?.$d.toDateString());
+  const day: string = date.getDate().toString().padStart(2, '0');
+  const month: string = (date.getMonth() + 1).toString();
+  const year: string = date.getFullYear().toString().slice(-2);
+  const dateFormatted: string = `${day}/${month}/${year}`;
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = {
       address: address.value,
       receiver: receiver.value,
       weight: Number(weight.value),
-      deliveryDate: value?.$d.toDateString(),
+      deliveryDate: dateFormatted,
       quantity: count,
     };
+    console.log(dateFormatted, 'soy dateFormatted');
 
     fetch(`${API_URL}/packages/create`, {
       method: 'POST',
@@ -71,9 +78,10 @@ const AddPackage = () => {
 
   return (
     <>
+      {' '}
       <Header />
-      <form onSubmit={handleSubmit}>
-        <Container maxWidth={'xs'}>
+      <Container maxWidth={'xs'}>
+        <form onSubmit={handleSubmit}>
           <Box className={styles.arrow}>
             <Link href={'/views/manage-packages'}>
               <ArrowApp />
@@ -112,16 +120,28 @@ const AddPackage = () => {
             fullWidth
             {...weight}
           />
-          <TextField
+          {/* <TextField
             label="Fecha en la que debe ser repartido"
             InputLabelProps={{ className: styles.labelColor }}
             variant="standard"
             className={styles.input}
             focused
             fullWidth
-          />
+          ></TextField> */}
+
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker value={value} onChange={(newValue) => setValue(newValue)} />
+            <DatePicker
+              label="Fecha en la que debe ser repartido"
+              value={value}
+              autoFocus
+              className={styles.dateContainer}
+              sx={{
+                marginTop: '20px',
+                color: 'yellow',
+              }}
+              onChange={(newValue) => setValue(newValue)}
+              renderInput={(params) => <TextField focused {...params} />}
+            />
           </LocalizationProvider>
           {/* <InputLabel
             sx={{ fontSize: '12px', marginTop: '20px' }}
@@ -130,7 +150,7 @@ const AddPackage = () => {
           >
             Cantidad
           </InputLabel>
-          <Box>
+          <Box> 
             <Box className={styles.boxContainIconsPackage}>
               <Button onClick={DecNum} variant="contained" className={styles.buttonRemovePackage}>
                 <RemoveIcon sx={{ color: 'black' }} />
@@ -143,13 +163,14 @@ const AddPackage = () => {
               </Button>
             </Box>
           </Box> */}
-        </Container>
-        <Box className={styles.boxContainer}>
-          <button type="submit">
-            <ButtonApp>Agregar</ButtonApp>
-          </button>
-        </Box>
-      </form>
+
+          <Box className={styles.boxContainer}>
+            <ButtonApp typeofButton="submit" variantButton="contained">
+              Agregar
+            </ButtonApp>
+          </Box>
+        </form>
+      </Container>
     </>
   );
 };
