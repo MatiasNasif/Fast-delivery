@@ -23,6 +23,8 @@ import { useRouter } from 'next/router';
 import useInput from '@/utils/useInput';
 import { useSnackbar } from 'notistack';
 
+import withAdminAuth from '@/commons/withAdminAuth';
+
 const AddPackage = () => {
   interface InputProps {
     value: string;

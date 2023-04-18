@@ -11,12 +11,11 @@ import {
 import ArrowDropDownSharpIcon from '@mui/icons-material/ArrowDropDownSharp';
 import styles from '../../styles/Schedule.module.css';
 import Header from '@/commons/header';
-import Calendar from '../../commons/day';
+import Calendar from '../../commons/daySlide';
 import Progress from '../../commons/progress';
-import CircleDummy from '../../dummy-data/Circular-Progress.json';
-import PackageDummy from '../../dummy-data/package-progress.json';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import withAdminAuth from '@/commons/withAdminAuth';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -31,7 +30,7 @@ interface Package {
   deliveryStatus: string;
 }
 
-export default function ManageSchedule() {
+const ManageSchedule = () => {
   const today = new Date();
   const day: string = today.getDate().toString().padStart(2, '0');
   const month: string = (today.getMonth() + 1).toString();
@@ -128,63 +127,60 @@ export default function ManageSchedule() {
                 {selectedDate} - Detalles
               </Typography>
             </AccordionSummary>
-            {CircleDummy.map((data, i) => (
-              <Box key={i}>
-                <Box className={styles.boxOfdeliveryman}>
-                  <Progress value={activeDeliveryManPercentage} />
-                  <Box sx={{ width: '100%' }}>
-                    <Typography className={styles.textOfdeliveryman} variant="inherit">
-                      Repartidores
-                    </Typography>
-                    <Typography className={styles.textOfstatus} variant="inherit">
-                      {`${activeDeliveryManCounter}/${totalDeliveryManCounter}`} Activos
-                    </Typography>
-                  </Box>
-                  <AvatarGroup max={2} sx={{ marginLeft: 'auto', marginRight: '20px' }}>
-                    <Avatar alt="Remy Sharp" />
-                    <Avatar alt="Travis Howard" />
-                  </AvatarGroup>
+            <Box>
+              <Box className={styles.boxOfdeliveryman}>
+                <Progress value={activeDeliveryManPercentage} />
+                <Box sx={{ width: '100%' }}>
+                  <Typography className={styles.textOfdeliveryman} variant="inherit">
+                    Repartidores
+                  </Typography>
+                  <Typography className={styles.textOfstatus} variant="inherit">
+                    {`${activeDeliveryManCounter}/${totalDeliveryManCounter}`} Activos
+                  </Typography>
                 </Box>
-                <Box className={styles.boxBtn}>
-                  <Box mt={2} px={2}>
-                    <Link href={'/views/manage-delivery-man'}>
-                      <Button fullWidth variant="contained" size="small">
-                        Ver Repartidores
-                      </Button>
-                    </Link>
-                  </Box>
+                <AvatarGroup max={2} sx={{ marginLeft: 'auto', marginRight: '20px' }}>
+                  <Avatar alt="Remy Sharp" />
+                  <Avatar alt="Travis Howard" />
+                </AvatarGroup>
+              </Box>
+              <Box className={styles.boxBtn}>
+                <Box mt={2} px={2}>
+                  <Link href={'/views/manage-delivery-man'}>
+                    <Button fullWidth variant="contained" size="small">
+                      Ver Repartidores
+                    </Button>
+                  </Link>
                 </Box>
               </Box>
-            ))}
-            {PackageDummy.map((data, i) => (
-              <Box key={i}>
-                <Box className={styles.boxOfpackages}>
-                  <Progress value={deliveredPackagesPercentage} />
-                  <Box sx={{ width: '100%' }}>
-                    <Typography className={styles.textOfdeliveryman} variant="inherit">
-                      Paquetes
-                    </Typography>
+            </Box>
+            <Box>
+              <Box className={styles.boxOfpackages}>
+                <Progress value={deliveredPackagesPercentage} />
+                <Box sx={{ width: '100%' }}>
+                  <Typography className={styles.textOfdeliveryman} variant="inherit">
+                    Paquetes
+                  </Typography>
 
-                    <Typography className={styles.textOfstatus} variant="inherit">
-                      {`${deliveredPackages}/${totalPackages}`} Repartidos
-                    </Typography>
-                  </Box>{' '}
-                </Box>
+                  <Typography className={styles.textOfstatus} variant="inherit">
+                    {`${deliveredPackages}/${totalPackages}`} Repartidos
+                  </Typography>
+                </Box>{' '}
+              </Box>
 
-                <Box className={styles.boxBtn}>
-                  <Box mt={2} px={2}>
-                    <Link href={'/views/manage-packages'}>
-                      <Button fullWidth variant="contained" size="small" className={styles.box}>
-                        Ver Paquetes
-                      </Button>
-                    </Link>
-                  </Box>
+              <Box className={styles.boxBtn}>
+                <Box mt={2} px={2}>
+                  <Link href={'/views/manage-packages'}>
+                    <Button fullWidth variant="contained" size="small" className={styles.box}>
+                      Ver Paquetes
+                    </Button>
+                  </Link>
                 </Box>
               </Box>
-            ))}
+            </Box>
           </Accordion>
         </Box>
       </Container>
     </>
   );
-}
+};
+export default ManageSchedule;

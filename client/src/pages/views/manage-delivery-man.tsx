@@ -9,6 +9,7 @@ import styles from '../../styles/ManageDeliveryMan.module.css';
 import SwitchDeliveryStatus from '../../utils/SwitchDeliveryStatus';
 import { useDispatch } from 'react-redux';
 import { setPersistence } from '@/store/user';
+import withAdminAuth from '@/commons/withAdminAuth';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -23,7 +24,7 @@ interface User {
   packages?: Package[];
 }
 
-export default function ManageDeliveryMan() {
+const ManageDeliveryMan = () => {
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
   const [deliveryManPackages, setDeliveryManPackages] = useState<{ [key: string]: Package[] }>({});
   const dispatch = useDispatch();
@@ -182,4 +183,6 @@ export default function ManageDeliveryMan() {
       </Container>
     </>
   );
-}
+};
+
+export default withAdminAuth(ManageDeliveryMan);

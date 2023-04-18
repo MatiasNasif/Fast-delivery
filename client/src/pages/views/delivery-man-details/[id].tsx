@@ -9,6 +9,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import withAdminAuth from '@/commons/withAdminAuth';
 
 interface User {
   fullName: string;
@@ -37,12 +38,6 @@ const DeliveryManDetails = () => {
   const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(
     deliveryMan.status !== 'Activo' ? false : true
   );
-
-  let user: User | null = null;
-  if (typeof window !== 'undefined') {
-    const userLocalStorage: string | null = localStorage.getItem('user');
-    user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
-  }
 
   const router = useRouter();
   const idDeliveryManParam: string = (router.query.id ?? '').toString();
@@ -118,30 +113,7 @@ const DeliveryManDetails = () => {
                 onChange={handleChangeSwitchButton}
               />
               <span className={styles.slider}></span>
-            </label>
-          </section>
-        </Box>
-
-        <Box className={styles.box}>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ArrowDropDownIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography variant="h6" className={styles.title}>
-                Repartos pendientes
-              </Typography>
-            </AccordionSummary>
-            {pendingPackages.length > 0 &&
-              pendingPackages.map((pendingPackage: Package, i: number) => (
-                <PackageDetailsCard key={i} packageDetail={pendingPackage} />
-              ))}
-          </Accordion>
-        </Box>
-
-        <Box className={styles.box}>
-          <Accordion>
+            </label>manage-schedule
             <AccordionSummary
               expandIcon={<ArrowDropDownIcon />}
               aria-controls="panel1a-content"

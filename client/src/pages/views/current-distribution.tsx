@@ -5,6 +5,8 @@ import ArrowApp from '@/commons/arrowApp';
 import Header from '@/commons/header';
 import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import {
   Container,
   Button,
@@ -39,6 +41,8 @@ export default function CurrentDistribution() {
   }
 
   const userId: string | undefined = user?.id;
+  const navigate = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [packagesByUser, setPackagesByUser] = useState<Package[]>([]);
 
@@ -47,7 +51,7 @@ export default function CurrentDistribution() {
       .then((response) => response.json())
       .then((packagesByUser: Package[]) => setPackagesByUser(packagesByUser))
       .catch((error) => console.log(error));
-  }, [userId, packagesByUser]);
+  }, []);
 
   const handleUpdatePackageStatus = (
     packageId: string | undefined,
@@ -62,6 +66,21 @@ export default function CurrentDistribution() {
       body: JSON.stringify({ deliveryStatus: packageDeliveryStatus }),
     })
       .then((response) => response.json())
+      .then(() =>
+        enqueueSnackbar(`Paquete entregado`, {
+          variant: 'info',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+          style: {
+            fontSize: '16px',
+            color: '#fffff',
+            fontWeight: 'bold',
+          },
+        })
+      )
+      .then(() => window.location.reload())
       .catch((error) => console.error(error));
   };
 

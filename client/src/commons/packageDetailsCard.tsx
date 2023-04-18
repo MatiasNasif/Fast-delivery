@@ -2,6 +2,7 @@ import { Box, Typography, Divider } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import styles from '../styles/Card.module.css';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
 
 interface Props {
   packageDetail: Package;
@@ -30,7 +31,18 @@ export default function PackageDetailsCard({
         if (!response.ok) {
           throw new Error('Fallo al querer eliminar el paquete');
         } else {
-          alert('Paquete eliminado correctamente');
+          enqueueSnackbar('Paquete eliminado correctamente', {
+            variant: 'success',
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+            style: {
+              fontSize: '16px',
+              color: '#fffff',
+              fontWeight: 'bold',
+            },
+          });
           onDeletePackage();
         }
       })
@@ -47,6 +59,7 @@ export default function PackageDetailsCard({
         </Typography>
         <Box className={styles.icon_delete}>
           <DeleteForeverIcon
+            className={styles.deleteButton}
             color="error"
             onClick={() => handleDeletePackage(packageDetail?._id)}
           />

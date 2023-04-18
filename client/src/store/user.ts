@@ -101,9 +101,7 @@ export const userLogin = createAsyncThunk<
       admin: responseData.admin,
     };
     localStorage.setItem('user', JSON.stringify(user));
-    const nameWithCapitalizedFirstLetter =
-      user.fullName.charAt(0).toUpperCase() + user.fullName.slice(1);
-    enqueueSnackbar(`Bienvenido/a  ${nameWithCapitalizedFirstLetter} `, {
+    enqueueSnackbar(`Bienvenido/a  ${user.fullName} `, {
       variant: 'success',
       anchorOrigin: {
         vertical: 'top',

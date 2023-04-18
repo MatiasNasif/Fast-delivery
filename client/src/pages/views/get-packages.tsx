@@ -7,10 +7,10 @@ import Header from '../../commons/header';
 import ButtonApp from '../../commons/buttonApp';
 import ArrowApp from '../../commons/arrowApp';
 import React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPersistence } from '@/store/user';
-import Link from 'next/link';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -23,8 +23,7 @@ interface Package {
 export default function GetPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
-  const userRedux = useSelector((state) => state.user);
-  const userId = userRedux.id;
+
   const dispatch = useDispatch();
 
   const API_URL = 'http://localhost:5000';
@@ -45,6 +44,8 @@ export default function GetPackages() {
   useEffect(() => {
     dispatch(setPersistence());
   }, [dispatch]);
+  const userRedux = useSelector((state) => state.user);
+  const userId = userRedux.id;
 
   const handleChange = (packageId: string) => {
     const index = selectedPackages.indexOf(packageId);
@@ -85,10 +86,12 @@ export default function GetPackages() {
         body: body,
       })
         .then((response) => response.json())
+
         .then(() => updateDeliveryStatus())
         .then(() => navigate.push(`start-workday`))
         .catch((error) => {
           navigate.push(`start-workday`);
+
           console.error(error);
         });
     }
@@ -112,7 +115,6 @@ export default function GetPackages() {
               </Typography>
             </Box>
           </Box>
-
           {packages?.map((pack) => {
             return (
               <>
