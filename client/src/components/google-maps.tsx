@@ -13,7 +13,7 @@ interface LatitudeAndLongitude {
 }
 
 interface Props {
-  destination: string;
+  destination: string | undefined;
 }
 
 const containerStyle = {
