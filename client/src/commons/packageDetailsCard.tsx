@@ -3,6 +3,9 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import styles from '../styles/Card.module.css';
 import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { useDispatch } from 'react-redux';
+import { setPackage } from '@/store/packageIdSelected';
+import { useRouter } from 'next/router';
 
 interface Props {
   packageDetail: Package;
@@ -23,6 +26,9 @@ export default function PackageDetailsCard({
   hideDeliveryStatus,
   onDeletePackage,
 }: Props) {
+  const dispatch = useDispatch();
+  const navigate = useRouter();
+
   const handleDeletePackage = (packageId: string) => {
     return fetch(`${urlApi}/packages/${packageId}`, {
       method: 'DELETE',
@@ -50,10 +56,20 @@ export default function PackageDetailsCard({
         console.error(error);
       });
   };
+
+  const handleClick = (packageId: string): void => {
+    dispatch(setPackage(packageId));
+    navigate.push('current-distribution');
+  };
+
   return (
     <>
       <Box className={styles.card_container}>
-        <LocalShippingIcon fontSize="large" className={styles.icon_card_shipping} />
+        <LocalShippingIcon
+          fontSize="large"
+          className={styles.icon_card_shipping}
+          onClick={() => handleClick(packageDetail?._id)}
+        />
         <Typography variant="subtitle1" className={styles.address}>
           {packageDetail?.address}
         </Typography>
