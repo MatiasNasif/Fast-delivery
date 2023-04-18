@@ -51,7 +51,7 @@ const GoogleMaps = ({ destination }: Props) => {
     } else {
       console.error('Geolocalización no funciona');
     }
-  }, [setOrigin]);
+  }, []);
 
   const directionsCallback = (result: google.maps.DirectionsResult | null) => {
     if (result !== null) {
