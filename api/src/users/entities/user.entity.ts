@@ -28,6 +28,9 @@ export class User {
     default: [],
   })
   packages?: mongoose.Types.ObjectId[];
+
+  @Prop()
+  photo?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

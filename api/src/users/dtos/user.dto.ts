@@ -30,6 +30,9 @@ export class CreateUserDto {
 
   @IsOptional()
   packages?: mongoose.Types.ObjectId[];
+
+  @IsOptional()
+  readonly photo?: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
