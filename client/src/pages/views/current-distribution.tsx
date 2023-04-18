@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import {
   Container,
   Button,
@@ -31,7 +32,7 @@ const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
 export default function CurrentDistribution() {
   const { enqueueSnackbar } = useSnackbar();
-
+  const navigate = useRouter();
   const packageIdSelected = useSelector((state) => state.package);
   const [packageByUser, setPackageByUser] = useState<Package>();
 
@@ -69,7 +70,7 @@ export default function CurrentDistribution() {
           },
         })
       )
-      .then(() => window.location.reload())
+      .then(() => navigate.push('start-workday'))
       .catch((error) => console.error(error));
   };
 
