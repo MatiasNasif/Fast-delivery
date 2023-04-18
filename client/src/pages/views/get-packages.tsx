@@ -1,6 +1,6 @@
 import { Container, Box, Typography, Button } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import styles from '../../styles/GetPackages.module.css';
 import Header from '../../commons/header';
@@ -30,12 +30,16 @@ export default function GetPackages() {
 
   const navigate = useRouter();
 
-  useEffect(() => {
-    fetch(`${API_URL}/packages/packagesPending`)
+  const fetchPackages = useCallback(() => {
+    fetch(`${API_URL}/packages/packagesPendingNotAssign`)
       .then((response) => response.json())
       .then((packages) => setPackages(packages))
       .catch((error) => console.error(error));
-  }, []);
+  }, [API_URL]);
+
+  useEffect(() => {
+    fetchPackages();
+  }, [fetchPackages]);
 
   useEffect(() => {
     dispatch(setPersistence());
@@ -56,10 +60,24 @@ export default function GetPackages() {
     }
   };
 
-  const handleSubmit = () => {
+  const updateDeliveryStatus = (): void => {
+    selectedPackages?.map((pack) => {
+      fetch(`${API_URL}/packages/${pack}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          deliveryStatus: 'En curso',
+        }),
+      });
+    });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (selectedPackages.length > 0) {
       const body = JSON.stringify({ packs: selectedPackages });
-
       fetch(`${API_URL}/users/${userId}/assign`, {
         method: 'POST',
         headers: {
@@ -68,8 +86,12 @@ export default function GetPackages() {
         body: body,
       })
         .then((response) => response.json())
-        .then(() => navigate.push('/views/start-workday'))
+
+        .then(() => updateDeliveryStatus())
+        .then(() => navigate.push(`start-workday`))
         .catch((error) => {
+          navigate.push(`start-workday`);
+
           console.error(error);
         });
     }

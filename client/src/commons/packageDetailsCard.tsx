@@ -2,11 +2,12 @@ import { Box, Typography, Divider } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import styles from '../styles/Card.module.css';
-import { useSnackbar } from 'notistack';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
 
 interface Props {
   packageDetail: Package;
   hideDeliveryStatus?: boolean;
+  onDeletePackage: () => void;
 }
 
 interface Package {
@@ -17,9 +18,11 @@ interface Package {
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
-export default function PackageDetailsCard({ packageDetail, hideDeliveryStatus }: Props) {
-  const { enqueueSnackbar } = useSnackbar();
-
+export default function PackageDetailsCard({
+  packageDetail,
+  hideDeliveryStatus,
+  onDeletePackage,
+}: Props) {
   const handleDeletePackage = (packageId: string) => {
     return fetch(`${urlApi}/packages/${packageId}`, {
       method: 'DELETE',
@@ -40,6 +43,7 @@ export default function PackageDetailsCard({ packageDetail, hideDeliveryStatus }
               fontWeight: 'bold',
             },
           });
+          onDeletePackage();
         }
       })
       .catch((error) => {

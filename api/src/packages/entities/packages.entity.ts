@@ -18,10 +18,6 @@ export class Package {
   @Prop()
   deliveryDate?: string;
 
-  @Max(100)
-  @Prop()
-  quantity?: number;
-
   @Prop({ enum: ['Entregado', 'En curso', 'Pendiente'] })
   deliveryStatus?: string;
 

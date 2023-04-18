@@ -56,6 +56,14 @@ export class PackagesService {
     return packages;
   }
 
+  async getAllPackagesPendingNotAssign(): Promise<CreatePackageDto[]> {
+    const packages = await this.packageModel.find({
+      deliveryStatus: 'Pendiente',
+      user: undefined,
+    });
+    return packages;
+  }
+
   async getAllPackagesPendingByUser(
     userId: string,
   ): Promise<CreatePackageDto[]> {
@@ -75,6 +83,7 @@ export class PackagesService {
     deliveryDateString: string,
   ): Promise<CreatePackageDto[]> {
     const deliveryDate = deliveryDateString.replace(/-/g, '/');
+
     const packagesByDate = await this.packageModel
       .find({
         deliveryDate: deliveryDate,

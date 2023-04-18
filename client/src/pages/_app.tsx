@@ -24,7 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <SnackbarProvider
           maxSnack={2}
-          autoHideDuration={2000}
+          autoHideDuration={3000}
           iconVariant={{
             success: <SentimentSatisfiedAltOutlinedIcon />,
             error: <SentimentVeryDissatisfiedIcon />,

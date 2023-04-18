@@ -3,7 +3,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AddIcon from '@mui/icons-material/Add';
 import Header from '../../commons/header';
 import Card from '../../commons/packageDetailsCard';
-import React from 'react';
+import React, { useCallback } from 'react';
 import Link from 'next/link';
 import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
@@ -37,17 +37,20 @@ const ManagePackages = () => {
   }
 
   const dateSelected = useSelector((state) => state.date);
-  console.log(dateSelected, 'date redux');
 
   const API_URL = 'http://localhost:5000';
 
-  useEffect(() => {
+  const countPackages = packages.length;
+
+  const fetchPackages = useCallback(() => {
     fetch(`${API_URL}/packages/${dateSelected}/delivery-date`)
       .then((response) => response.json())
       .then((packs) => setPackages(packs));
   }, [dateSelected]);
 
-  let countPackages = packages.length;
+  useEffect(() => {
+    fetchPackages();
+  }, [fetchPackages]);
 
   return (
     <>
@@ -57,7 +60,7 @@ const ManagePackages = () => {
       </Link>
       <Container maxWidth="xs" disableGutters={true}>
         <Box className={styles.box}>
-          <Accordion>
+          <Accordion defaultExpanded>
             <AccordionSummary
               expandIcon={<ArrowDropDownIcon />}
               aria-controls="panel1a-content"
@@ -72,7 +75,7 @@ const ManagePackages = () => {
             </Typography>
             {packages && packages.length > 0
               ? packages.map((pack: Package, i: number) => {
-                  return <Card key={i} packageDetail={pack} />;
+                  return <Card key={i} packageDetail={pack} onDeletePackage={fetchPackages} />;
                 })
               : null}
           </Accordion>
@@ -89,4 +92,4 @@ const ManagePackages = () => {
   );
 };
 
-export default withAdminAuth(ManagePackages);
+export default ManagePackages;
