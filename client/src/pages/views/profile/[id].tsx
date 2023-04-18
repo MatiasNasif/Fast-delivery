@@ -39,7 +39,7 @@ const Profile = () => {
             expandIcon={<ArrowDropDownRoundedIcon />}
             aria-controls="panel1a-content"
           >
-            <Typography className={styles.tittle} variant="inherit">
+            <Typography className={styles.title} variant="inherit">
               Información del repartidor
             </Typography>
           </AccordionSummary>

@@ -21,18 +21,33 @@ import ButtonApp from '@/commons/buttonApp';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useInput from '@/utils/useInput';
+import { useSnackbar } from 'notistack';
 
 const AddPackage = () => {
+  interface InputProps {
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    reset: () => void;
+  }
+
+  const useInput = (): InputProps => {
+    const [value, setValue] = useState('');
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(event.target.value);
+    };
+    const reset = () => {
+      setValue('');
+    };
+    return { value, onChange: handleChange, reset };
+  };
+
   const address = useInput();
   const receiver = useInput();
   const weight = useInput();
   const [value, setValue] = useState();
-  /*  const fecha = new Date('1/04/23');
-  console.log(fecha, 'fechaa'); */
-  /* const fecha: string | undefined = value?.$d.toDateString();
-  console.log(fecha); */
 
   const navigate = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [count, setCount] = useState(0);
   const IncNum = () => {
@@ -63,17 +78,33 @@ const AddPackage = () => {
       deliveryDate: dateFormatted,
       quantity: count,
     };
-    console.log(dateFormatted, 'soy dateFormatted');
-
     fetch(`${API_URL}/packages/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    })
-      .then(() => alert('Los datos se guardaron correctamente.'))
-      .then(() => navigate.push('/views/manage-packages'));
+    }).then(() => {
+      address.reset();
+      receiver.reset();
+      weight.reset();
+      setCount(0);
+      enqueueSnackbar(
+        `El paquete para ${receiver.value} a la dirección ${address.value} se agregó correctamente`,
+        {
+          variant: 'info',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+          style: {
+            fontSize: '16px',
+            color: '#fffff',
+            fontWeight: 'bold',
+          },
+        }
+      );
+    });
   };
 
   return (
@@ -120,14 +151,6 @@ const AddPackage = () => {
             fullWidth
             {...weight}
           />
-          {/* <TextField
-            label="Fecha en la que debe ser repartido"
-            InputLabelProps={{ className: styles.labelColor }}
-            variant="standard"
-            className={styles.input}
-            focused
-            fullWidth
-          ></TextField> */}
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
@@ -143,26 +166,6 @@ const AddPackage = () => {
               renderInput={(params) => <TextField focused {...params} />}
             />
           </LocalizationProvider>
-          {/* <InputLabel
-            sx={{ fontSize: '12px', marginTop: '20px' }}
-            className={styles.labelColor}
-            focused={true}
-          >
-            Cantidad
-          </InputLabel>
-          <Box> 
-            <Box className={styles.boxContainIconsPackage}>
-              <Button onClick={DecNum} variant="contained" className={styles.buttonRemovePackage}>
-                <RemoveIcon sx={{ color: 'black' }} />
-              </Button>
-
-              {count}
-
-              <Button onClick={IncNum} variant="contained" className={styles.buttonAddPackage}>
-                <AddIcon sx={{ color: 'black' }} />
-              </Button>
-            </Box>
-          </Box> */}
 
           <Box className={styles.boxContainer}>
             <ButtonApp typeofButton="submit" variantButton="contained">

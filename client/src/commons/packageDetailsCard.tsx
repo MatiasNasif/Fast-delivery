@@ -6,6 +6,7 @@ import styles from '../styles/Card.module.css';
 interface Props {
   packageDetail: Package;
   hideDeliveryStatus?: boolean;
+  onDeletePackage: () => void;
 }
 
 interface Package {
@@ -16,7 +17,11 @@ interface Package {
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
-export default function PackageDetailsCard({ packageDetail, hideDeliveryStatus }: Props) {
+export default function PackageDetailsCard({
+  packageDetail,
+  hideDeliveryStatus,
+  onDeletePackage,
+}: Props) {
   const handleDeletePackage = (packageId: string) => {
     return fetch(`${urlApi}/packages/${packageId}`, {
       method: 'DELETE',
@@ -26,6 +31,7 @@ export default function PackageDetailsCard({ packageDetail, hideDeliveryStatus }
           throw new Error('Fallo al querer eliminar el paquete');
         } else {
           alert('Paquete eliminado correctamente');
+          onDeletePackage();
         }
       })
       .catch((error) => {

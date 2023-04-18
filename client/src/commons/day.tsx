@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import styles from '../styles/DaysOfWeek.module.css';
+import { useDispatch } from 'react-redux';
+import { setDate } from '../store/dateSelected';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -17,6 +19,8 @@ const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dates, setDates] = useState<Date[]>([]);
   const [selectedDay, setSelectedDay] = useState<number>(currentDayOfWeek);
+
+  const dispatch = useDispatch();
 
   useMemo(() => {
     setToday(new Date());
@@ -38,6 +42,7 @@ const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
         }
       })
       .then((packageByDate: Package[]) => {
+        dispatch(setDate(dateFormatted));
         updatePackagesByDate(packageByDate, dateFormatted);
       })
       .catch((error) => console.log(error));

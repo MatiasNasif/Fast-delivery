@@ -33,6 +33,12 @@ export class PackagesController {
     return packages;
   }
 
+  @Get('/packagesPendingNotAssign')
+  async getAllPackagesPendingNotAssign() {
+    const packages = await this.packageService.getAllPackagesPendingNotAssign();
+    return packages;
+  }
+
   @Get('/:packageId')
   async getPackage(@Param('packageId') packageId) {
     const packageid = await this.packageService.getPackage(packageId);

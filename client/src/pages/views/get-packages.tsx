@@ -1,6 +1,6 @@
 import { Container, Box, Typography, Button } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import styles from '../../styles/GetPackages.module.css';
 import Header from '../../commons/header';
@@ -10,10 +10,12 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPersistence } from '@/store/user';
+import Link from 'next/link';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 interface Package {
+  weight: number;
   address: string;
   _id: string;
 }
@@ -29,12 +31,16 @@ export default function GetPackages() {
 
   const navigate = useRouter();
 
-  useEffect(() => {
-    fetch(`${API_URL}/packages/packagesPending`)
+  const fetchPackages = useCallback(() => {
+    fetch(`${API_URL}/packages/packagesPendingNotAssign`)
       .then((response) => response.json())
       .then((packages) => setPackages(packages))
       .catch((error) => console.error(error));
-  }, []);
+  }, [API_URL]);
+
+  useEffect(() => {
+    fetchPackages();
+  }, [fetchPackages]);
 
   useEffect(() => {
     dispatch(setPersistence());
@@ -53,21 +59,38 @@ export default function GetPackages() {
     }
   };
 
-  const handleSubmit = async () => {
+  const updateDeliveryStatus = (): void => {
+    selectedPackages?.map((pack) => {
+      fetch(`${API_URL}/packages/${pack}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          deliveryStatus: 'En curso',
+        }),
+      });
+    });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (selectedPackages.length > 0) {
       const body = JSON.stringify({ packs: selectedPackages });
-      try {
-        const response = await fetch(`${API_URL}/users/${userId}/assign`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: body,
+      fetch(`${API_URL}/users/${userId}/assign`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      })
+        .then((response) => response.json())
+        .then(() => updateDeliveryStatus())
+        .then(() => navigate.push(`start-workday`))
+        .catch((error) => {
+          navigate.push(`start-workday`);
+          console.error(error);
         });
-        const result = await response.json();
-      } catch (error) {
-        console.error(error);
-      }
     }
   };
 
@@ -75,7 +98,9 @@ export default function GetPackages() {
     <Container maxWidth={'xs'} disableGutters={true}>
       <>
         <Header />
-        <ArrowApp />
+        <Link href={'/views/start-workday'}>
+          <ArrowApp />
+        </Link>
         <form onSubmit={handleSubmit}>
           <Box className={styles.boxGetAndHowMany}>
             <Box>
@@ -87,7 +112,7 @@ export default function GetPackages() {
               </Typography>
             </Box>
           </Box>
-          {/* Recorrer el conjunto de direcciones únicas */}
+
           {packages?.map((pack) => {
             return (
               <>
@@ -108,13 +133,20 @@ export default function GetPackages() {
                       {pack.address}
                     </Typography>
                   </Box>
+                  <Box>
+                    <Typography ml={2} variant="subtitle1" className={styles.boxAddress}>
+                      {pack.weight} Kg
+                    </Typography>
+                  </Box>
                 </Box>
                 <Divider sx={{ m: '5%' }} />
               </>
             );
           })}
           <Box className={styles.boxContainer}>
-            <button type="submit">HOLA{/* <ButtonApp>Iniciar Jornada</ButtonApp> */}</button>
+            <ButtonApp typeofButton="submit" variantButton="contained">
+              Iniciar Jornada
+            </ButtonApp>
           </Box>
         </form>
       </>
