@@ -11,6 +11,7 @@ import {
   Container,
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import styles from '../../styles/AddPackage.module.css';
@@ -21,9 +22,6 @@ import ButtonApp from '@/commons/buttonApp';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useInput from '@/utils/useInput';
-import { useSnackbar } from 'notistack';
-
-import withAdminAuth from '@/commons/withAdminAuth';
 
 const AddPackage = () => {
   interface InputProps {
@@ -47,6 +45,10 @@ const AddPackage = () => {
   const receiver = useInput();
   const weight = useInput();
   const [value, setValue] = useState();
+  /*  const fecha = new Date('1/04/23');
+  console.log(fecha, 'fechaa'); */
+  /* const fecha: string | undefined = value?.$d.toDateString();
+  console.log(fecha); */
 
   const navigate = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -86,27 +88,9 @@ const AddPackage = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    }).then(() => {
-      address.reset();
-      receiver.reset();
-      weight.reset();
-      setCount(0);
-      enqueueSnackbar(
-        `El paquete para ${receiver.value} a la dirección ${address.value} se agregó correctamente`,
-        {
-          variant: 'info',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-          style: {
-            fontSize: '16px',
-            color: '#fffff',
-            fontWeight: 'bold',
-          },
-        }
-      );
-    });
+    })
+      .then(() => alert('Los datos se guardaron correctamente.'))
+      .then(() => navigate.push('/views/manage-packages'));
   };
 
   return (
@@ -153,29 +137,30 @@ const AddPackage = () => {
             fullWidth
             {...weight}
           />
-
+          <TextField
+            label="Fecha en la que debe ser repartido"
+            InputLabelProps={{ className: styles.labelColor }}
+            variant="standard"
+            className={styles.input}
+            focused
+            fullWidth
+          />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Fecha en la que debe ser repartido"
-              value={value}
-              autoFocus
-              className={styles.dateContainer}
-              sx={{
-                marginTop: '20px',
-                color: 'yellow',
-              }}
-              onChange={(newValue) => setValue(newValue)}
-              renderInput={(params) => <TextField focused {...params} />}
-            />
+            <DatePicker value={value} onChange={(newValue) => setValue(newValue)} />
           </LocalizationProvider>
 
-          <Box className={styles.boxContainer}>
-            <ButtonApp typeofButton="submit" variantButton="contained">
-              Agregar
-            </ButtonApp>
-          </Box>
-        </form>
-      </Container>
+              <Button onClick={IncNum} variant="contained" className={styles.buttonAddPackage}>
+                <AddIcon sx={{ color: 'black' }} />
+              </Button>
+            </Box>
+          </Box> */}
+        </Container>
+        <Box className={styles.boxContainer}>
+          <ButtonApp typeofButton="submit" variantButton="contained">
+            Agregar
+          </ButtonApp>
+        </Box>
+      </form>
     </>
   );
 };
