@@ -69,7 +69,7 @@ const SwornStatement = () => {
         fontSize: '16px',
         color: '#fffff',
         fontWeight: 'bold',
-      }, 
+      },
     });
   };
   useEffect(() => {
@@ -81,6 +81,18 @@ const SwornStatement = () => {
     dispatch(formCreate(dataForm))
       .then(() => navigate.push('/views/start-workday'))
       .catch((err) => console.log(err));
+    enqueueSnackbar('El formulario se creo correctamente', {
+      variant: 'success',
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+      style: {
+        fontSize: '16px',
+        color: '#fffff',
+        fontWeight: 'bold',
+      },
+    });
   };
 
   return (
