@@ -59,7 +59,6 @@ export default function GetPackages() {
     }
   };
 
-<<<<<<< HEAD
   const updateDeliveryStatus = (): void => {
     selectedPackages?.map((pack) => {
       fetch(`${API_URL}/packages/${pack}`, {
@@ -78,12 +77,6 @@ export default function GetPackages() {
     event.preventDefault();
     if (selectedPackages.length > 0) {
       const body = JSON.stringify({ packs: selectedPackages });
-=======
-  const handleSubmit = () => {
-    if (selectedPackages.length > 0) {
-      const body = JSON.stringify({ packs: selectedPackages });
-
->>>>>>> f0bf669 (bugfix: correcting errors)
       fetch(`${API_URL}/users/${userId}/assign`, {
         method: 'POST',
         headers: {
@@ -92,18 +85,10 @@ export default function GetPackages() {
         body: body,
       })
         .then((response) => response.json())
-<<<<<<< HEAD
-
         .then(() => updateDeliveryStatus())
         .then(() => navigate.push(`start-workday`))
         .catch((error) => {
           navigate.push(`start-workday`);
-
-=======
-        .then(() => navigate.push('views/start-workday'))
-        .catch((error) => {
-          navigate.push('views/start-workday');
->>>>>>> f0bf669 (bugfix: correcting errors)
           console.error(error);
         });
     }

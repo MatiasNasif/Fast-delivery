@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import 'animate.css';
 import React, { useEffect, useState } from 'react';
 import { Inter } from '@next/font/google';
 import styles from '../styles/Login.module.css';
@@ -47,10 +48,11 @@ export default function Login() {
   // const userId: string = useSelector((state) => state.user?.id ?? null);
   const [formsByUser, setFormsByUser] = useState([]);
   const [hasFormToday, setHasFormToday] = useState(false);
+  const [animationLogin, setAnimationLogin] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmitOfLogin = (data: LoginFormData) => {
-    dispatch(userLogin({ data, enqueueSnackbar }));
+    dispatch(userLogin({ data, enqueueSnackbar, setAnimationLogin }));
   };
   useEffect(() => {
     if (userId !== null && userId !== undefined) {
@@ -86,7 +88,15 @@ export default function Login() {
       <Container maxWidth={'xs'}>
         <Box className={styles.boxspace}></Box>
         <Box className={styles.boxBrand}>
-          <Image className={styles.brand} src={brand} alt="Fast Delivery Brand" />
+          <Image
+            className={`${
+              styles.brand
+            } animate__animated animate__backInLeft animate__duration-1s ${
+              animationLogin ? 'animate__animated animate__bounceOutRight animate__duration-1s' : ''
+            }`}
+            src={brand}
+            alt="Fast Delivery Brand"
+          />
         </Box>
         <form onSubmit={handleSubmit(onSubmitOfLogin)}>
           <InputEmail name="email" register={register} errors={errors} />

@@ -80,8 +80,8 @@ export const userRegister = createAsyncThunk(
 
 export const userLogin = createAsyncThunk<
   User,
-  { data: UserCredentials; enqueueSnackbar: Function }
->('USER_LOGGED', async ({ data, enqueueSnackbar }) => {
+  { data: UserCredentials; enqueueSnackbar: Function; setAnimationLogin: Function }
+>('USER_LOGGED', async ({ data, enqueueSnackbar, setAnimationLogin }) => {
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -100,6 +100,7 @@ export const userLogin = createAsyncThunk<
       fullName: responseData.fullName,
       admin: responseData.admin,
     };
+    setAnimationLogin(true);
     localStorage.setItem('user', JSON.stringify(user));
     enqueueSnackbar(`Bienvenido/a  ${user.fullName} `, {
       variant: 'success',
