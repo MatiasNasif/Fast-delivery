@@ -12,7 +12,7 @@ interface User {
   id: string;
   fullName: string;
   admin: boolean;
-  photo: string;
+  photo?: string;
 }
 
 interface UserCredentials {
@@ -35,7 +35,6 @@ export const userRegister = createAsyncThunk(
   'USER_REGISTER',
   async (data: { data: UserRegister; enqueueSnackbar: Function; navigate: Function }) => {
     try {
-      console.log(data.user);
       const response = await fetch(`${API_URL}/users/signup`, {
         method: 'POST',
         headers: {
@@ -145,9 +144,9 @@ export const getAllUsers = createAsyncThunk('GET_ALL_USER', () => {
 
 export const updateUserById = createAsyncThunk(
   'UPDATE_USER',
-  async (payload: { userId: string; userPhoto: string }) => {
-    const { userId, userPhoto } = payload;
-    return axios.put(`${API_URL}/users/${userId}`, userPhoto).then((user) => user.data);
+  async (payload: { userId: string; photo: string }) => {
+    const { userId, photo } = payload;
+    return axios.put(`${API_URL}/users/${userId}`, { photo }).then((user) => user.data);
   },
   (error) => {
     console.log('Error updating user:', error);
@@ -164,6 +163,7 @@ const userReducer = createReducer(setPersistence.fulfilled({}), {
   [`${userLogout.fulfilled}`]: (state, action) => {
     return {};
   },
+  [`${updateUserById.fulfilled}`]: (state, action) => action.payload,
 });
 
 export default userReducer;

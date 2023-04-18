@@ -31,13 +31,11 @@ const Profile = () => {
     };
   };
 
-  const API_URL = 'http://localhost:5000';
-
   const handlePhoto = async (baseImage) => {
     const userId = user.id;
-    if (baseImage) dispatch(updateUserById({ userId, userPhoto: baseImage }));
+    const updatedUser = await dispatch(updateUserById({ userId, photo: baseImage }));
+    dispatch({ type: 'UPDATE_USER', payload: updatedUser });
   };
-
   return (
     <>
       <Container maxWidth="xs" disableGutters={true}>
