@@ -35,7 +35,7 @@ const ManageSchedule = () => {
   const day: string = today.getDate().toString().padStart(2, '0');
   const month: string = (today.getMonth() + 1).toString();
   const year: string = today.getFullYear().toString().slice(-2);
-  const dateFormatted: string = `${day}-${month}-${year}`;
+  const dateFormatted: string = `${day}/${month}/${year}`;
 
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);

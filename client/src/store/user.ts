@@ -80,8 +80,8 @@ export const userRegister = createAsyncThunk(
 
 export const userLogin = createAsyncThunk<
   User,
-  { data: UserCredentials; enqueueSnackbar: Function }
->('USER_LOGGED', async ({ data, enqueueSnackbar }) => {
+  { data: UserCredentials; enqueueSnackbar: Function; setAnimationLogin: Function }
+>('USER_LOGGED', async ({ data, enqueueSnackbar, setAnimationLogin }) => {
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -91,6 +91,34 @@ export const userLogin = createAsyncThunk<
       body: JSON.stringify(data),
     });
     if (!response.ok) {
+      if (response.status === 401) {
+        enqueueSnackbar('Contraseña incorrecta', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+          style: {
+            fontSize: '16px',
+            color: '#fffff',
+            fontWeight: 'bold',
+          },
+        });
+      }
+      if (response.status === 404) {
+        enqueueSnackbar('Usuario incorrecto o no existente', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+          style: {
+            fontSize: '16px',
+            color: '#fffff',
+            fontWeight: 'bold',
+          },
+        });
+      }
       throw new Error('Error en la respuesta');
     }
     const responseData = await response.json();
@@ -101,6 +129,7 @@ export const userLogin = createAsyncThunk<
       admin: responseData.admin,
       photo: responseData.photo,
     };
+    setAnimationLogin(true);
     localStorage.setItem('user', JSON.stringify(user));
     enqueueSnackbar(`Bienvenido/a  ${user.fullName} `, {
       variant: 'success',
@@ -116,18 +145,7 @@ export const userLogin = createAsyncThunk<
     });
     return user;
   } catch (error) {
-    enqueueSnackbar('Usuario o Contraseña no existen o son incorrectos', {
-      variant: 'error',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'center',
-      },
-      style: {
-        fontSize: '16px',
-        color: '#fffff',
-        fontWeight: 'bold',
-      },
-    });
+    console.log(error);
   }
 });
 
