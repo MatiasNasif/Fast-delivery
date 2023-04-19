@@ -1,0 +1,42 @@
+.keyboardArrowLeftIcon {
+  font-size: 32px;
+  left: 10px;
+  top: 60px;
+}
+
+.boxGetAndHowMany {
+  margin-bottom: 20px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 4%;
+  max-width: 100%;
+}
+
+.wordGet {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 2px;
+}
+
+.wordHowMany {
+  font-size: 14px;
+  font-weight: normal;
+  margin-top: -3px;
+}
+
+.boxAddress {
+  font-size: 13px;
+  width: 215px;
+  margin-top: 9%;
+  font-weight: normal;
+}
+
+.noPackages {
+  text-align: center;
+  margin-top: 12%;
+}
+
+.boxContainer {
+  margin-top: 14%;
+}

@@ -1,0 +1,61 @@
+.arrow {
+  margin-left: -3%;
+}
+
+.wordAdd {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 2px;
+}
+.textLabelcolor{
+    color: #FEBC14 !important;
+    font-weight: 400;
+    fill: solid;
+    font-style: regular;
+    text-decoration-color: blue !important;
+}
+.formAdd {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: 'center';
+  max-width: 100%;
+}
+
+.labelColor {
+  color: #febc14 !important;
+  font-weight: 400;
+  fill: solid;
+  font-style: regular;
+  text-decoration-color: blue !important;
+}
+
+.input {
+  margin-top: 20px;
+}
+
+.boxContainIconsPackage {
+  display: flex;
+  margin-top: 13px;
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+.buttonRemovePackage {
+  height: 20px;
+  min-width: 13px;
+  padding: 12px 1px 12px 1px;
+  margin-right: 13px;
+  border: 1px;
+  background-color: white;
+  border-color: #b2bcca;
+}
+
+.buttonAddPackage {
+  height: 20px;
+  padding: 12px 1px 12px 1px;
+  min-width: 13px;
+  margin-left: 13px;
+  border: 1px;
+  background-color: white;
+  border-color: #b2bcca;
+}

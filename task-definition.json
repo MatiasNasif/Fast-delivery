@@ -1,0 +1,73 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:181744671448:task-definition/fast-delivery-app:1",
+    "containerDefinitions": [
+        {
+            "name": "fast-delivery-api",
+            "image": "181744671448.dkr.ecr.us-east-1.amazonaws.com/fast-delivery-app",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "fast-delivery-api-5000-tcp",
+                    "containerPort": 5000,
+                    "hostPort": 0,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": []
+        },
+        {
+            "name": "fast-delivery-client",
+            "image": "181744671448.dkr.ecr.us-east-1.amazonaws.com/fast-delivery-app",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "fast-delivery-client-3000-tcp",
+                    "containerPort": 3000,
+                    "hostPort": 0,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": false,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": []
+        }
+    ],
+    "family": "fast-delivery-app",
+    "executionRoleArn": "arn:aws:iam::181744671448:role/ecsTaskExecutionRole",
+    "networkMode": "bridge",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2"
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2023-03-08T22:39:26.561Z",
+    "registeredBy": "arn:aws:iam::181744671448:root",
+    "tags": []
+}

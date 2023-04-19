@@ -1,0 +1,26 @@
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Roboto';
+}
+
+.userInfo {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Roboto';
+  margin-right: 2%;
+}
+.userInfoContent {
+  font-size: 18px;
+  font-weight: 400;
+  font-family: 'Roboto';
+}
+.boxInfo {
+  display: flex;
+  justify-content: center;
+}
+
+.boxInfoMost {
+  display: flex;
+  flex-direction: column;
+}

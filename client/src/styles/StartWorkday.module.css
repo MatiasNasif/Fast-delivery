@@ -1,0 +1,21 @@
+.box {
+  margin-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.subtitle {
+  margin-left: 5%;
+  font-size: 12px;
+  margin-bottom: 2%;
+}
+
+.button{
+  cursor: pointer ;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 16px;
+}
+

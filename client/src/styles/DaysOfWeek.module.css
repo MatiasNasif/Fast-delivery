@@ -1,0 +1,64 @@
+.container {
+  width: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.daysContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+
+.day {
+  color: white;
+  height: 127px;
+  width: 61px;
+  background-color: #217bce;
+  border-radius: 40px;
+  font-family: 'Roboto';
+  margin: 2px;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease-out;
+}
+
+.selectedDay {
+  background-color: #fcbc11;
+}
+
+/* .currentDay {
+  background-color: #7fb3d5;
+} */
+
+.outOfRange {
+  background-color: #dbdbdb;
+  opacity: 0.5;
+  cursor: default;
+}
+
+.arrow {
+  color: white;
+  height: 100px;
+  width: 50px;
+  background-color: #217bce;
+  border-radius: 40px;
+  font-family: 'Roboto';
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease-out;
+}
+
+.arrow:hover {
+  background-color: #7fb3d5;
+}

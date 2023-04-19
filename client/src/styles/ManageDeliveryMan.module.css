@@ -1,0 +1,102 @@
+
+.tittle{
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Roboto';
+}
+.boxOfdeliveryman{
+    display: flex;
+    margin-bottom: 20%
+}
+
+
+.deliveryName{
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Roboto';
+    max-width: 400px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.deliveryManDot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+
+}
+
+.deliveryStatusBlue{    
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color: blue;
+    max-width: 400px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.deliveryStatusRed{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color: red;
+   
+}
+
+
+.boxmayor{
+    display: flex;
+}
+
+.boxcito{
+display: flex;
+
+}
+.boxOfall{
+    display: flex;
+    flex-direction: column;
+}
+
+.deliveryStatusFinish{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color:  #96DB76;
+}
+
+.deliveryStatusInCourse{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto';
+    margin-top: 5px;
+    color: #217BCE;
+}
+
+
+
+.deliveryManContainer{
+    margin-left: 20px;
+    margin-bottom: 20%;
+    margin-top: 1%;
+   
+}
+
+.boxStatus{
+    display: flex; 
+
+}
+
+
+
+.boxcitomax{
+display: flex;
+} 
+

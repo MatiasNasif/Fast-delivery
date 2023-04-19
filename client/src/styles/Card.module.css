@@ -1,0 +1,39 @@
+.icon_card_shipping {
+  width: 80px;
+  height: 80px;
+  background-color: #e8effa;
+  border-radius: 5%;
+}
+
+.status {
+  font-size: 12px;
+  text-align: end;
+  margin-right: 5%;
+  color: black;
+}
+
+.card_container {
+  display: flex;
+  margin-top: 5%;
+  justify-content: space-evenly;
+}
+
+.address {
+  font-size: 12px;
+  width: 156px;
+  margin-left: 2%;
+}
+
+.divider {
+  margin: 5%;
+}
+
+.deleteButton{
+  cursor: pointer;
+}
+
+.card_container_all{
+  background-color: rgb(226, 96, 96);
+  animation-duration: 2s;
+}
+
