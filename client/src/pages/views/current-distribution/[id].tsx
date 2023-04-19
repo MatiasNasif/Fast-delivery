@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import {
   Container,
   Button,
@@ -34,6 +35,10 @@ const initialPackage: Package = {
   _id: '',
 };
 
+interface User {
+  status: string;
+}
+
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
 export default function CurrentDistribution() {
@@ -41,6 +46,7 @@ export default function CurrentDistribution() {
   const navigate = useRouter();
   const packageIdSelected: string = (navigate.query.id ?? '').toString();
   const [packageByUser, setPackageByUser] = useState<Package>(initialPackage);
+  const user: User = useSelector((state) => state.user);
 
   const fetchPackage = useCallback(() => {
     fetch(`${urlApi}/packages/${packageIdSelected}`)
@@ -90,6 +96,16 @@ export default function CurrentDistribution() {
       <Link href={'/views/start-workday'}>
         <ArrowApp />
       </Link>
+      {user?.status === 'Inactivo' ? (
+        <>
+          <Typography variant="h6" className={styles.user_blocked}>
+            Usuario Bloqueado
+          </Typography>
+          <Typography variant="h6" className={styles.user_blocked}>
+            No podrá seguir repartiendo paquetes
+          </Typography>
+        </>
+      ) : null}
       {packageByUser?.deliveryStatus === undefined || packageByUser?.deliveryStatus === '' ? (
         <h1 className={styles.loading}>cargando...</h1>
       ) : (
@@ -130,7 +146,11 @@ export default function CurrentDistribution() {
               </section>
             </AccordionDetails>
             <section className={styles.container_button}>
-              {packageByUser?.deliveryStatus != 'Entregado' ? (
+              {packageByUser?.deliveryStatus === 'Entregado' || user?.status === 'Inactivo' ? (
+                <Button className={styles.button} variant="contained" disabled={true}>
+                  Finalizado
+                </Button>
+              ) : (
                 <Button
                   className={styles.button}
                   variant="contained"
@@ -139,10 +159,6 @@ export default function CurrentDistribution() {
                   }
                 >
                   Finalizar
-                </Button>
-              ) : (
-                <Button className={styles.button} variant="contained" disabled={true}>
-                  Finalizado
                 </Button>
               )}
             </section>
