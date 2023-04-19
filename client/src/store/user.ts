@@ -12,6 +12,7 @@ interface User {
   id: string;
   fullName: string;
   admin: boolean;
+  photo?: string;
 }
 
 interface UserCredentials {
@@ -34,7 +35,6 @@ export const userRegister = createAsyncThunk(
   'USER_REGISTER',
   async (data: { data: UserRegister; enqueueSnackbar: Function; navigate: Function }) => {
     try {
-      console.log(data.user);
       const response = await fetch(`${API_URL}/users/signup`, {
         method: 'POST',
         headers: {
@@ -127,6 +127,7 @@ export const userLogin = createAsyncThunk<
       id: responseData.id,
       fullName: responseData.fullName,
       admin: responseData.admin,
+      photo: responseData.photo,
     };
     setAnimationLogin(true);
     localStorage.setItem('user', JSON.stringify(user));
@@ -159,19 +160,28 @@ export const getAllUsers = createAsyncThunk('GET_ALL_USER', () => {
   return axios.get(`${API_URL}/users`);
 });
 
-const userReducer = createReducer(
-  setPersistence.fulfilled({}), // valor inicial
-  {
-    [`${getUserById.fulfilled}`]: (state, action) => action.payload,
-    [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
-    [`${userLogin.fulfilled}`]: (state, action) => action.payload,
-    [`${setPersistence.fulfilled}`]: (state, action) => {
-      return action.payload;
-    },
-    [`${userLogout.fulfilled}`]: (state, action) => {
-      return {};
-    },
+export const updateUserById = createAsyncThunk(
+  'UPDATE_USER',
+  async (payload: { userId: string; photo: string }) => {
+    const { userId, photo } = payload;
+    return axios.put(`${API_URL}/users/${userId}`, { photo }).then((user) => user.data);
+  },
+  (error) => {
+    console.log('Error updating user:', error);
   }
 );
+
+const userReducer = createReducer(setPersistence.fulfilled({}), {
+  [`${getUserById.fulfilled}`]: (state, action) => action.payload,
+  [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
+  [`${userLogin.fulfilled}`]: (state, action) => action.payload,
+  [`${setPersistence.fulfilled}`]: (state, action) => {
+    return action.payload;
+  },
+  [`${userLogout.fulfilled}`]: (state, action) => {
+    return {};
+  },
+  [`${updateUserById.fulfilled}`]: (state, action) => action.payload,
+});
 
 export default userReducer;

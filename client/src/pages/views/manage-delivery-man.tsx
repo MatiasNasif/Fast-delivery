@@ -22,6 +22,7 @@ interface User {
   status?: string | undefined;
   _id?: string;
   packages?: Package[];
+  photo?: string;
 }
 
 const ManageDeliveryMan = () => {
@@ -171,7 +172,7 @@ const ManageDeliveryMan = () => {
                         href={`/views/delivery-man-details/${deliveryMan._id}`}
                         style={{ marginLeft: 'auto', marginRight: '20px' }}
                       >
-                        <Avatar alt="Remy Sharp" />
+                        <Avatar src={deliveryMan.photo} alt="Remy Sharp" />
                       </Link>
                     </div>
                   );
