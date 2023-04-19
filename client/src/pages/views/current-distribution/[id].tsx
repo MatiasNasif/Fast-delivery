@@ -86,7 +86,7 @@ export default function CurrentDistribution() {
           },
         })
       )
-      .then(() => navigate.push('start-workday'))
+      .then(() => navigate.push('/views/start-workday'))
       .catch((error) => console.error(error));
   };
 

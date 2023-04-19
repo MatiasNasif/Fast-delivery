@@ -114,9 +114,9 @@ export default function GetPackages() {
             </Box>
           </Box>
           {countPackages ? (
-            packages.map((pack) => (
+            packages.map((pack, i) => (
               <>
-                <Box sx={{ display: 'flex' }}>
+                <Box sx={{ display: 'flex' }} key={i}>
                   <Checkbox
                     {...label}
                     checked={selectedPackages.includes(pack._id)}
