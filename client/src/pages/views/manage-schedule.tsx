@@ -14,8 +14,8 @@ import Header from '@/commons/header';
 import Calendar from '../../commons/daySlide';
 import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
 import Link from 'next/link';
-import withAdminAuth from '@/commons/withAdminAuth';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -35,11 +35,12 @@ const ManageSchedule = () => {
   const day: string = today.getDate().toString().padStart(2, '0');
   const month: string = (today.getMonth() + 1).toString();
   const year: string = today.getFullYear().toString().slice(-2);
-  const dateFormatted: string = `${day}/${month}/${year}`;
+  const dateFormatted: string = `${day}-${month}-${year}`;
 
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>(dateFormatted);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetch(`${urlApi}/users/alldeliveryman`)
@@ -54,6 +55,18 @@ const ManageSchedule = () => {
         if (response.ok) {
           return response.json();
         } else {
+          enqueueSnackbar('No hay paquetes para la fecha seleccionada', {
+            variant: 'error',
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+            style: {
+              fontSize: '16px',
+              color: '#fffff',
+              fontWeight: 'bold',
+            },
+          });
           return [];
         }
       })
