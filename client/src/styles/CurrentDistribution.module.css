@@ -18,6 +18,20 @@
   flex-direction: column;
 }
 
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.user_blocked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
 .accordion_space {
   margin-bottom: 10%;
 }

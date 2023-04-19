@@ -13,6 +13,7 @@ interface User {
   fullName: string;
   admin: boolean;
   photo?: string;
+  status?: string;
 }
 
 interface UserCredentials {
@@ -128,6 +129,7 @@ export const userLogin = createAsyncThunk<
       fullName: responseData.fullName,
       admin: responseData.admin,
       photo: responseData.photo,
+      status: responseData.status,
     };
     setAnimationLogin(true);
     localStorage.setItem('user', JSON.stringify(user));
