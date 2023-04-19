@@ -18,11 +18,6 @@ export class PackagesService {
   async createPackage(
     createPackageDto: CreatePackageDto,
   ): Promise<CreatePackageDto> {
-    if (createPackageDto.quantity > 100) {
-      throw new BadRequestException(
-        'La cantidad de paquetes creados no puede ser mayor a 100.',
-      );
-    }
     return this.packageModel.create(createPackageDto);
   }
 

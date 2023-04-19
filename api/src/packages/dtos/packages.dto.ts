@@ -20,11 +20,6 @@ export class CreatePackageDto {
   @IsOptional()
   readonly deliveryDate?: string;
 
-  /* @IsNotEmpty() */
-  @IsNumber()
-  /* @IsOptional() */
-  readonly quantity?: number;
-
   @IsString()
   @IsOptional()
   readonly deliveryStatus?: string = 'Pendiente';
