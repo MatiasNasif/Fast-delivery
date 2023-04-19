@@ -45,7 +45,6 @@ export default function Login() {
   const userRedux = useSelector((state) => state.user);
   const userId = userRedux?.id ?? null;
 
-  // const userId: string = useSelector((state) => state.user?.id ?? null);
   const [formsByUser, setFormsByUser] = useState([]);
   const [hasFormToday, setHasFormToday] = useState(false);
   const [animationLogin, setAnimationLogin] = useState(false);
@@ -106,14 +105,6 @@ export default function Login() {
           </Button>
         </form>
         <Box className={styles.boxLinks}>
-          <Typography
-            className={styles.TextLiks}
-            sx={{ fontWeight: '300' }}
-            variant="inherit"
-            color="primary"
-          >
-            Recuperar contraseña
-          </Typography>
           <Link href="/views/register">
             <Typography
               className={styles.TextLiks}
