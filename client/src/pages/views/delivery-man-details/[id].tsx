@@ -105,6 +105,7 @@ const DeliveryManDetails = () => {
             <Typography className={styles.typography_name}>{deliveryMan?.fullName}</Typography>
             <DeliveryStatus checkSwitchChange={deliveryMan?.status} />
           </section>
+
           <section className={styles.container_switch}>
             <label className={styles.switch}>
               <input
@@ -113,7 +114,28 @@ const DeliveryManDetails = () => {
                 onChange={handleChangeSwitchButton}
               />
               <span className={styles.slider}></span>
-            </label>manage-schedule
+            </label>
+          </section>
+        </Box>
+        <Box className={styles.box}>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ArrowDropDownIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography variant="h6" className={styles.title}>
+                Repartos pendientes
+              </Typography>
+            </AccordionSummary>
+            {pendingPackages.length > 0 &&
+              pendingPackages.map((pendingPackage: Package, i: number) => (
+                <PackageDetailsCard key={i} packageDetail={pendingPackage} />
+              ))}
+          </Accordion>
+        </Box>
+        <Box className={styles.box}>
+          <Accordion>
             <AccordionSummary
               expandIcon={<ArrowDropDownIcon />}
               aria-controls="panel1a-content"
@@ -136,5 +158,4 @@ const DeliveryManDetails = () => {
     </>
   );
 };
-
 export default DeliveryManDetails;

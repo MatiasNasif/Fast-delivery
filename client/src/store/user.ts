@@ -91,6 +91,34 @@ export const userLogin = createAsyncThunk<
       body: JSON.stringify(data),
     });
     if (!response.ok) {
+      if (response.status === 401) {
+        enqueueSnackbar('Contraseña incorrecta', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+          style: {
+            fontSize: '16px',
+            color: '#fffff',
+            fontWeight: 'bold',
+          },
+        });
+      }
+      if (response.status === 404) {
+        enqueueSnackbar('Usuario incorrecto o no existente', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+          style: {
+            fontSize: '16px',
+            color: '#fffff',
+            fontWeight: 'bold',
+          },
+        });
+      }
       throw new Error('Error en la respuesta');
     }
     const responseData = await response.json();
@@ -116,18 +144,7 @@ export const userLogin = createAsyncThunk<
     });
     return user;
   } catch (error) {
-    enqueueSnackbar('Usuario o Contraseña no existen o son incorrectos', {
-      variant: 'error',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'center',
-      },
-      style: {
-        fontSize: '16px',
-        color: '#fffff',
-        fontWeight: 'bold',
-      },
-    });
+    console.log(error);
   }
 });
 
