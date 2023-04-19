@@ -2,12 +2,10 @@ import { Box, Typography, Divider } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import styles from '../styles/Card.module.css';
-import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setPackage } from '@/store/packageIdSelected';
-import { useRouter } from 'next/router';
 import 'animate.css';
+import Link from 'next/link';
 
 interface Props {
   packageDetail: Package;
@@ -29,8 +27,6 @@ export default function PackageDetailsCard({
   onDeletePackage,
 }: Props) {
   const [isDeleting, setIsDeleting] = useState<Boolean>(false);
-  const dispatch = useDispatch();
-  const navigate = useRouter();
 
   const handleDeletePackage = (packageId: string) => {
     setIsDeleting(true); // Establecer el estado en true
@@ -71,20 +67,13 @@ export default function PackageDetailsCard({
     }, 1000); // Esperar 2 segundos antes de ejecutar el fetch
   };
 
-  const handleClick = (packageId: string): void => {
-    dispatch(setPackage(packageId));
-    navigate.push('current-distribution');
-  };
-
   return (
     <>
       <Box className={isDeleting && `${styles.card_container_all} animate__backOutRight`}>
         <Box className={styles.card_container}>
-          <LocalShippingIcon
-            fontSize="large"
-            className={styles.icon_card_shipping}
-            onClick={() => handleClick(packageDetail?._id)}
-          />
+          <Link href={`/views/current-distribution/${packageDetail?._id}`}>
+            <LocalShippingIcon fontSize="large" className={styles.icon_card_shipping} />
+          </Link>
           <Typography variant="subtitle1" className={styles.address}>
             {packageDetail?.address}
           </Typography>

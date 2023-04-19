@@ -3,7 +3,6 @@ import userReducer from './user';
 import formSwornReducer from './formSworn';
 import logger from 'redux-logger';
 import dateReducer from './dateSelected';
-import packageReducer from './packageIdSelected';
 
 export const store = configureStore({
   middleware: (getDefaultMiddelware) =>
@@ -14,6 +13,5 @@ export const store = configureStore({
     user: userReducer,
     form: formSwornReducer,
     date: dateReducer,
-    package: packageReducer,
   },
 });
