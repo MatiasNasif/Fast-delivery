@@ -4,8 +4,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import styles from '../styles/Card.module.css';
 import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
-import 'animate.css';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import 'animate.css';
 
 interface Props {
   packageDetail: Package;
@@ -19,6 +20,10 @@ interface Package {
   _id: string;
 }
 
+interface User {
+  admin: boolean;
+}
+
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
 export default function PackageDetailsCard({
@@ -27,6 +32,7 @@ export default function PackageDetailsCard({
   onDeletePackage,
 }: Props) {
   const [isDeleting, setIsDeleting] = useState<Boolean>(false);
+  const user: User = useSelector((state) => state.user);
 
   const handleDeletePackage = (packageId: string) => {
     setIsDeleting(true); // Establecer el estado en true
@@ -71,9 +77,13 @@ export default function PackageDetailsCard({
     <>
       <Box className={isDeleting && `${styles.card_container_all} animate__backOutRight`}>
         <Box className={styles.card_container}>
-          <Link href={`/views/current-distribution/${packageDetail?._id}`}>
+          {user?.admin === true ? (
             <LocalShippingIcon fontSize="large" className={styles.icon_card_shipping} />
-          </Link>
+          ) : (
+            <Link href={`/views/current-distribution/${packageDetail?._id}`}>
+              <LocalShippingIcon fontSize="large" className={styles.icon_card_shipping} />
+            </Link>
+          )}
           <Typography variant="subtitle1" className={styles.address}>
             {packageDetail?.address}
           </Typography>
