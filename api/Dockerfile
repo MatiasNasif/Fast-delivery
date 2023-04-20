@@ -4,7 +4,6 @@ COPY package.json ./
 COPY package-lock.json ./
 COPY tsconfig.json ./
 COPY src/ src/
-COPY node_modules/ node_modules/
 RUN  ["npm", "install"]
 RUN npm i -g @nestjs/cli
 CMD  ["npm", "run", "start"]
