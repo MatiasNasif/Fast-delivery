@@ -1,15 +1,15 @@
 version: '3'
 
 services:
-  api:
-    image: api:latest
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    ports:
-      - 5000:5000
-    volumes:
-      - ./api/:/api
+  # api:
+  #   image: api:latest
+  #   build:
+  #     context: ./api
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 5000:5000
+  #   volumes:
+  #     - ./api/:/api
 
   client:
     image: client:latest
