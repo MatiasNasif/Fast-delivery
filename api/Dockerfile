@@ -1,4 +1,4 @@
-FROM node:16.13.1
+FROM node:latest
 WORKDIR /api
 COPY package.json ./
 COPY package-lock.json ./
