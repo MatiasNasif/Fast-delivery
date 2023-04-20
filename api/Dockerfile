@@ -4,7 +4,6 @@ COPY package.json ./
 COPY package-lock.json ./
 COPY tsconfig.json ./
 COPY src/ src/
-COPY . .
 RUN  ["npm", "install"]
 CMD  ["npm", "run", "start"]
 EXPOSE 5000
