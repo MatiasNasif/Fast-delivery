@@ -22,6 +22,7 @@
             "commit-msg": "npm run commitmsg"
         }
     },
+    "proxy": "http://mongodb:27017",
     "dependencies": {
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",

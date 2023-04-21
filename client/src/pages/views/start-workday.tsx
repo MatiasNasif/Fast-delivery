@@ -33,7 +33,7 @@ export default function StartWorkday() {
   const form = useSelector((state) => state.form);
   const userRedux = useSelector((state) => state.user);
   const userId = userRedux.id;
-  const API_URL = 'http://localhost:5000';
+  const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
   const { enqueueSnackbar } = useSnackbar();
   const counterPackages: number = packages.length;
 

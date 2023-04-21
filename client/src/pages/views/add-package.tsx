@@ -51,7 +51,7 @@ const AddPackage = () => {
     }
   };
 
-  const API_URL = 'http://localhost:5000';
+  const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
   const handleFormSubmit = (data) => {
     const date = data.deliveryDate;
