@@ -43,7 +43,6 @@ const SwornStatement = () => {
 
   const user = useSelector((state) => state.user);
 
-  console.log(user.id + 'EL USER EN EL FORMULARIO');
   const dataForm = {
     user: user.id,
     ...answers,

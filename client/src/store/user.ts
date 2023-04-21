@@ -21,7 +21,7 @@ interface UserCredentials {
   password: string;
 }
 
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
 export const setPersistence = createAsyncThunk('SET_PERSISTENCIA', () => {
   return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};

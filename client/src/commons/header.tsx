@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { setPersistence } from '@/store/user';
 import Link from 'next/link';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
 export default function Header() {
   const dispatch = useDispatch();

@@ -38,7 +38,7 @@ const ManagePackages = () => {
 
   const dateSelected = useSelector((state) => state.date);
 
-  const API_URL = 'http://localhost:5000';
+  const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
   const countPackages = packages.length;
 

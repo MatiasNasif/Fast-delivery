@@ -23,7 +23,7 @@ interface LoginFormData {
   password: string;
 }
 
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
 async function getAllFormSwornByUser(userId: string) {
   if (!userId) {
