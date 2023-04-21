@@ -1,30 +1,9 @@
-#build stage
 FROM node:latest
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm install 
-
-COPY . .
-
-RUN npm run build
-
-
-#prod stage
-FROM node:latest
-
-WORKDIR /usr/src/app
-
-COPY --from=build /usr/src/app/dist ./dist
-
-COPY package*.json ./
-
-RUN npm install --only=production
-
-RUN rm package*.json
-
+WORKDIR /api
+COPY package.json ./
+COPY package-lock.json ./
+COPY tsconfig.json ./
+COPY src/ src/
+RUN  ["npm", "install"]
+CMD  ["npm", "run", "start"]
 EXPOSE 5000
-
-CMD [ "node" , "dist/main.js" ]
