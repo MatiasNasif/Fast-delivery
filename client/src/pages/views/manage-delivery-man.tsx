@@ -86,12 +86,12 @@ const ManageDeliveryMan = () => {
 
   return (
     <>
-      <Container maxWidth="xs" disableGutters={true}>
+      <Container className={styles.containerManageDeliveryMan} maxWidth="xs" disableGutters={true}>
         <Header />
         <Link href={'/views/manage-schedule'}>
           <ArrowApp />
         </Link>
-        <Box mt={2}>
+        <Box className={styles.boxManageDeliveryMan} mt={2}>
           <Accordion defaultExpanded>
             <AccordionSummary
               expandIcon={<ArrowDropDownRoundedIcon />}

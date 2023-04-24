@@ -28,7 +28,7 @@ export default function Header() {
     showAlert(
       {
         message: ` Hasta pronto ${user.fullName} `,
-        typeAlert: 'default',
+        typeAlert: 'success',
         showCloseButton: true,
       },
       { autoHideDuration: 3000 }

@@ -14,7 +14,7 @@ import Header from '@/commons/header';
 import Calendar from '../../commons/daySlide';
 import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
+import { useAlert } from '@/hook/Alerthook';
 import Link from 'next/link';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
@@ -31,6 +31,7 @@ interface Package {
 }
 
 const ManageSchedule = () => {
+  const showAlert = useAlert();
   const today = new Date();
   const day: string = today.getDate().toString().padStart(2, '0');
   const month: string = (today.getMonth() + 1).toString();
@@ -40,41 +41,26 @@ const ManageSchedule = () => {
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>(dateFormatted);
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetch(`${urlApi}/users/alldeliveryman`)
       .then((response) => response.json())
       .then((deliveryMans: User[]) => setDeliveryMans(deliveryMans))
       .catch((error) => console.log(error));
-  }, [deliveryMans]);
+  }, []);
 
   useEffect(() => {
     fetch(`${urlApi}/packages/${dateFormatted}/delivery-date`)
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          enqueueSnackbar('No hay paquetes para la fecha seleccionada', {
-            variant: 'error',
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center',
-            },
-            style: {
-              fontSize: '16px',
-              color: '#fffff',
-              fontWeight: 'bold',
-            },
-          });
-          return [];
         }
       })
       .then((packageByDate: Package[]) => {
         setPackages(packageByDate);
       })
       .catch((error) => console.log(error));
-  }, [dateFormatted]);
+  }, []);
 
   const updatePackagesByDate = (newPackages: Package[], date: string): void => {
     if (Array.isArray(newPackages)) {
@@ -116,8 +102,8 @@ const ManageSchedule = () => {
 
   return (
     <>
-      <Header />
       <Container disableGutters={true} className={styles.containerManage}>
+        <Header />
         <Box className={styles.boxAdmin}>
           <Avatar alt="Admin" />
           <Box>

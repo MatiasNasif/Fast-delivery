@@ -39,6 +39,7 @@ export const useAlert = () => {
         fontSize: '14px',
         color: '#fffff',
         fontWeight: 'bold',
+        fontFamily: 'Roboto',
       },
       action,
       ...options,

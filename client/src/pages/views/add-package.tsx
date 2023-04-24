@@ -22,8 +22,7 @@ import ButtonApp from '@/commons/buttonApp';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
-import useInput from '@/utils/useInput';
-import { useSnackbar } from 'notistack';
+import { useAlert } from '@/hook/Alerthook';
 import { useForm } from 'react-hook-form';
 
 import withAdminAuth from '@/commons/withAdminAuth';
@@ -37,7 +36,7 @@ const AddPackage = () => {
   } = useForm();
 
   const navigate = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
+  const showAlert = useAlert();
 
   const [count, setCount] = useState(0);
   const IncNum = () => {
@@ -75,21 +74,11 @@ const AddPackage = () => {
       },
       body: JSON.stringify(formdata),
     }).then((res) => {
-      enqueueSnackbar(
-        `El paquete para ${data.receiver} a la dirección ${data.address} se agregó correctamente`,
-        {
-          variant: 'info',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-          style: {
-            fontSize: '16px',
-            color: '#fffff',
-            fontWeight: 'bold',
-          },
-        }
-      );
+      showAlert({
+        message: `El paquete para ${data.receiver} a la dirección ${data.address} se agregó correctamente`,
+        typeAlert: 'success',
+        showCloseButton: true,
+      });
       reset({ address: '', receiver: '', weight: '', deliveryDate: '' });
     });
   };

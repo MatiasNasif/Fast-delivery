@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import styles from '../styles/DaysOfWeek.module.css';
 import { useDispatch } from 'react-redux';
 import { setDate } from '../store/dateSelected';
-import { useSnackbar } from 'notistack';
+import { useAlert } from '@/hook/Alerthook';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -20,8 +20,7 @@ const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dates, setDates] = useState<Date[]>([]);
   const [selectedDay, setSelectedDay] = useState<number>(currentDayOfWeek);
-  const { enqueueSnackbar } = useSnackbar();
-
+  const showAlert = useAlert();
   const dispatch = useDispatch();
 
   useMemo(() => {
@@ -40,19 +39,11 @@ const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
         if (response.ok) {
           return response.json();
         } else {
-          enqueueSnackbar('No hay paquetes para la fecha seleccionada', {
-            variant: 'error',
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center',
-            },
-            style: {
-              fontSize: '16px',
-              color: '#fffff',
-              fontWeight: 'bold',
-            },
+          showAlert({
+            message: 'No hay paquetes para la fecha seleccionada',
+            typeAlert: 'error',
+            showCloseButton: true,
           });
-          return [];
         }
       })
       .then((packageByDate: Package[]) => {

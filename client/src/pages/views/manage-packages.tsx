@@ -54,11 +54,11 @@ const ManagePackages = () => {
 
   return (
     <>
-      <Header />
-      <Link href={'/views/manage-schedule'}>
-        <ArrowApp />
-      </Link>
-      <Container maxWidth="xs" disableGutters={true}>
+      <Container className={styles.containerManagePackages} maxWidth="xs" disableGutters={true}>
+        <Header />
+        <Link href={'/views/manage-schedule'}>
+          <ArrowApp />
+        </Link>
         <Box className={styles.box}>
           <Accordion defaultExpanded>
             <AccordionSummary
