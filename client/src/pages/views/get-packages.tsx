@@ -26,8 +26,9 @@ export default function GetPackages() {
   const userRedux = useSelector((state) => state.user);
   const userId = userRedux.id;
   const dispatch = useDispatch();
+  const countPackages = packages?.length > 0;
 
-  const API_URL = 'http://localhost:5000';
+  const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
   const navigate = useRouter();
 
@@ -112,11 +113,10 @@ export default function GetPackages() {
               </Typography>
             </Box>
           </Box>
-
-          {packages?.map((pack) => {
-            return (
+          {countPackages ? (
+            packages.map((pack, i) => (
               <>
-                <Box sx={{ display: 'flex' }}>
+                <Box sx={{ display: 'flex' }} key={i}>
                   <Checkbox
                     {...label}
                     checked={selectedPackages.includes(pack._id)}
@@ -141,12 +141,22 @@ export default function GetPackages() {
                 </Box>
                 <Divider sx={{ m: '5%' }} />
               </>
-            );
-          })}
+            ))
+          ) : (
+            <Box>
+              <Typography className={styles.noPackages}>No hay paquetes disponibles</Typography>
+            </Box>
+          )}
           <Box className={styles.boxContainer}>
-            <ButtonApp typeofButton="submit" variantButton="contained">
-              Iniciar Jornada
-            </ButtonApp>
+            {countPackages ? (
+              <ButtonApp typeofButton="submit" variantButton="contained" isDisable={false}>
+                Iniciar Jornada
+              </ButtonApp>
+            ) : (
+              <ButtonApp typeofButton="submit" variantButton="contained" isDisable={true}>
+                Iniciar Jornada
+              </ButtonApp>
+            )}
           </Box>
         </form>
       </>

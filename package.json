@@ -23,6 +23,7 @@
       "pre-push": "npm run pre-push"
     }
   },
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "concurrently": "^7.6.0"
   },

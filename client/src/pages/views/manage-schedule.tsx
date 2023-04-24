@@ -14,8 +14,8 @@ import Header from '@/commons/header';
 import Calendar from '../../commons/daySlide';
 import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
+import { useAlert } from '@/hook/Alerthook';
 import Link from 'next/link';
-import withAdminAuth from '@/commons/withAdminAuth';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -31,11 +31,12 @@ interface Package {
 }
 
 const ManageSchedule = () => {
+  const showAlert = useAlert();
   const today = new Date();
   const day: string = today.getDate().toString().padStart(2, '0');
   const month: string = (today.getMonth() + 1).toString();
   const year: string = today.getFullYear().toString().slice(-2);
-  const dateFormatted: string = `${day}/${month}/${year}`;
+  const dateFormatted: string = `${day}-${month}-${year}`;
 
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
@@ -46,22 +47,20 @@ const ManageSchedule = () => {
       .then((response) => response.json())
       .then((deliveryMans: User[]) => setDeliveryMans(deliveryMans))
       .catch((error) => console.log(error));
-  }, [deliveryMans]);
+  }, []);
 
   useEffect(() => {
     fetch(`${urlApi}/packages/${dateFormatted}/delivery-date`)
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          return [];
         }
       })
       .then((packageByDate: Package[]) => {
         setPackages(packageByDate);
       })
       .catch((error) => console.log(error));
-  }, [dateFormatted]);
+  }, []);
 
   const updatePackagesByDate = (newPackages: Package[], date: string): void => {
     if (Array.isArray(newPackages)) {
@@ -103,8 +102,8 @@ const ManageSchedule = () => {
 
   return (
     <>
-      <Header />
       <Container disableGutters={true} className={styles.containerManage}>
+        <Header />
         <Box className={styles.boxAdmin}>
           <Avatar alt="Admin" />
           <Box>

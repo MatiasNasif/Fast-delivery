@@ -9,7 +9,6 @@ import styles from '../../styles/ManageDeliveryMan.module.css';
 import SwitchDeliveryStatus from '../../utils/SwitchDeliveryStatus';
 import { useDispatch } from 'react-redux';
 import { setPersistence } from '@/store/user';
-import withAdminAuth from '@/commons/withAdminAuth';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -87,12 +86,12 @@ const ManageDeliveryMan = () => {
 
   return (
     <>
-      <Container maxWidth="xs" disableGutters={true}>
+      <Container className={styles.containerManageDeliveryMan} maxWidth="xs" disableGutters={true}>
         <Header />
         <Link href={'/views/manage-schedule'}>
           <ArrowApp />
         </Link>
-        <Box mt={2}>
+        <Box className={styles.boxManageDeliveryMan} mt={2}>
           <Accordion defaultExpanded>
             <AccordionSummary
               expandIcon={<ArrowDropDownRoundedIcon />}
@@ -109,7 +108,7 @@ const ManageDeliveryMan = () => {
                     (dm) => dm.deliveryManId === deliveryMan._id
                   );
                   return (
-                    <div key={i} className={styles.boxmayor}>
+                    <Box key={i} className={styles.boxmayor}>
                       <Box className={styles.boxcitomax}>
                         <Progress
                           className={styles.progressCircle}
@@ -130,7 +129,7 @@ const ManageDeliveryMan = () => {
                               </Typography>
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                 {deliveredPackages?.deliveredPackagesCount !== 10 ? (
-                                  <div className={styles.boxStatus}>
+                                  <Box className={styles.boxStatus}>
                                     <SwitchDeliveryStatus
                                       checked={
                                         deliveryMan.status === 'Activo'
@@ -150,9 +149,9 @@ const ManageDeliveryMan = () => {
                                         ? 'Viaje en Curso'
                                         : deliveryMan.status}
                                     </Typography>
-                                  </div>
+                                  </Box>
                                 ) : (
-                                  <div className={styles.boxStatus}>
+                                  <Box className={styles.boxStatus}>
                                     <SwitchDeliveryStatus checked={'Finalizó'} />
                                     <Typography
                                       variant="inherit"
@@ -160,7 +159,7 @@ const ManageDeliveryMan = () => {
                                     >
                                       Finalizó
                                     </Typography>
-                                  </div>
+                                  </Box>
                                 )}
                               </Box>
                               <Box></Box>
@@ -174,7 +173,7 @@ const ManageDeliveryMan = () => {
                       >
                         <Avatar src={deliveryMan.photo} alt="Remy Sharp" />
                       </Link>
-                    </div>
+                    </Box>
                   );
                 })}
               </Box>{' '}
@@ -186,4 +185,4 @@ const ManageDeliveryMan = () => {
   );
 };
 
-export default withAdminAuth(ManageDeliveryMan);
+export default ManageDeliveryMan;

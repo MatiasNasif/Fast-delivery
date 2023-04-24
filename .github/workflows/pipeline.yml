@@ -95,17 +95,17 @@ jobs:
     # needs: [test]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      # - name: Checkout repo
+      #   uses: actions/checkout@v3
 
-      - name: Build Docker image
-        run: docker build -t fast-delivery_api:latest ./api
+      # - name: Build Docker image
+      #   run: sudo docker compose up -d
 
       - name: Deploy to EC2
         uses: bitovi/github-actions-deploy-docker-to-ec2@v0.5.0
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_default_region: us-east-1
-          image_name: fast-delivery_api
+          aws_default_region: us-east-2
+          image_name: fast-delivery
           image_tag: latest

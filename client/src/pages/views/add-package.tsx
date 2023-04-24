@@ -9,6 +9,7 @@ import {
   Button,
   InputLabel,
   Container,
+  FormHelperText,
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -20,36 +21,22 @@ import { useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import useInput from '@/utils/useInput';
-import { useSnackbar } from 'notistack';
+import dayjs from 'dayjs';
+import { useAlert } from '@/hook/Alerthook';
+import { useForm } from 'react-hook-form';
 
 import withAdminAuth from '@/commons/withAdminAuth';
 
 const AddPackage = () => {
-  interface InputProps {
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    reset: () => void;
-  }
-
-  const useInput = (): InputProps => {
-    const [value, setValue] = useState('');
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(event.target.value);
-    };
-    const reset = () => {
-      setValue('');
-    };
-    return { value, onChange: handleChange, reset };
-  };
-
-  const address = useInput();
-  const receiver = useInput();
-  const weight = useInput();
-  const [value, setValue] = useState();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
   const navigate = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
+  const showAlert = useAlert();
 
   const [count, setCount] = useState(0);
   const IncNum = () => {
@@ -63,49 +50,36 @@ const AddPackage = () => {
     }
   };
 
-  const API_URL = 'http://localhost:5000';
+  const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
-  const date = new Date(value?.$d.toDateString());
-  const day: string = date.getDate().toString().padStart(2, '0');
-  const month: string = (date.getMonth() + 1).toString();
-  const year: string = date.getFullYear().toString().slice(-2);
-  const dateFormatted: string = `${day}/${month}/${year}`;
+  const handleFormSubmit = (data) => {
+    const date = data.deliveryDate;
+    const dateArray = date.split('-');
+    const year = dateArray[0].slice(-2);
+    const month = Number(dateArray[1]).toString();
+    const newDate = `${dateArray[2]}/${month}/${year}`;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = {
-      address: address.value,
-      receiver: receiver.value,
-      weight: Number(weight.value),
-      deliveryDate: dateFormatted,
-      quantity: count,
+    const formdata = {
+      address: data.address,
+      receiver: data.receiver,
+      weight: Number(data.weight),
+      deliveryDate: newDate,
     };
+
+    console.log(formdata);
     fetch(`${API_URL}/packages/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
-    }).then(() => {
-      address.reset();
-      receiver.reset();
-      weight.reset();
-      setCount(0);
-      enqueueSnackbar(
-        `El paquete para ${receiver.value} a la dirección ${address.value} se agregó correctamente`,
-        {
-          variant: 'info',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-          style: {
-            fontSize: '16px',
-            color: '#fffff',
-            fontWeight: 'bold',
-          },
-        }
-      );
+      body: JSON.stringify(formdata),
+    }).then((res) => {
+      showAlert({
+        message: `El paquete para ${data.receiver} a la dirección ${data.address} se agregó correctamente`,
+        typeAlert: 'success',
+        showCloseButton: true,
+      });
+      reset({ address: '', receiver: '', weight: '', deliveryDate: '' });
     });
   };
 
@@ -114,7 +88,7 @@ const AddPackage = () => {
       {' '}
       <Header />
       <Container maxWidth={'xs'}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <Box className={styles.arrow}>
             <Link href={'/views/manage-packages'}>
               <ArrowApp />
@@ -133,8 +107,11 @@ const AddPackage = () => {
             className={styles.input}
             focused
             fullWidth
-            {...address}
+            {...register('address', { required: true })}
           />
+          {errors?.address && (
+            <FormHelperText error={true}>La dirección es requerida</FormHelperText>
+          )}
           <TextField
             label="Nombre de quien recibe"
             InputLabelProps={{ className: styles.labelColor }}
@@ -142,8 +119,12 @@ const AddPackage = () => {
             className={styles.input}
             focused
             fullWidth
-            {...receiver}
+            {...register('receiver', { required: true })}
           />
+
+          {errors?.receiver && (
+            <FormHelperText error={true}>Nombre de quien recibe requerido</FormHelperText>
+          )}
           <TextField
             label="Peso(Kg)"
             InputLabelProps={{ className: styles.labelColor }}
@@ -151,24 +132,27 @@ const AddPackage = () => {
             className={styles.input}
             focused
             fullWidth
-            {...weight}
+            {...register('weight', { required: true })}
           />
-
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {errors?.weight && <FormHelperText error={true}>Peso requerido</FormHelperText>}
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Fecha en la que debe ser repartido"
-              value={value}
               autoFocus
               className={styles.dateContainer}
               sx={{
                 marginTop: '20px',
                 color: 'yellow',
               }}
-              onChange={(newValue) => setValue(newValue)}
+              {...register('date', { required: true })}
               renderInput={(params) => <TextField focused {...params} />}
             />
-          </LocalizationProvider>
+          </LocalizationProvider> */}
+          <div className={'input-wrapper'}>
+            <input type="date" {...register('deliveryDate', { required: true })} />
+          </div>
 
+          {errors?.deliveryDate && <FormHelperText error={true}>Falta la fecha pa</FormHelperText>}
           <Box className={styles.boxContainer}>
             <ButtonApp typeofButton="submit" variantButton="contained">
               Agregar

@@ -14,7 +14,8 @@ import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '@/store/user';
 import axios from 'axios';
-import { useSnackbar } from 'notistack';
+import { useAlert } from '@/hook/Alerthook';
+import Spinner from '@/commons/Spinner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,7 +24,7 @@ interface LoginFormData {
   password: string;
 }
 
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
 async function getAllFormSwornByUser(userId: string) {
   if (!userId) {
@@ -34,6 +35,8 @@ async function getAllFormSwornByUser(userId: string) {
 }
 
 export default function Login() {
+  const showAlert = useAlert();
+
   const {
     register,
     handleSubmit,
@@ -45,14 +48,13 @@ export default function Login() {
   const userRedux = useSelector((state) => state.user);
   const userId = userRedux?.id ?? null;
 
-  // const userId: string = useSelector((state) => state.user?.id ?? null);
   const [formsByUser, setFormsByUser] = useState([]);
   const [hasFormToday, setHasFormToday] = useState(false);
   const [animationLogin, setAnimationLogin] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmitOfLogin = (data: LoginFormData) => {
-    dispatch(userLogin({ data, enqueueSnackbar, setAnimationLogin }));
+    dispatch(userLogin({ data, showAlert, setAnimationLogin, setIsLoading }));
   };
   useEffect(() => {
     if (userId !== null && userId !== undefined) {
@@ -85,47 +87,49 @@ export default function Login() {
       <Head>
         <title>Login</title>
       </Head>
-      <Container maxWidth={'xs'}>
-        <Box className={styles.boxspace}></Box>
-        <Box className={styles.boxBrand}>
-          <Image
-            className={`${
-              styles.brand
-            } animate__animated animate__backInLeft animate__duration-1s ${
-              animationLogin ? 'animate__animated animate__bounceOutRight animate__duration-1s' : ''
-            }`}
-            src={brand}
-            alt="Fast Delivery Brand"
-          />
-        </Box>
-        <form onSubmit={handleSubmit(onSubmitOfLogin)}>
-          <InputEmail name="email" register={register} errors={errors} />
-          <InputPassword name="password" register={register} errors={errors} />
-          <Button fullWidth variant="contained" type="submit">
-            Ingresar
-          </Button>
-        </form>
-        <Box className={styles.boxLinks}>
-          <Typography
-            className={styles.TextLiks}
-            sx={{ fontWeight: '300' }}
-            variant="inherit"
-            color="primary"
-          >
-            Recuperar contraseña
-          </Typography>
-          <Link href="/views/register">
-            <Typography
-              className={styles.TextLiks}
-              sx={{ fontWeight: '700' }}
-              variant="inherit"
-              color="primary"
-            >
-              Registrarse
-            </Typography>
-          </Link>
-        </Box>
-      </Container>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Container maxWidth={'xs'}>
+          <Box className={styles.boxspace}></Box>
+          <Box className={styles.boxBrand}>
+            <Image
+              className={`${
+                styles.brand
+              } animate__animated animate__backInLeft animate__duration-1s 
+  ${animationLogin ? 'animate__animated animate__bounceOutRight animate__duration-1s' : ''}
+
+`}
+              src={brand}
+              alt="Fast Delivery Brand"
+            />
+          </Box>
+          <form onSubmit={handleSubmit(onSubmitOfLogin)}>
+            <InputEmail name="email" register={register} errors={errors} />
+            <InputPassword name="password" register={register} errors={errors} />
+            <Button fullWidth variant="contained" type="submit">
+              Ingresar
+            </Button>
+          </form>
+          <Box className={styles.boxLinks}>
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <Link href="/views/register">
+                <Typography
+                  className={styles.TextLiks}
+                  sx={{ fontWeight: '700' }}
+                  variant="inherit"
+                  color="primary"
+                  onClick={() => setIsLoading(true)}
+                >
+                  Registrarse
+                </Typography>
+              </Link>
+            )}
+          </Box>
+        </Container>
+      )}
     </>
   );
 }

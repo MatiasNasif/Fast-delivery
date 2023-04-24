@@ -23,19 +23,21 @@ const SwitchSworn = (props) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Button
-        variant={activeButton === 'si' ? 'contained' : 'outlined'}
+        variant={activeButton === 'si' ? 'contained' : 'contained'}
         color={activeButton === 'si' ? 'error' : 'error'}
         endIcon={<SentimentDissatisfiedOutlinedIcon />}
         onClick={() => handleButtonClick('si')}
+        disabled={activeButton === 'no'}
       >
         Si
       </Button>
       <Button
         sx={{ marginLeft: '20px' }}
-        variant={activeButton === 'no' ? 'contained' : 'outlined'}
+        variant={activeButton === 'no' ? 'contained' : 'contained'}
         color={activeButton === 'no' ? 'success' : 'success'}
         endIcon={<SentimentSatisfiedAltOutlinedIcon />}
         onClick={() => handleButtonClick('no')}
+        disabled={activeButton === 'si'}
       >
         No
       </Button>

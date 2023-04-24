@@ -1,6 +1,4 @@
 import { createAsyncThunk, createReducer } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { enqueueSnackbar, useSnackbar } from 'notistack';
 
 interface UserRegister {
   fullName: string;
@@ -13,6 +11,7 @@ interface User {
   fullName: string;
   admin: boolean;
   photo?: string;
+  status?: string;
 }
 
 interface UserCredentials {
@@ -20,20 +19,27 @@ interface UserCredentials {
   password: string;
 }
 
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
-export const setPersistence = createAsyncThunk('SET_PERSISTENCIA', () => {
-  return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
+export const setPersistence = createAsyncThunk('SET_PERSISTENCIA', async () => {
+  return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') ?? '') : {};
 });
 
-export const getUserById = createAsyncThunk('GET_USER', () => {
+export const getUserById = createAsyncThunk('GET_USER', async () => {
   const userId: string = JSON.parse(localStorage.getItem('user') ?? '').id;
-  return axios.get(`${API_URL}/users/${userId}`).then((user) => user.data);
+  const response = await fetch(`${API_URL}/users/${userId}`);
+  return response.json();
 });
 
 export const userRegister = createAsyncThunk(
   'USER_REGISTER',
-  async (data: { data: UserRegister; enqueueSnackbar: Function; navigate: Function }) => {
+  async (data: {
+    data: UserRegister;
+    showAlert: Function;
+    navigate: Function;
+    setAnimationLogin: Function;
+    setIsLoading: Function;
+  }) => {
     try {
       const response = await fetch(`${API_URL}/users/signup`, {
         method: 'POST',
@@ -46,128 +52,110 @@ export const userRegister = createAsyncThunk(
         throw new Error('Error al registrarse');
       }
       const user = await response.json();
-      data.enqueueSnackbar('Usuario Creado', {
-        variant: 'success',
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'center',
-        },
-        style: {
-          fontSize: '16px',
-          color: '#fffff',
-          fontWeight: 'bold',
-        },
-      });
+
+      data.showAlert(
+        { message: 'Usuario creado', typeAlert: 'success', showCloseButton: true },
+        { autoHideDuration: 3000 }
+      );
+      data.setAnimationLogin(true);
       data.navigate.push('/');
+      data.setIsLoading(true);
       return user;
     } catch (error) {
-      console.log(error);
-      data.enqueueSnackbar('Usuario Existente', {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'center',
-        },
-        style: {
-          fontSize: '16px',
-          color: '#fffff',
-          fontWeight: 'bold',
-        },
-      });
+      data.showAlert(
+        { message: 'Usuario existente', typeAlert: 'error', showCloseButton: true },
+        { autoHideDuration: 3000 }
+      );
     }
   }
 );
 
 export const userLogin = createAsyncThunk<
   User,
-  { data: UserCredentials; enqueueSnackbar: Function; setAnimationLogin: Function }
->('USER_LOGGED', async ({ data, enqueueSnackbar, setAnimationLogin }) => {
-  try {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      if (response.status === 401) {
-        enqueueSnackbar('Contraseña incorrecta', {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-          style: {
-            fontSize: '16px',
-            color: '#fffff',
-            fontWeight: 'bold',
-          },
-        });
-      }
-      if (response.status === 404) {
-        enqueueSnackbar('Usuario incorrecto o no existente', {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-          style: {
-            fontSize: '16px',
-            color: '#fffff',
-            fontWeight: 'bold',
-          },
-        });
-      }
-      throw new Error('Error en la respuesta');
-    }
-    const responseData = await response.json();
-    const user: User = {
-      email: responseData.email,
-      id: responseData.id,
-      fullName: responseData.fullName,
-      admin: responseData.admin,
-      photo: responseData.photo,
-    };
-    setAnimationLogin(true);
-    localStorage.setItem('user', JSON.stringify(user));
-    enqueueSnackbar(`Bienvenido/a  ${user.fullName} `, {
-      variant: 'success',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'center',
-      },
-      style: {
-        fontSize: '16px',
-        color: '#fffff',
-        fontWeight: 'bold',
-      },
-    });
-    return user;
-  } catch (error) {
-    console.log(error);
-  }
-});
+  {
+    data: UserCredentials;
+    showAlert: Function;
+    setAnimationLogin: Function;
+    setLoginFailed: Function;
+    setIsLoading: Function;
+  },
+  { rejectValue: string }
+>(
+  'USER_LOGGED',
+  async ({ data, showAlert, setAnimationLogin, setIsLoading }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        if (response.status === 401) {
+          showAlert({
+            message: 'Contraseña incorrecta',
+            typeAlert: 'error',
+            showCloseButton: true,
+          });
+        }
+        if (response.status === 404) {
+          showAlert({
+            message: 'Usuario incorrecto o no existente',
+            typeAlert: 'error',
+            showCloseButton: true,
+          });
+        }
 
-export const userLogout = createAsyncThunk('USER_LOGOUT', () => {
-  return axios.post(`${API_URL}/auth/logout`).then(() => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('switchState');
-  });
+        throw new Error('Error en la respuesta');
+      }
+
+      const responseData = await response.json();
+      const user: User = {
+        email: responseData.email,
+        id: responseData.id,
+        fullName: responseData.fullName,
+        admin: responseData.admin,
+        photo: responseData.photo,
+        status: responseData.status,
+      };
+      setAnimationLogin(true);
+      setIsLoading(true);
+      localStorage.setItem('user', JSON.stringify(user));
+      showAlert(
+        { message: `Bienvenido/a ${user.fullName}`, typeAlert: 'success', showCloseButton: true },
+        { autoHideDuration: 3000 }
+      );
+      return user;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue('Error al iniciar sesión');
+    }
+  }
+);
+
+export const userLogout = createAsyncThunk('USER_LOGOUT', async () => {
+  await fetch(`${API_URL}/auth/logout`, { method: 'POST' });
+  localStorage.removeItem('user');
+  localStorage.removeItem('switchState');
 });
 
 export const getAllUsers = createAsyncThunk('GET_ALL_USER', () => {
-  return axios.get(`${API_URL}/users`);
+  return fetch(`${API_URL}/users`, { method: 'GET' });
 });
 
 export const updateUserById = createAsyncThunk(
   'UPDATE_USER',
   async (payload: { userId: string; photo: string }) => {
     const { userId, photo } = payload;
-    return axios.put(`${API_URL}/users/${userId}`, { photo }).then((user) => user.data);
-  },
-  (error) => {
-    console.log('Error updating user:', error);
+    const response = await fetch(`${API_URL}/users/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ photo }),
+    });
+    return response.json();
   }
 );
 

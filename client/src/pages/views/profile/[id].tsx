@@ -7,6 +7,7 @@ import styles from '../../../styles/Profile.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserById } from '@/store/user';
 import React, { useCallback, useEffect, useState } from 'react';
+
 import ButtonApp from '@/commons/buttonApp';
 
 const Profile = () => {

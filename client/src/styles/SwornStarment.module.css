@@ -1,10 +1,11 @@
 .BoxwordAdd{
   align-items: center;
-  margin-top: 7%;
+
 }
 
 .BoxOfCheckbox{
   display: flex;
+  margin-top: 1%;
 }
 .ButtonApp{
   margin-top: 5%;
@@ -19,11 +20,18 @@
     margin-bottom: 20px;
     margin-left: 15px;
      font-weight: 400;
-  font-size: 17px;
+     font-size: 17px;
 }
+.wordTextTrue{
+    margin-left: 2px;
+     font-weight: 300;
+     font-size: 16px;
+}
+
 
 .BoxSwitches{
   display: flex;
   justify-content: center;
   margin-top: 15px;
 }
+

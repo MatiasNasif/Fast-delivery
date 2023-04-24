@@ -100,3 +100,13 @@ display: flex;
 display: flex;
 } 
 
+.containerManageDeliveryMan{
+    height: 100vh;
+     width: 100vw
+ }
+ .boxManageDeliveryMan{
+    padding-left: 15px;
+    padding-right: 15px;
+    
+ }
+ 
