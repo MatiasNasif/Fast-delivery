@@ -121,3 +121,16 @@ a {
 .input-wrapper input:focus {
   outline-color: lightcoral;
 }
+
+.spin{
+  align-items: center;
+  margin-bottom: 60px;
+}
+.SpinnerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+
+}
