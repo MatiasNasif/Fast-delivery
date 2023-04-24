@@ -1,17 +1,17 @@
 import { useState, useEffect, ReactEventHandler } from 'react';
-import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
 import ButtonApp from '@/commons/buttonApp';
 import { Container, Box, Typography } from '@mui/material';
 import styles from '../../styles/SwornStarment.module.css';
 import Checkbox from '@mui/material/Checkbox';
 import SwitchSworn from '../../commons/switchSworn';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { formCreate } from '../../store/formSworn';
 import { setPersistence } from '@/store/user';
 import { useSnackbar } from 'notistack';
+import { userLogout } from '@/store/user';
+import { useAlert } from '@/hook/Alerthook';
 
 const SwornStatement = () => {
   const repetitiveText = [
@@ -32,8 +32,7 @@ const SwornStatement = () => {
   const [answers, setAnswers] = useState({});
   const [buttonValidate, setButtonValidate] = useState<boolean>(true);
   const [buttonClicks, setButtonClicks] = useState<number>(0);
-
-  const { enqueueSnackbar } = useSnackbar();
+  const showAlert = useAlert();
   const navigate = useRouter();
   const dispatch = useDispatch();
 
@@ -56,20 +55,19 @@ const SwornStatement = () => {
   const handleButtonClick = () => {
     setButtonClicks((prevClicks) => prevClicks + 1);
   };
+  const handleLogout = () => {
+    dispatch(userLogout()).then(() => navigate.push('/'));
+  };
 
   const handleButtonClickDesactivate = () => {
-    return enqueueSnackbar('Tiene que completar todos los campos', {
-      variant: 'error',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'center',
+    return showAlert(
+      {
+        message: `Tiene que completar todos los campos`,
+        typeAlert: 'error',
+        showCloseButton: true,
       },
-      style: {
-        fontSize: '16px',
-        color: '#fffff',
-        fontWeight: 'bold',
-      },
-    });
+      { autoHideDuration: 3000 }
+    );
   };
   useEffect(() => {
     setButtonValidate(!hasRequiredFields(answers));
@@ -80,24 +78,20 @@ const SwornStatement = () => {
     dispatch(formCreate(dataForm))
       .then(() => navigate.push('/views/start-workday'))
       .catch((err) => console.log(err));
-    enqueueSnackbar('El formulario se creo correctamente', {
-      variant: 'success',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'center',
+    showAlert(
+      {
+        message: `El formulario se creo correctamente`,
+        typeAlert: 'success',
+        showCloseButton: true,
       },
-      style: {
-        fontSize: '16px',
-        color: '#fffff',
-        fontWeight: 'bold',
-      },
-    });
+      { autoHideDuration: 3000 }
+    );
   };
 
   return (
     <Container maxWidth={'xs'} disableGutters={true}>
       <>
-        <Header />
+        <ArrowApp onClick={handleLogout} className={styles.arrow} />
 
         <form onSubmit={handleSubmitSwornStatement}>
           <Box className={styles.BoxwordAdd}>
@@ -134,7 +128,7 @@ const SwornStatement = () => {
                 <Checkbox required disabled={false} />
               )}
 
-              <Typography variant="p" className={styles.wordText}>
+              <Typography variant="p" className={styles.wordTextTrue}>
                 Declaro que mis respuestas fueron totalmente verdaderas y que he respondido a todas
                 las preguntas con la mayor honestidad posible.
               </Typography>
