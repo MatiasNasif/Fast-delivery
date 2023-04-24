@@ -171,13 +171,13 @@ export const updateUserById = createAsyncThunk(
   }
 );
 
-const userReducer = createReducer(setPersistence.fulfilled({}), {
+const userReducer = createReducer(null, {
   [`${getUserById.fulfilled}`]: (state, action) => action.payload,
   [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
   [`${userLogin.fulfilled}`]: (state, action) => action.payload,
-  [`${setPersistence.fulfilled}`]: (state, action) => {
-    return action.payload;
-  },
+  // [`${setPersistence.fulfilled}`]: (state, action) => {
+  //   return action.payload;
+  // },
   [`${userLogout.fulfilled}`]: (state, action) => {
     return {};
   },

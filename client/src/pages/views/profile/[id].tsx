@@ -5,8 +5,8 @@ import Link from 'next/link';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import styles from '../../../styles/Profile.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPersistence, updateUserById } from '@/store/user';
-import React, { useEffect, useState } from 'react';
+import { updateUserById } from '@/store/user';
+import React, { useCallback, useEffect, useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
 
 const Profile = () => {
@@ -14,11 +14,8 @@ const Profile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setPersistence());
-  }, [dispatch]);
-
   const user = useSelector((state) => state.user);
+  const userId = useSelector((state) => state.user.id);
 
   const uploadImage = (event) => {
     const selectedPhoto = event.target.files[0];
@@ -32,10 +29,16 @@ const Profile = () => {
   };
 
   const handlePhoto = async (baseImage) => {
-    const userId = user.id;
+    if (!userId) {
+      console.error('User ID is not defined');
+      return;
+    }
     const updatedUser = await dispatch(updateUserById({ userId, photo: baseImage }));
     dispatch({ type: 'UPDATE_USER', payload: updatedUser });
+    setSelectedImage(null);
   };
+
+  console.log(user.photo, 'user.photo');
   return (
     <>
       <Container maxWidth="xs" disableGutters={true}>
@@ -50,23 +53,15 @@ const Profile = () => {
           </Link>
         )}
 
-        {selectedImage ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Avatar src={selectedImage} sx={{ height: '200px', width: '200px' }} />
-          </Box>
-        ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Avatar src={user.photo} sx={{ height: '200px', width: '200px' }} />
-          </Box>
-        )}
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Avatar src={user.photo} sx={{ height: '200px', width: '200px' }} />
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <input type="file" onChange={uploadImage} />
+        </Box>
+
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-          <input
-            type="file"
-            onChange={(e) => {
-              uploadImage(e);
-            }}
-            accept="image/*"
-          />
           <ButtonApp variant="contained" color="primary" onClick={() => handlePhoto(baseImage)}>
             Guardar foto
           </ButtonApp>
