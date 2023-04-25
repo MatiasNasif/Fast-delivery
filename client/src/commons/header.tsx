@@ -15,8 +15,12 @@ import Spinner from './Spinner';
 
 const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
-export default function Header() {
-  const [isLoading, setIsLoading] = useState(false);
+interface ClickLoader {
+  onClickedLogout: () => void;
+  onClickedProfile: () => void;
+}
+export default function Header({ onClickedLogout, onClickedProfile }: ClickLoader) {
+  const [isLoading, setIsLoading] = useState(true);
   const showAlert = useAlert();
   const dispatch = useDispatch();
   const navigate = useRouter();
@@ -25,6 +29,8 @@ export default function Header() {
 
   const onClickLogoutSession = () => {
     dispatch(userLogout({ setIsLoading })).then(() => navigate.push('/'));
+    localStorage.removeItem('userLoggedInBefore');
+    onClickedLogout();
     showAlert(
       {
         message: ` Hasta pronto ${user.fullName} `,
@@ -37,11 +43,11 @@ export default function Header() {
 
   return (
     <>
-      {isLoading ? (
+      {!isLoading ? (
         <Spinner />
       ) : (
         <Box className={styles.header_container} component="form" noValidate autoComplete="off">
-          <Link href={`/views/profile/${user.id}`}>
+          <Link href={`/views/profile/${user.id}`} onClick={() => onClickedProfile()}>
             <Image src={brand} alt="Fast Delivery Brand" className={styles.logo} />
           </Link>
           <Box className={styles.buttonApp_container}>

@@ -23,6 +23,7 @@ interface Package {
 export default function GetPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const userRedux = useSelector((state) => state.user);
   const userId = userRedux.id;
   const dispatch = useDispatch();
@@ -98,7 +99,10 @@ export default function GetPackages() {
   return (
     <Container maxWidth={'xs'} disableGutters={true}>
       <>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         <Link href={'/views/start-workday'}>
           <ArrowApp />
         </Link>

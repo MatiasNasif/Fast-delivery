@@ -122,10 +122,7 @@ export const userLogin = createAsyncThunk<
       setAnimationLogin(true);
       setIsLoading(true);
       localStorage.setItem('user', JSON.stringify(user));
-      showAlert(
-        { message: `Bienvenido/a ${user.fullName}`, typeAlert: 'success', showCloseButton: true },
-        { autoHideDuration: 3000 }
-      );
+
       return user;
     } catch (error) {
       console.log(error);

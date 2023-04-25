@@ -8,14 +8,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserById } from '@/store/user';
 import React, { useEffect, useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
+import { useRouter } from 'next/router';
 
 const Profile = () => {
   const [baseImage, setBaseImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const dispatch = useDispatch();
-
+  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
 
+  const router = useRouter();
+
+  const goBack = () => {
+    router.back();
+  };
   const uploadImage = (event) => {
     const selectedPhoto = event.target.files[0];
     const reader = new FileReader();
@@ -35,7 +41,10 @@ const Profile = () => {
   return (
     <>
       <Container maxWidth="xs" disableGutters={true}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         {user.admin ? (
           <Link href={'/views/manage-schedule'}>
             <ArrowApp />
