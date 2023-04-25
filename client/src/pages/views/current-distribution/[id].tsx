@@ -47,7 +47,9 @@ export default function CurrentDistribution() {
   const [isLoading, setIsLoading] = useState(false);
   const packageIdSelected: string = (navigate.query.id ?? '').toString();
   const [packageByUser, setPackageByUser] = useState<Package>(initialPackage);
-  const user: User = useSelector((state) => state.user);
+
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const userId = user.id;
 
   const fetchPackage = useCallback(() => {
     fetch(`${urlApi}/packages/${packageIdSelected}`)

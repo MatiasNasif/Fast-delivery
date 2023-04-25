@@ -20,15 +20,14 @@ import ButtonApp from '@/commons/buttonApp';
 import { useRouter } from 'next/router';
 import { useAlert } from '../../../hook/Alerthook';
 
-
 const Profile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [savingPhoto, setSavingPhoto] = useState(false);
   const showAlert = useAlert();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
   const userId = user.id;
-
 
   const router = useRouter();
 
@@ -50,7 +49,11 @@ const Profile = () => {
       console.error('User ID is not defined');
       return;
     }
-    const updatedUser = await dispatch(updateUserById({ userId, photo: selectedImage }));
+    setSavingPhoto(true);
+
+    const updatedUser = await dispatch(
+      updateUserById({ userId, photo: selectedImage, admin: user.admin })
+    );
     dispatch({ type: 'UPDATE_USER', payload: updatedUser });
     const userFromLocalStorage = JSON.parse(localStorage.getItem('user'));
     userFromLocalStorage.photo = selectedImage;
@@ -60,6 +63,7 @@ const Profile = () => {
       typeAlert: 'success',
       showCloseButton: true,
     });
+    setSavingPhoto(false);
   };
 
   return (
@@ -98,11 +102,15 @@ const Profile = () => {
           </Button>
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           {selectedImage ? (
-            <Button variant="text" onClick={() => handlePhoto(selectedImage)}>
-              Guardar foto
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              {!savingPhoto && (
+                <Button variant="text" onClick={() => handlePhoto(selectedImage)}>
+                  Guardar foto
+                </Button>
+              )}
+            </Box>
           ) : null}
         </Box>
         <Accordion defaultExpanded>

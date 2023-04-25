@@ -38,6 +38,7 @@ const ManageSchedule = () => {
 
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>(dateFormatted);
 
   useEffect(() => {
@@ -101,7 +102,10 @@ const ManageSchedule = () => {
   return (
     <>
       <Container disableGutters={true} className={styles.containerManage}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         <Box className={styles.boxAdmin}>
           <Avatar alt="Admin" />
           <Box>

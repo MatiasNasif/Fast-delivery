@@ -44,7 +44,7 @@ export default function StartWorkday() {
   function AlertLogin() {
     return showAlert(
       {
-        message: `Bienvenido/a ${userRedux.fullName}`,
+        message: `Bienvenido/a ${user.fullName}`,
         typeAlert: 'success',
         showCloseButton: true,
       },

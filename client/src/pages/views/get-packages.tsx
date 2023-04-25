@@ -9,7 +9,7 @@ import ArrowApp from '../../commons/arrowApp';
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPersistence } from '@/store/user';
+
 import Link from 'next/link';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -24,9 +24,10 @@ export default function GetPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const userRedux = useSelector((state) => state.user);
-  const userId = userRedux.id;
-  const dispatch = useDispatch();
+
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const userId = user.id;
+
   const countPackages = packages?.length > 0;
 
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
@@ -43,10 +44,6 @@ export default function GetPackages() {
   useEffect(() => {
     fetchPackages();
   }, [fetchPackages]);
-
-  useEffect(() => {
-    dispatch(setPersistence());
-  }, [dispatch]);
 
   const handleChange = (packageId: string) => {
     const index = selectedPackages.indexOf(packageId);

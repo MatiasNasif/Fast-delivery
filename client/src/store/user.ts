@@ -143,14 +143,14 @@ export const getAllUsers = createAsyncThunk('GET_ALL_USER', () => {
 
 export const updateUserById = createAsyncThunk(
   'UPDATE_USER',
-  async (payload: { userId: string; photo: string }) => {
-    const { userId, photo } = payload;
+  async (payload: { userId: string; photo: string; admin: boolean }) => {
+    const { userId, photo, admin } = payload;
     const response = await fetch(`${API_URL}/users/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ photo }),
+      body: JSON.stringify({ photo, admin }),
     });
     return response.json();
   }

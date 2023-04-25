@@ -26,6 +26,7 @@ interface User {
 
 const ManageDeliveryMan = () => {
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [deliveryManPackages, setDeliveryManPackages] = useState<{ [key: string]: Package[] }>({});
   const dispatch = useDispatch();
 
@@ -87,7 +88,10 @@ const ManageDeliveryMan = () => {
   return (
     <>
       <Container className={styles.containerManageDeliveryMan} maxWidth="xs" disableGutters={true}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         <Link href={'/views/manage-schedule'}>
           <ArrowApp />
         </Link>
