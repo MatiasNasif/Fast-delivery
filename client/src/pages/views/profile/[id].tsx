@@ -8,6 +8,7 @@ import {
   AccordionSummary,
   Typography,
   Button,
+  Input,
 } from '@mui/material';
 import Link from 'next/link';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
@@ -24,7 +25,6 @@ const Profile = () => {
 
   const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
   const userId = user.id;
-  console.log(userId, 'userId');
 
   const uploadImage = (event) => {
     const selectedPhoto = event.target.files[0];
@@ -82,7 +82,7 @@ const Profile = () => {
         <Box sx={{ display: 'flex', justifyContent: 'center', padding: '5%' }}>
           <Button variant="contained" component="label">
             Seleccionar imagen
-            <input type="file" hidden onChange={uploadImage} />
+            <Input type="file" onChange={uploadImage} sx={{ display: 'none' }} />
           </Button>
         </Box>
 
