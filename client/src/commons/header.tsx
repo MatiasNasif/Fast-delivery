@@ -25,7 +25,9 @@ export default function Header({ onClickedLogout, onClickedProfile }: ClickLoade
   const dispatch = useDispatch();
   const navigate = useRouter();
 
-  const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.user);
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const userId = user.id;
 
   const onClickLogoutSession = () => {
     dispatch(userLogout({ setIsLoading })).then(() => navigate.push('/'));
