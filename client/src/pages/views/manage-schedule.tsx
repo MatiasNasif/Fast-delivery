@@ -14,7 +14,6 @@ import Header from '@/commons/header';
 import Calendar from '../../commons/daySlide';
 import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
-import { useAlert } from '@/hook/Alerthook';
 import Link from 'next/link';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
@@ -31,7 +30,6 @@ interface Package {
 }
 
 const ManageSchedule = () => {
-  const showAlert = useAlert();
   const today = new Date();
   const day: string = today.getDate().toString().padStart(2, '0');
   const month: string = (today.getMonth() + 1).toString();
