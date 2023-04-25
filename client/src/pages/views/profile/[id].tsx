@@ -1,22 +1,30 @@
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
-import { Container, Avatar, Box, Accordion, AccordionSummary, Typography } from '@mui/material';
+import {
+  Container,
+  Avatar,
+  Box,
+  Accordion,
+  AccordionSummary,
+  Typography,
+  Button,
+} from '@mui/material';
 import Link from 'next/link';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import styles from '../../../styles/Profile.module.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateUserById } from '@/store/user';
-import React, { useCallback, useEffect, useState } from 'react';
-
-import ButtonApp from '@/commons/buttonApp';
+import React, { useState } from 'react';
+import { useAlert } from '../../../hook/Alerthook';
 
 const Profile = () => {
-  const [baseImage, setBaseImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const showAlert = useAlert();
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.user);
-  const userId = useSelector((state) => state.user.id);
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const userId = user.id;
+  console.log(userId, 'userId');
 
   const uploadImage = (event) => {
     const selectedPhoto = event.target.files[0];
@@ -25,21 +33,26 @@ const Profile = () => {
     reader.onload = () => {
       const photoString = reader.result;
       setSelectedImage(photoString);
-      setBaseImage(photoString);
     };
   };
 
-  const handlePhoto = async (baseImage) => {
+  const handlePhoto = async () => {
     if (!userId) {
       console.error('User ID is not defined');
       return;
     }
-    const updatedUser = await dispatch(updateUserById({ userId, photo: baseImage }));
+    const updatedUser = await dispatch(updateUserById({ userId, photo: selectedImage }));
     dispatch({ type: 'UPDATE_USER', payload: updatedUser });
-    setSelectedImage(null);
+    const userFromLocalStorage = JSON.parse(localStorage.getItem('user'));
+    userFromLocalStorage.photo = selectedImage;
+    localStorage.setItem('user', JSON.stringify(userFromLocalStorage));
+    showAlert({
+      message: 'La imagen ha sido agregada correctamente',
+      typeAlert: 'success',
+      showCloseButton: true,
+    });
   };
 
-  console.log(user.photo, 'user.photo');
   return (
     <>
       <Container maxWidth="xs" disableGutters={true}>
@@ -53,19 +66,32 @@ const Profile = () => {
             <ArrowApp />
           </Link>
         )}
-
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Avatar src={user.photo} sx={{ height: '200px', width: '200px' }} />
-        </Box>
-
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <input type="file" onChange={uploadImage} />
+        {selectedImage ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Avatar src={selectedImage} sx={{ height: '200px', width: '200px' }} />
+          </Box>
+        ) : user.photo ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Avatar src={user.photo} sx={{ height: '200px', width: '200px' }} />
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Avatar sx={{ height: '200px', width: '200px' }} />
+          </Box>
+        )}
+        <Box sx={{ display: 'flex', justifyContent: 'center', padding: '5%' }}>
+          <Button variant="contained" component="label">
+            Seleccionar imagen
+            <input type="file" hidden onChange={uploadImage} />
+          </Button>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-          <ButtonApp variant="contained" color="primary" onClick={() => handlePhoto(baseImage)}>
-            Guardar foto
-          </ButtonApp>
+          {selectedImage ? (
+            <Button variant="text" onClick={() => handlePhoto(selectedImage)}>
+              Guardar foto
+            </Button>
+          ) : null}
         </Box>
         <Accordion defaultExpanded>
           <AccordionSummary

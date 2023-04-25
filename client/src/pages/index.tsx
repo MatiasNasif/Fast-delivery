@@ -54,6 +54,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmitOfLogin = (data: LoginFormData) => {
+    console.log(data, 'data')
     dispatch(userLogin({ data, showAlert, setAnimationLogin, setIsLoading }));
   };
   useEffect(() => {

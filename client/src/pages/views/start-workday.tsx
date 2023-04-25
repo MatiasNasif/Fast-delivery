@@ -7,7 +7,6 @@ import ButtonApp from '../../commons/buttonApp';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { setPersistence } from '@/store/user';
 import { getFormById } from '@/store/formSworn';
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
@@ -32,8 +31,9 @@ export default function StartWorkday() {
   const [packages, setPackages] = useState<Package[]>([]);
   const dispatch = useDispatch();
   const form = useSelector((state) => state.form);
-  const userRedux = useSelector((state) => state.user);
-  const userId = userRedux.id;
+
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const userId = user.id;
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
   const { enqueueSnackbar } = useSnackbar();
   const counterPackages: number = packages.length;
@@ -60,10 +60,6 @@ export default function StartWorkday() {
   useEffect(() => {
     fetchPackagesPendingByUser();
   }, [fetchPackagesPendingByUser]);
-
-  useEffect(() => {
-    dispatch(setPersistence());
-  }, [dispatch]);
 
   useEffect(() => {
     if (userId) {
