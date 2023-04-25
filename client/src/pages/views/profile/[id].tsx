@@ -15,17 +15,26 @@ import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import styles from '../../../styles/Profile.module.css';
 import { useDispatch } from 'react-redux';
 import { updateUserById } from '@/store/user';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import ButtonApp from '@/commons/buttonApp';
+import { useRouter } from 'next/router';
 import { useAlert } from '../../../hook/Alerthook';
+
 
 const Profile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const showAlert = useAlert();
   const dispatch = useDispatch();
-
+  const [isLoading, setIsLoading] = useState(false);
   const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
   const userId = user.id;
 
+
+  const router = useRouter();
+
+  const goBack = () => {
+    router.back();
+  };
   const uploadImage = (event) => {
     const selectedPhoto = event.target.files[0];
     const reader = new FileReader();
@@ -56,7 +65,10 @@ const Profile = () => {
   return (
     <>
       <Container maxWidth="xs" disableGutters={true}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         {user.admin ? (
           <Link href={'/views/manage-schedule'}>
             <ArrowApp />

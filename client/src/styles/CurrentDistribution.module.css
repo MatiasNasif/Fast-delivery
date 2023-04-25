@@ -16,6 +16,8 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+    padding-left: 15px;
+  padding-right: 15px;
 }
 
 .loading {
@@ -51,7 +53,10 @@
   font-weight: bold;
   color: #4f4f4f;
 }
-
+.current_distribution_container{
+  height: 100vh;
+  width: 100vw;
+}
 .container_accordion_subtitle_details {
   font-weight: normal;
 }
