@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { setPersistence } from '@/store/user';
 import { getFormById } from '@/store/formSworn';
 import { useSnackbar } from 'notistack';
+import { useCallback } from 'react';
 
 interface Package {
   address: string;
@@ -37,21 +38,28 @@ export default function StartWorkday() {
   const { enqueueSnackbar } = useSnackbar();
   const counterPackages: number = packages.length;
 
-  useEffect(() => {
+  const fetchpackagesByUser = useCallback(() => {
     if (userId) {
       fetch(`${API_URL}/packages/${userId}/packagesByUser`)
         .then((response) => response.json())
         .then((packs) => setPackages(packs));
     }
-  }, [userId, packages]);
-
+  }, []);
   useEffect(() => {
+    fetchpackagesByUser();
+  }, [fetchpackagesByUser]);
+
+  const fetchPackagesPendingByUser = useCallback(() => {
     if (userId) {
       fetch(`${API_URL}/packages/${userId}/packagesPendingByUser`)
         .then((response) => response.json())
         .then((packs) => setPackagesPending(packs));
     }
-  }, [userId, packagesPending]);
+  }, []);
+
+  useEffect(() => {
+    fetchPackagesPendingByUser();
+  }, [fetchPackagesPendingByUser]);
 
   useEffect(() => {
     dispatch(setPersistence());
@@ -83,7 +91,7 @@ export default function StartWorkday() {
   return (
     <>
       <main>
-        <Container maxWidth="xs" disableGutters={true}>
+        <Container className={styles.containerStartWorkday} maxWidth="xs" disableGutters={true}>
           <Header />
           {form.alcohol === 'si' ? (
             <span onClick={messageOfalcoholYesButton}>

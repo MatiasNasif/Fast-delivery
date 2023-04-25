@@ -5,7 +5,7 @@ import Link from 'next/link';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import styles from '../../../styles/Profile.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPersistence, updateUserById } from '@/store/user';
+import { updateUserById } from '@/store/user';
 import React, { useEffect, useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
 
@@ -13,10 +13,6 @@ const Profile = () => {
   const [baseImage, setBaseImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setPersistence());
-  }, [dispatch]);
 
   const user = useSelector((state) => state.user);
 

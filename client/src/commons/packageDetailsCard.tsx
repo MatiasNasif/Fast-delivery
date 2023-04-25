@@ -6,6 +6,7 @@ import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
+import { useAlert } from '@/hook/Alerthook';
 import 'animate.css';
 
 interface Props {
@@ -33,11 +34,10 @@ export default function PackageDetailsCard({
 }: Props) {
   const [isDeleting, setIsDeleting] = useState<Boolean>(false);
   const user: User = useSelector((state) => state.user);
+  const showAlert = useAlert();
 
   const handleDeletePackage = (packageId: string) => {
-    setIsDeleting(true); // Establecer el estado en true
-
-    // Agregar una animación de espera antes de ejecutar el fetch
+    setIsDeleting(true);
     setTimeout(() => {
       fetch(`${urlApi}/packages/${packageId}`, {
         method: 'DELETE',
@@ -46,31 +46,22 @@ export default function PackageDetailsCard({
           if (!response.ok) {
             throw new Error('Fallo al querer eliminar el paquete');
           } else {
-            enqueueSnackbar('Paquete eliminado correctamente', {
-              variant: 'success',
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'center',
-              },
-              style: {
-                fontSize: '16px',
-                color: '#fffff',
-                fontWeight: 'bold',
-              },
+            showAlert({
+              message: 'Paquete eliminado correctamente',
+              typeAlert: 'success',
+              showCloseButton: true,
             });
             onDeletePackage();
-
-            // Esperar a que se complete la animación antes de establecer el estado en false
             setTimeout(() => {
-              setIsDeleting(false); // Establecer el estado en false
-            }, 1000); // Esperar 1 segundo antes de establecer el estado en false
+              setIsDeleting(false);
+            }, 1000);
           }
         })
         .catch((error) => {
           console.error(error);
-          setIsDeleting(false); // Establecer el estado en false en caso de error
+          setIsDeleting(false);
         });
-    }, 1000); // Esperar 2 segundos antes de ejecutar el fetch
+    }, 1000);
   };
 
   return (

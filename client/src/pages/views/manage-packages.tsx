@@ -36,6 +36,12 @@ const ManagePackages = () => {
     user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
   }
 
+  const today = new Date();
+  const day: string = today.getDate().toString().padStart(2, '0');
+  const month: string = (today.getMonth() + 1).toString();
+  const year: string = today.getFullYear().toString().slice(-2);
+  const dateFormatted: string = `${day}-${month}-${year}`;
+
   const dateSelected = useSelector((state) => state.date);
 
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
@@ -43,9 +49,13 @@ const ManagePackages = () => {
   const countPackages = packages.length;
 
   const fetchPackages = useCallback(() => {
-    fetch(`${API_URL}/packages/${dateSelected}/delivery-date`)
-      .then((response) => response.json())
-      .then((packs) => setPackages(packs));
+    dateSelected === '' || dateSelected === undefined
+      ? fetch(`${API_URL}/packages/${dateFormatted}/delivery-date`)
+          .then((response) => response.json())
+          .then((packs) => setPackages(packs))
+      : fetch(`${API_URL}/packages/${dateSelected}/delivery-date`)
+          .then((response) => response.json())
+          .then((packs) => setPackages(packs));
   }, [dateSelected]);
 
   useEffect(() => {
@@ -54,11 +64,11 @@ const ManagePackages = () => {
 
   return (
     <>
-      <Header />
-      <Link href={'/views/manage-schedule'}>
-        <ArrowApp />
-      </Link>
-      <Container maxWidth="xs" disableGutters={true}>
+      <Container className={styles.containerManagePackages} maxWidth="xs" disableGutters={true}>
+        <Header />
+        <Link href={'/views/manage-schedule'}>
+          <ArrowApp />
+        </Link>
         <Box className={styles.box}>
           <Accordion defaultExpanded>
             <AccordionSummary
