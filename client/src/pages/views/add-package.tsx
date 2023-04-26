@@ -1,31 +1,13 @@
 import ArrowApp from '@/commons/arrowApp';
 import React from 'react';
 import Header from '@/commons/header';
-import {
-  Typography,
-  Box,
-  TextField,
-  FormControl,
-  Button,
-  InputLabel,
-  Container,
-  FormHelperText,
-} from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Typography, Box, TextField, FormControl, Container, FormHelperText } from '@mui/material';
 import styles from '../../styles/AddPackage.module.css';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import dayjs from 'dayjs';
 import { useAlert } from '@/hook/Alerthook';
 import { useForm } from 'react-hook-form';
-
-import withAdminAuth from '@/commons/withAdminAuth';
 
 const AddPackage = () => {
   const {
@@ -35,38 +17,24 @@ const AddPackage = () => {
     reset,
   } = useForm();
 
-  const navigate = useRouter();
   const showAlert = useAlert();
 
-  const [count, setCount] = useState(0);
-  const IncNum = () => {
-    setCount(count + 1);
-  };
-  const DecNum = () => {
-    if (count > 0) setCount(count - 1);
-    else {
-      setCount(0);
-      alert('min limit reached');
-    }
-  };
+  const today = new Date();
+  const minDate = new Date(today.getTime());
+  const maxDate = new Date(today.getTime() + 31 * 24 * 60 * 60 * 1000);
+  const minDateStr = minDate.toISOString().slice(0, 10);
+  const maxDateStr = maxDate.toISOString().slice(0, 10);
 
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
   const handleFormSubmit = (data) => {
-    const date = data.deliveryDate;
-    const dateArray = date.split('-');
-    const year = dateArray[0].slice(-2);
-    const month = Number(dateArray[1]).toString();
-    const newDate = `${dateArray[2]}/${month}/${year}`;
-
     const formdata = {
       address: data.address,
       receiver: data.receiver,
       weight: Number(data.weight),
-      deliveryDate: newDate,
+      deliveryDate: data.deliveryDate,
     };
 
-    console.log(formdata);
     fetch(`${API_URL}/packages/create`, {
       method: 'POST',
       headers: {
@@ -135,21 +103,13 @@ const AddPackage = () => {
             {...register('weight', { required: true })}
           />
           {errors?.weight && <FormHelperText error={true}>Peso requerido</FormHelperText>}
-          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Fecha en la que debe ser repartido"
-              autoFocus
-              className={styles.dateContainer}
-              sx={{
-                marginTop: '20px',
-                color: 'yellow',
-              }}
-              {...register('date', { required: true })}
-              renderInput={(params) => <TextField focused {...params} />}
-            />
-          </LocalizationProvider> */}
           <div className={'input-wrapper'}>
-            <input type="date" {...register('deliveryDate', { required: true })} />
+            <input
+              type="date"
+              {...register('deliveryDate', { required: true })}
+              min={minDateStr}
+              max={maxDateStr}
+            />
           </div>
 
           {errors?.deliveryDate && <FormHelperText error={true}>Falta la fecha pa</FormHelperText>}
