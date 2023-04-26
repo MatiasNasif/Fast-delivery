@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "eslint --fix .",
         "commitmsg": "commitlint -E HUSKY_GIT_PARAMS",
-        "precommit": "lint-staged"
+        "precommit": "lint-staged",
+        "test": "cypress open"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": [
@@ -22,7 +23,7 @@
             "commit-msg": "npm run commitmsg"
         }
     },
-    "proxy": "http://mongodb:27017",
+    "proxy": "http://localhost:5000",
     "dependencies": {
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
