@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from '../../../styles/DeliveryManDetails.module.css';
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
@@ -9,7 +9,6 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import withAdminAuth from '@/commons/withAdminAuth';
 
 interface User {
   fullName: string;
@@ -47,21 +46,29 @@ const DeliveryManDetails = () => {
       .then((response) => response.json())
       .then((deliveryMan: User) => setDeliveryMan(deliveryMan))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam]);
+  }, []);
 
-  useEffect(() => {
+  const fetchPackages = useCallback(() => {
     fetch(`${urlApi}/packages/${idDeliveryManParam}/packagesByUser`)
       .then((response) => response.json())
       .then((packages: Package[]) => setDeliveredPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam, deliveredPackages]);
+  }, []);
 
   useEffect(() => {
+    fetchPackages();
+  }, [fetchPackages]);
+
+  const fetchPackagesPending = useCallback(() => {
     fetch(`${urlApi}/packages/${idDeliveryManParam}/packagesPendingByUser`)
       .then((response) => response.json())
       .then((packages: Package[]) => setPendingPackages(packages))
       .catch((error) => console.log(error));
-  }, [idDeliveryManParam, setPendingPackages]);
+  }, []);
+
+  useEffect(() => {
+    fetchPackagesPending();
+  }, [fetchPackagesPending]);
 
   const handleChangeSwitchButton = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setCheckSwitchChange(event.target.checked);
@@ -130,7 +137,11 @@ const DeliveryManDetails = () => {
             </AccordionSummary>
             {pendingPackages.length > 0 &&
               pendingPackages.map((pendingPackage: Package, i: number) => (
-                <PackageDetailsCard key={i} packageDetail={pendingPackage} />
+                <PackageDetailsCard
+                  key={i}
+                  packageDetail={pendingPackage}
+                  onDeletePackage={fetchPackagesPending}
+                />
               ))}
           </Accordion>
         </Box>
@@ -150,7 +161,11 @@ const DeliveryManDetails = () => {
             </Typography>
             {deliveredPackages.length > 0 &&
               deliveredPackages.map((deliveredPackage: Package, i: number) => (
-                <PackageDetailsCard key={i} packageDetail={deliveredPackage} />
+                <PackageDetailsCard
+                  key={i}
+                  packageDetail={deliveredPackage}
+                  onDeletePackage={fetchPackages}
+                />
               ))}
           </Accordion>
         </Box>

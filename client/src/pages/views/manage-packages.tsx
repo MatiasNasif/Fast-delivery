@@ -9,7 +9,6 @@ import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import withAdminAuth from '@/commons/withAdminAuth';
 
 interface User {
   email: string;
