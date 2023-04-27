@@ -67,6 +67,7 @@ export default function StartWorkday() {
         .then((packs) => setPackages(packs));
     }
   }, []);
+
   useEffect(() => {
     fetchpackagesByUser();
   }, [fetchpackagesByUser]);
@@ -139,7 +140,11 @@ export default function StartWorkday() {
                 </AccordionSummary>
                 {packagesPending.length > 0 ? (
                   packagesPending.map((pendingPackage: Package, i: number) => (
-                    <Card key={i} packageDetail={pendingPackage} />
+                    <Card
+                      key={i}
+                      packageDetail={pendingPackage}
+                      onDeletePackage={fetchPackagesPendingByUser}
+                    />
                   ))
                 ) : (
                   <Typography variant="subtitle1" className={styles.subtitle}>
@@ -171,7 +176,7 @@ export default function StartWorkday() {
                   </Typography>
                 )}
                 {packages.map((pack: Package, i: number) => (
-                  <Card key={i} packageDetail={pack} />
+                  <Card key={i} packageDetail={pack} onDeletePackage={fetchpackagesByUser} />
                 ))}
               </Accordion>
             </Box>
