@@ -19,6 +19,8 @@ export class FormSworn {
 
   @Prop({ default: Date.now })
   createdAt: Date;
+  @Prop({ expires: 30 })
+  expiresAt: Date;
 }
 
 export const FormSwornSchema = SchemaFactory.createForClass(FormSworn);
