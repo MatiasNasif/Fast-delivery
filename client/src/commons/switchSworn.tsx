@@ -23,6 +23,7 @@ const SwitchSworn = (props) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Button
+        data-testid="si-button"
         variant={activeButton === 'si' ? 'contained' : 'contained'}
         color={activeButton === 'si' ? 'error' : 'error'}
         endIcon={<SentimentDissatisfiedOutlinedIcon />}
@@ -32,6 +33,7 @@ const SwitchSworn = (props) => {
         Si
       </Button>
       <Button
+        data-testid="no-button"
         sx={{ marginLeft: '20px' }}
         variant={activeButton === 'no' ? 'contained' : 'contained'}
         color={activeButton === 'no' ? 'success' : 'success'}

@@ -1,11 +1,10 @@
 describe('login', () => {
   beforeEach(() => {
     cy.viewport(375, 667);
-    cy.visit('/');
-    cy.get('.MuiFormControl-root').type('admin@mail.com');
-    cy.get('.MuiInputBase-adornedEnd > .MuiInputBase-input').type('admin');
-    cy.get('form').submit();
+    cy.loginAsAdmin();
+    // cy.visit('/views/manage-schedule')
   });
+
   it('acceder a manage-schedule', () => {
     cy.wait(10000);
     cy.get('.DaysOfWeek_selectedDay__DBfmv').click();
