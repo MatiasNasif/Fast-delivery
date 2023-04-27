@@ -99,7 +99,7 @@ const DeliveryManDetails = () => {
       <Container className={styles.container_all}>
         <Box className={styles.container_grid}>
           <section className={styles.container_avatar_image}>
-            <Avatar className={styles.container_avatar}></Avatar>
+            <Avatar src={deliveryMan?.photo} className={styles.container_avatar}></Avatar>
           </section>
           <section className={styles.container_options_and_typography}>
             <Typography className={styles.typography_name}>{deliveryMan?.fullName}</Typography>

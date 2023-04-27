@@ -17,6 +17,8 @@
   width: 61px;
   background-color: #217bce;
   border-radius: 40px;
+  font-size: 24px;
+  font-weight: 700;
   border: none;
   font-family: 'Roboto';
   margin: 2px;
@@ -30,13 +32,25 @@
   transition: background-color 0.3s ease-out;
 }
 
-.selectedDay {
-  background-color: #fcbc11;
+.dayOfWeek{
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.5;
 }
 
-/* .currentDay {
-  background-color: #7fb3d5;
-} */
+.dayOfWeekSpan{
+  display: flex;
+  flex-direction: column;
+ 
+}
+
+.selectedDay {
+  background-color: #fcbc11;
+
+  
+}
+
+
 
 .outOfRange {
   background-color: #dbdbdb;
@@ -47,7 +61,7 @@
 .arrow {
   color: white;
   height: 100px;
-  width: 50px;
+  width: 61px;
   background-color: #217bce;
   border-radius: 40px;
   font-family: 'Roboto';

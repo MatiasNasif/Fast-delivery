@@ -25,7 +25,6 @@ export default function Header({ onClickedLogout, onClickedProfile }: ClickLoade
   const dispatch = useDispatch();
   const navigate = useRouter();
 
-  // const user = useSelector((state) => state.user);
   const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
   const userId = user.id;
 
@@ -49,7 +48,7 @@ export default function Header({ onClickedLogout, onClickedProfile }: ClickLoade
         <Spinner />
       ) : (
         <Box className={styles.header_container} component="form" noValidate autoComplete="off">
-          <Link href={`/views/profile/${user.id}`} onClick={() => onClickedProfile()}>
+          <Link href={`/views/profile/${user?.id}`} onClick={() => onClickedProfile()}>
             <Image src={brand} alt="Fast Delivery Brand" className={styles.logo} />
           </Link>
           <Box className={styles.buttonApp_container}>
