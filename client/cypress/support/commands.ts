@@ -1,3 +1,18 @@
+Cypress.Commands.add('loginAsAdmin', () => {
+  cy.login('admin@mail.com', 'admin');
+});
+
+Cypress.Commands.add('loginAsDeliveryMan', () => {
+  cy.login('fabi@mail.com', 'fabi');
+});
+
+Cypress.Commands.add('login', (email, password) => {
+  cy.visit('/');
+  cy.get('.MuiFormControl-root').type(email);
+  cy.get('.MuiInputBase-adornedEnd > .MuiInputBase-input').type(password);
+  cy.get('form').submit();
+});
+
 /// <reference types="cypress" />
 // ***********************************************
 // This example commands.ts shows you how to

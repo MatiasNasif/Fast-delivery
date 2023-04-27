@@ -132,10 +132,10 @@ const SwornStatement = () => {
                 <Box className={styles.BoxOfCheckbox}>
                   {buttonValidate ? (
                     <span className={styles.BoxOfCheckbox} onClick={handleButtonClickDesactivate}>
-                      <Checkbox required disabled={true} />
+                      <Checkbox required disabled={true}/>
                     </span>
                   ) : (
-                    <Checkbox required disabled={false} />
+                    <Checkbox required disabled={false}/>
                   )}
 
                   <Typography variant="p" className={styles.wordTextTrue}>
