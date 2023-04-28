@@ -109,7 +109,12 @@ export default function StartWorkday() {
         <Spinner />
       ) : (
         <main>
-          <Container className={styles.containerStartWorkday} maxWidth="xs" disableGutters={true}>
+          <Container
+            className={styles.containerStartWorkday}
+            maxWidth="xs"
+            disableGutters={true}
+            data-testid="container-view"
+          >
             <Header
               onClickedLogout={() => setIsLoading(true)}
               onClickedProfile={() => setIsLoading(true)}
@@ -118,7 +123,7 @@ export default function StartWorkday() {
               <span onClick={messageOfalcoholYesButton}>
                 <ButtonApp variantButton="contained" isDisable={true}>
                   {' '}
-                  NO PODES LABURAR POR 24 HORAS
+                  NO PODES TRABAJAR POR 24 HORAS
                 </ButtonApp>
               </span>
             ) : (
@@ -176,7 +181,12 @@ export default function StartWorkday() {
                   </Typography>
                 )}
                 {packages.map((pack: Package, i: number) => (
-                  <Card key={i} packageDetail={pack} onDeletePackage={fetchpackagesByUser} />
+                  <Card
+                    key={i}
+                    packageDetail={pack}
+                    onDeletePackage={fetchpackagesByUser}
+                    data-testid="card-package"
+                  />
                 ))}
               </Accordion>
             </Box>

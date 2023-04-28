@@ -99,7 +99,7 @@ const SwornStatement = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <Container maxWidth={'xs'} disableGutters={true}>
+        <Container maxWidth={'xs'} disableGutters={true} data-testid="sworn-statement-view">
           <>
             <ArrowApp onClick={handleLogout} className={styles.arrow} />
 
@@ -132,7 +132,7 @@ const SwornStatement = () => {
                 <Box className={styles.BoxOfCheckbox}>
                   {buttonValidate ? (
                     <span className={styles.BoxOfCheckbox} onClick={handleButtonClickDesactivate}>
-                      <Checkbox required disabled={true}/>
+                      <Checkbox required disabled={true} data-testid="my-checkbox"/>
                     </span>
                   ) : (
                     <Checkbox required disabled={false}/>
