@@ -107,9 +107,11 @@ const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
               className={dateClassNames}
               onClick={() => handleDayClick(index, date)}
             >
-              <strong>{dayOfWeek}</strong>
-              <br />
-              {numberDate}
+              <span className={styles.dayOfWeekSpan}>
+                {numberDate}
+
+                <strong className={styles.dayOfWeek}>{dayOfWeek}</strong>
+              </span>
             </button>
           );
         })}

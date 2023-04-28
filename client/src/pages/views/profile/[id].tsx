@@ -1,21 +1,39 @@
 import Header from '@/commons/header';
 import ArrowApp from '@/commons/arrowApp';
-import { Container, Avatar, Box, Accordion, AccordionSummary, Typography } from '@mui/material';
+import {
+  Container,
+  Avatar,
+  Box,
+  Accordion,
+  AccordionSummary,
+  Typography,
+  Button,
+  Input,
+} from '@mui/material';
 import Link from 'next/link';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import styles from '../../../styles/Profile.module.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateUserById } from '@/store/user';
 import React, { useEffect, useState } from 'react';
 import ButtonApp from '@/commons/buttonApp';
+import { useRouter } from 'next/router';
+import { useAlert } from '../../../hook/Alerthook';
 
 const Profile = () => {
-  const [baseImage, setBaseImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [savingPhoto, setSavingPhoto] = useState(false);
+  const showAlert = useAlert();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const userId = user.id;
 
-  const user = useSelector((state) => state.user);
+  const router = useRouter();
 
+  const goBack = () => {
+    router.back();
+  };
   const uploadImage = (event) => {
     const selectedPhoto = event.target.files[0];
     const reader = new FileReader();
@@ -23,19 +41,38 @@ const Profile = () => {
     reader.onload = () => {
       const photoString = reader.result;
       setSelectedImage(photoString);
-      setBaseImage(photoString);
     };
   };
 
-  const handlePhoto = async (baseImage) => {
-    const userId = user.id;
-    const updatedUser = await dispatch(updateUserById({ userId, photo: baseImage }));
+  const handlePhoto = async () => {
+    if (!userId) {
+      console.error('User ID is not defined');
+      return;
+    }
+    setSavingPhoto(true);
+
+    const updatedUser = await dispatch(
+      updateUserById({ userId, photo: selectedImage, admin: user.admin })
+    );
     dispatch({ type: 'UPDATE_USER', payload: updatedUser });
+    const userFromLocalStorage = JSON.parse(localStorage.getItem('user'));
+    userFromLocalStorage.photo = selectedImage;
+    localStorage.setItem('user', JSON.stringify(userFromLocalStorage));
+    showAlert({
+      message: 'La imagen ha sido agregada correctamente',
+      typeAlert: 'success',
+      showCloseButton: true,
+    });
+    setSavingPhoto(false);
   };
+
   return (
     <>
       <Container maxWidth="xs" disableGutters={true}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         {user.admin ? (
           <Link href={'/views/manage-schedule'}>
             <ArrowApp />
@@ -45,27 +82,36 @@ const Profile = () => {
             <ArrowApp />
           </Link>
         )}
-
         {selectedImage ? (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Avatar src={selectedImage} sx={{ height: '200px', width: '200px' }} />
           </Box>
-        ) : (
+        ) : user.photo ? (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Avatar src={user.photo} sx={{ height: '200px', width: '200px' }} />
           </Box>
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Avatar sx={{ height: '200px', width: '200px' }} />
+          </Box>
         )}
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-          <input
-            type="file"
-            onChange={(e) => {
-              uploadImage(e);
-            }}
-            accept="image/*"
-          />
-          <ButtonApp variant="contained" color="primary" onClick={() => handlePhoto(baseImage)}>
-            Guardar foto
-          </ButtonApp>
+        <Box sx={{ display: 'flex', justifyContent: 'center', padding: '5%' }}>
+          <Button variant="contained" component="label">
+            Seleccionar imagen
+            <Input type="file" onChange={uploadImage} sx={{ display: 'none' }} />
+          </Button>
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          {selectedImage ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              {!savingPhoto && (
+                <Button variant="text" onClick={() => handlePhoto(selectedImage)}>
+                  Guardar foto
+                </Button>
+              )}
+            </Box>
+          ) : null}
         </Box>
         <Accordion defaultExpanded>
           <AccordionSummary

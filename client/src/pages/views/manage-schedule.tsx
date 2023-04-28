@@ -15,6 +15,8 @@ import Calendar from '../../commons/daySlide';
 import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useSelector, useDispatch } from 'react-redux';
+import { setPersistence } from '@/store/user';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -38,7 +40,9 @@ const ManageSchedule = () => {
 
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>(dateFormatted);
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
 
   useEffect(() => {
     fetch(`${urlApi}/users/alldeliveryman`)
@@ -98,12 +102,27 @@ const ManageSchedule = () => {
     deliveredPackagesPercentage = (deliveredPackages / totalPackages) * 100;
   }
 
+  const deliveryMansPhotos = deliveryMans.filter((deliveryMans) => deliveryMans.photo);
+
+  const deliveryMansWithPhotoAndActiveStatus = deliveryMansPhotos.filter(
+    (deliveryUser) => deliveryUser.photo && deliveryUser.status === 'Activo'
+  );
+
+  const randomActiveDeliveryMans = deliveryMansWithPhotoAndActiveStatus
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 2);
+
   return (
     <>
       <Container disableGutters={true} className={styles.containerManage}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         <Box className={styles.boxAdmin}>
-          <Avatar alt="Admin" />
+          <Link href={`/views/profile/${user?.id}`}>
+            <Avatar alt="Admin" src={user?.photo} className={styles.avatarAdmin} />
+          </Link>
           <Box>
             <Typography className={styles.helloAdmin} variant="inherit" color="black">
               Hola admin !
@@ -136,8 +155,9 @@ const ManageSchedule = () => {
                   </Typography>
                 </Box>
                 <AvatarGroup max={2} sx={{ marginLeft: 'auto', marginRight: '20px' }}>
-                  <Avatar alt="Remy Sharp" />
-                  <Avatar alt="Travis Howard" />
+                  {randomActiveDeliveryMans.map((deliveryUser, i) => (
+                    <Avatar key={i} alt="Remy Sharp" src={deliveryUser.photo} />
+                  ))}
                 </AvatarGroup>
               </Box>
               <Box className={styles.boxBtn}>

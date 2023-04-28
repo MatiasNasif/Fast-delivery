@@ -122,10 +122,7 @@ export const userLogin = createAsyncThunk<
       setAnimationLogin(true);
       setIsLoading(true);
       localStorage.setItem('user', JSON.stringify(user));
-      showAlert(
-        { message: `Bienvenido/a ${user.fullName}`, typeAlert: 'success', showCloseButton: true },
-        { autoHideDuration: 3000 }
-      );
+
       return user;
     } catch (error) {
       console.log(error);
@@ -146,26 +143,26 @@ export const getAllUsers = createAsyncThunk('GET_ALL_USER', () => {
 
 export const updateUserById = createAsyncThunk(
   'UPDATE_USER',
-  async (payload: { userId: string; photo: string }) => {
-    const { userId, photo } = payload;
+  async (payload: { userId: string; photo: string; admin: boolean }) => {
+    const { userId, photo, admin } = payload;
     const response = await fetch(`${API_URL}/users/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ photo }),
+      body: JSON.stringify({ photo, admin }),
     });
     return response.json();
   }
 );
 
-const userReducer = createReducer(setPersistence.fulfilled({}), {
+const userReducer = createReducer(null, {
   [`${getUserById.fulfilled}`]: (state, action) => action.payload,
   [`${getAllUsers.fulfilled}`]: (state, action) => action.payload,
   [`${userLogin.fulfilled}`]: (state, action) => action.payload,
-  [`${setPersistence.fulfilled}`]: (state, action) => {
-    return action.payload;
-  },
+  // [`${setPersistence.fulfilled}`]: (state, action) => {
+  //   return action.payload;
+  // },
   [`${userLogout.fulfilled}`]: (state, action) => {
     return {};
   },

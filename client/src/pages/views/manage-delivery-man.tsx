@@ -3,12 +3,12 @@ import Header from '../../commons/header';
 import ArrowApp from '../../commons/arrowApp';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import Progress from '../../commons/progress';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense, useRef } from 'react';
 import Link from 'next/link';
 import styles from '../../styles/ManageDeliveryMan.module.css';
 import SwitchDeliveryStatus from '../../utils/SwitchDeliveryStatus';
 import { useDispatch } from 'react-redux';
-import { setPersistence } from '@/store/user';
+import ButtonApp from '@/commons/buttonApp';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -26,12 +26,18 @@ interface User {
 
 const ManageDeliveryMan = () => {
   const [deliveryMans, setDeliveryMans] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [deliveryManPackages, setDeliveryManPackages] = useState<{ [key: string]: Package[] }>({});
   const dispatch = useDispatch();
+  const boxMayorRef = useRef<HTMLDivElement>(null);
+  const [itemsToShow, setItemsToShow] = useState(3);
 
-  useEffect(() => {
-    dispatch(setPersistence());
-  }, [dispatch]);
+  const handleSetMoreDeliverys = () => {
+    setItemsToShow(itemsToShow + 3);
+  };
+  const handleResetDelivery = () => {
+    setItemsToShow(3);
+  };
 
   useEffect(() => {
     fetch(`${urlApi}/users/alldeliveryman`)
@@ -72,29 +78,37 @@ const ManageDeliveryMan = () => {
       const deliveredPackages = deliveryMan.packages.filter(
         (pkg) => pkg.deliveryStatus === 'Entregado'
       );
+      const pendingsPackages = deliveryMan.packages.filter(
+        (pkg) => pkg.deliveryStatus === 'En curso' || pkg.deliveryStatus === 'Pendiente'
+      );
 
       deliveredPackagesCount.push({
         deliveryManId: deliveryMan.deliveryManId,
         deliveredPackagesCount: deliveredPackages.length,
+        pendingsPackagesCount: pendingsPackages.length,
+        totalPackages: pendingsPackages.length + deliveredPackages.length,
       });
     });
 
     return deliveredPackagesCount;
   }
 
-  const deliveredPackagesCount = countDeliveredPackages(deliveryManPackagesArray);
+  const allPackagesCount = countDeliveredPackages(deliveryManPackagesArray);
 
   return (
     <>
       <Container className={styles.containerManageDeliveryMan} maxWidth="xs" disableGutters={true}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         <Link href={'/views/manage-schedule'}>
           <ArrowApp />
         </Link>
         <Box className={styles.boxManageDeliveryMan} mt={2}>
           <Accordion defaultExpanded>
             <AccordionSummary
-              expandIcon={<ArrowDropDownRoundedIcon />}
+              expandIcon={<ArrowDropDownRoundedIcon onClick={handleResetDelivery} />}
               aria-controls="panel1a-content"
             >
               <Typography className={styles.tittle} variant="inherit">
@@ -104,78 +118,97 @@ const ManageDeliveryMan = () => {
             <Box>
               <Box className={styles.boxcitomayorcito}>
                 {deliveryMans.map((deliveryMan, i) => {
-                  const deliveredPackages = deliveredPackagesCount.find(
+                  const deliveredPackages = allPackagesCount.find(
                     (dm) => dm.deliveryManId === deliveryMan._id
                   );
-                  return (
-                    <Box key={i} className={styles.boxmayor}>
-                      <Box className={styles.boxcitomax}>
-                        <Progress
-                          className={styles.progressCircle}
-                          value={
-                            deliveredPackages?.deliveredPackagesCount
-                              ? deliveredPackages.deliveredPackagesCount + '0'
-                              : 0
-                          }
-                          deliveryStatus={deliveredPackages?.deliveredPackagesCount}
-                          deliveryId={deliveredPackages?.deliveryManId}
-                        />
+                  if (i < itemsToShow) {
+                    return (
+                      <Box
+                        key={i}
+                        className={styles.boxmayor}
+                        ref={i === deliveryMans.length - 1 ? boxMayorRef : null}
+                      >
+                        <Box className={styles.boxcitomax}>
+                          <Progress
+                            className={styles.progressCircle}
+                            value={
+                              deliveredPackages?.deliveredPackagesCount === 0 &&
+                              deliveredPackages?.totalPackages === 0
+                                ? 0
+                                : (deliveredPackages?.deliveredPackagesCount /
+                                    deliveredPackages?.totalPackages) *
+                                  100
+                            }
+                            deliveryStatus={deliveredPackages?.deliveredPackagesCount}
+                            deliveryId={deliveredPackages?.deliveryManId}
+                          />
 
-                        <Box>
-                          <Box className={styles.boxOfdeliveryman}>
-                            <Box className={styles.deliveryManContainer}>
-                              <Typography className={styles.deliveryName} variant="inherit">
-                                {deliveryMan.fullName}
-                              </Typography>
-                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                {deliveredPackages?.deliveredPackagesCount !== 10 ? (
-                                  <Box className={styles.boxStatus}>
-                                    <SwitchDeliveryStatus
-                                      checked={
-                                        deliveryMan.status === 'Activo'
-                                          ? 'Viaje en curso'
-                                          : 'Inactivo'
-                                      }
-                                    />
-                                    <Typography
-                                      className={
-                                        deliveryMan.status === 'Activo'
-                                          ? styles.deliveryStatusBlue
-                                          : styles.deliveryStatusRed
-                                      }
-                                      variant="inherit"
-                                    >
-                                      {deliveryMan.status === 'Activo'
-                                        ? 'Viaje en Curso'
-                                        : deliveryMan.status}
-                                    </Typography>
-                                  </Box>
-                                ) : (
-                                  <Box className={styles.boxStatus}>
-                                    <SwitchDeliveryStatus checked={'Finalizó'} />
-                                    <Typography
-                                      variant="inherit"
-                                      className={styles.deliveryStatusFinish}
-                                    >
-                                      Finalizó
-                                    </Typography>
-                                  </Box>
-                                )}
+                          <Box>
+                            <Box className={styles.boxOfdeliveryman}>
+                              <Box className={styles.deliveryManContainer}>
+                                <Typography className={styles.deliveryName} variant="inherit">
+                                  {deliveryMan.fullName}
+                                </Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  {deliveredPackages?.deliveredPackagesCount !== 10 ? (
+                                    <Box className={styles.boxStatus}>
+                                      <SwitchDeliveryStatus
+                                        checked={
+                                          deliveryMan.status === 'Activo'
+                                            ? 'Viaje en curso'
+                                            : 'Inactivo'
+                                        }
+                                      />
+
+                                      <Typography
+                                        className={
+                                          deliveryMan.status === 'Activo' ||
+                                          deliveredPackages?.pendingsPackagesCount
+                                            ? styles.deliveryStatusBlue // Si está activo o tiene paquetes en curso, usa el estilo de estado azul
+                                            : styles.deliveryStatusRed // Si no, usa el estilo de estado rojo
+                                        }
+                                        variant="inherit"
+                                      >
+                                        {
+                                          deliveryMan.status === 'Activo' &&
+                                          deliveredPackages?.pendingsPackagesCount
+                                            ? 'Viaje en curso' // Si está activo y tiene paquetes en curso, muestra "Viaje en curso"
+                                            : deliveryMan.status // Si no, muestra el estado actual
+                                        }
+                                      </Typography>
+                                    </Box>
+                                  ) : (
+                                    <Box className={styles.boxStatus}>
+                                      <SwitchDeliveryStatus checked={'Finalizó'} />
+                                      <Typography
+                                        variant="inherit"
+                                        className={styles.deliveryStatusFinish}
+                                      >
+                                        Finalizó
+                                      </Typography>
+                                    </Box>
+                                  )}
+                                </Box>
+                                <Box></Box>
                               </Box>
-                              <Box></Box>
                             </Box>
                           </Box>
                         </Box>
+                        <Link
+                          href={`/views/delivery-man-details/${deliveryMan._id}`}
+                          style={{ marginLeft: 'auto', marginRight: '20px' }}
+                        >
+                          <Avatar src={deliveryMan.photo} alt="Remy Sharp" />
+                        </Link>
                       </Box>
-                      <Link
-                        href={`/views/delivery-man-details/${deliveryMan._id}`}
-                        style={{ marginLeft: 'auto', marginRight: '20px' }}
-                      >
-                        <Avatar src={deliveryMan.photo} alt="Remy Sharp" />
-                      </Link>
-                    </Box>
-                  );
+                    );
+                  } else {
+                    return null;
+                  }
                 })}
+                <ButtonApp variantButton="text" onClick={handleSetMoreDeliverys}>
+                  ...
+                </ButtonApp>
               </Box>{' '}
             </Box>
           </Accordion>

@@ -44,9 +44,12 @@ const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 export default function CurrentDistribution() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const packageIdSelected: string = (navigate.query.id ?? '').toString();
   const [packageByUser, setPackageByUser] = useState<Package>(initialPackage);
-  const user: User = useSelector((state) => state.user);
+
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const userId = user.id;
 
   const fetchPackage = useCallback(() => {
     fetch(`${urlApi}/packages/${packageIdSelected}`)
@@ -91,8 +94,15 @@ export default function CurrentDistribution() {
   };
 
   return (
-    <Container maxWidth="xs" disableGutters={true}>
-      <Header />
+    <Container
+      className={styles.current_distribution_container}
+      maxWidth="xs"
+      disableGutters={true}
+    >
+      <Header
+        onClickedLogout={() => setIsLoading(true)}
+        onClickedProfile={() => setIsLoading(true)}
+      />
       <Link href={'/views/start-workday'}>
         <ArrowApp />
       </Link>
