@@ -3,7 +3,7 @@ Cypress.Commands.add('loginAsAdmin', () => {
 });
 
 Cypress.Commands.add('loginAsDeliveryMan', () => {
-  cy.login('fabi@mail.com', 'fabi');
+  cy.login('matias@mail.com', 'matias');
 });
 
 Cypress.Commands.add('login', (email, password) => {
