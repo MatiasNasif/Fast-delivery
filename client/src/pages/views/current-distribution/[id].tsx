@@ -7,7 +7,6 @@ import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
 import {
   Container,
   Button,
@@ -37,6 +36,7 @@ const initialPackage: Package = {
 
 interface User {
   status: string;
+  admin?: boolean;
 }
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
@@ -48,8 +48,12 @@ export default function CurrentDistribution() {
   const packageIdSelected: string = (navigate.query.id ?? '').toString();
   const [packageByUser, setPackageByUser] = useState<Package>(initialPackage);
 
-  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
-  const userId = user.id;
+  const user: User =
+    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+
+  if (user.admin === true) {
+    navigate.push('/views/manage-schedule');
+  }
 
   const fetchPackage = useCallback(() => {
     fetch(`${urlApi}/packages/${packageIdSelected}`)

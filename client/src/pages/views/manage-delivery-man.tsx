@@ -9,6 +9,7 @@ import styles from '../../styles/ManageDeliveryMan.module.css';
 import SwitchDeliveryStatus from '../../utils/SwitchDeliveryStatus';
 import { useDispatch } from 'react-redux';
 import ButtonApp from '@/commons/buttonApp';
+import { useRouter } from 'next/router';
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -22,6 +23,7 @@ interface User {
   _id?: string;
   packages?: Package[];
   photo?: string;
+  admin: boolean;
 }
 
 const ManageDeliveryMan = () => {
@@ -31,6 +33,14 @@ const ManageDeliveryMan = () => {
   const dispatch = useDispatch();
   const boxMayorRef = useRef<HTMLDivElement>(null);
   const [itemsToShow, setItemsToShow] = useState(3);
+  const router = useRouter();
+
+  const user: User =
+    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+
+  if (user.admin === false) {
+    router.push('/views/start-workday');
+  }
 
   const handleSetMoreDeliverys = () => {
     setItemsToShow(itemsToShow + 3);

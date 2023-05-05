@@ -9,7 +9,20 @@ import { useRouter } from 'next/router';
 import { useAlert } from '@/hook/Alerthook';
 import { useForm } from 'react-hook-form';
 
+interface User {
+  admin: boolean;
+}
+
 const AddPackage = () => {
+  const router = useRouter();
+
+  const user: User =
+    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+
+  if (user.admin === false) {
+    router.push('/views/start-workday');
+  }
+
   const {
     register,
     handleSubmit,

@@ -113,50 +113,52 @@ const Profile = () => {
             </Box>
           ) : null}
         </Box>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ArrowDropDownRoundedIcon />}
-            aria-controls="panel1a-content"
-          >
-            <Typography className={styles.title} variant="inherit">
-              Información del repartidor
-            </Typography>
-          </AccordionSummary>
-          <Box className={styles.boxInfoMost}>
-            <Box className={styles.boxInfo}>
-              <Typography className={styles.userInfo} variant="inherit">
-                Nombre:
+        <Box className={styles.box}>
+          <Accordion defaultExpanded>
+            <AccordionSummary
+              expandIcon={<ArrowDropDownRoundedIcon />}
+              aria-controls="panel1a-content"
+            >
+              <Typography className={styles.title} variant="inherit">
+                Información del repartidor
               </Typography>
-              <Typography className={styles.userInfoContent} variant="inherit">
-                {user.fullName}
-              </Typography>
+            </AccordionSummary>
+            <Box className={styles.boxInfoMost}>
+              <Box className={styles.boxInfo}>
+                <Typography className={styles.userInfo} variant="inherit">
+                  Nombre:
+                </Typography>
+                <Typography className={styles.userInfoContent} variant="inherit">
+                  {user.fullName}
+                </Typography>
+              </Box>
+              <Box className={styles.boxInfo}>
+                <Typography className={styles.userInfo} variant="inherit">
+                  Email:
+                </Typography>
+                <Typography className={styles.userInfoContent} variant="inherit">
+                  {user.email}
+                </Typography>
+              </Box>
+              <Box className={styles.boxInfo}>
+                <Typography className={styles.userInfo} variant="inherit">
+                  Status de usuario:
+                </Typography>
+                <Typography className={styles.userInfoContent} variant="inherit">
+                  {user.admin ? 'Admin' : 'Repartidor'}
+                </Typography>
+              </Box>
+              <Box className={styles.boxInfo}>
+                <Typography className={styles.userInfo} variant="inherit">
+                  Id:
+                </Typography>
+                <Typography className={styles.userInfoContent} variant="inherit">
+                  {user.id}
+                </Typography>
+              </Box>
             </Box>
-            <Box className={styles.boxInfo}>
-              <Typography className={styles.userInfo} variant="inherit">
-                Email:
-              </Typography>
-              <Typography className={styles.userInfoContent} variant="inherit">
-                {user.email}
-              </Typography>
-            </Box>
-            <Box className={styles.boxInfo}>
-              <Typography className={styles.userInfo} variant="inherit">
-                Status de usuario:
-              </Typography>
-              <Typography className={styles.userInfoContent} variant="inherit">
-                {user.admin ? 'Admin' : 'Repartidor'}
-              </Typography>
-            </Box>
-            <Box className={styles.boxInfo}>
-              <Typography className={styles.userInfo} variant="inherit">
-                Id:
-              </Typography>
-              <Typography className={styles.userInfoContent} variant="inherit">
-                {user.id}
-              </Typography>
-            </Box>
-          </Box>
-        </Accordion>
+          </Accordion>
+        </Box>
       </Container>
     </>
   );
