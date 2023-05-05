@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { getFormById } from '@/store/formSworn';
 import { useCallback } from 'react';
 import { useAlert } from '@/hook/Alerthook';
+import { useRouter } from 'next/router';
 import Spinner from '@/commons/Spinner';
 
 interface Package {
@@ -27,6 +28,10 @@ interface userRedux {
   id: string;
 }
 
+interface User {
+  admin: boolean;
+}
+
 export default function StartWorkday() {
   const [packagesPending, setPackagesPending] = useState<Package[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
@@ -35,8 +40,14 @@ export default function StartWorkday() {
   const dispatch = useDispatch();
   const showAlert = useAlert();
   const form = useSelector((state) => state.form);
+  const router = useRouter();
 
   const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+
+  if (user.admin === true) {
+    router.push('/views/manage-schedule');
+  }
+
   const userId = user.id;
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
   const counterPackages: number = packages.length;

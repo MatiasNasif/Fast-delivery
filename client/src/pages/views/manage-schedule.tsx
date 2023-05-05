@@ -15,6 +15,7 @@ import Calendar from '../../commons/daySlide';
 import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPersistence } from '@/store/user';
 
@@ -25,6 +26,7 @@ interface User {
   avatar?: string;
   id?: string;
   fullName?: string;
+  admin: boolean;
 }
 
 interface Package {
@@ -42,7 +44,13 @@ const ManageSchedule = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>(dateFormatted);
-  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const router = useRouter();
+  const user: User =
+    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+
+  if (user.admin === false) {
+    router.push('/views/start-workday');
+  }
 
   useEffect(() => {
     fetch(`${urlApi}/users/alldeliveryman`)

@@ -41,6 +41,13 @@ const DeliveryManDetails = () => {
   const router = useRouter();
   const idDeliveryManParam: string = (router.query.id ?? '').toString();
 
+  const user: User =
+    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+
+  if (user.admin === false) {
+    router.push('/views/start-workday');
+  }
+
   useEffect(() => {
     fetch(`${urlApi}/users/${idDeliveryManParam}`)
       .then((response) => response.json())

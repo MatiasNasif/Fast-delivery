@@ -14,6 +14,10 @@ import { userLogout } from '@/store/user';
 import { useAlert } from '@/hook/Alerthook';
 import Spinner from '@/commons/Spinner';
 
+interface User {
+  admin: boolean;
+}
+
 const SwornStatement = () => {
   const repetitiveText = [
     {
@@ -37,6 +41,13 @@ const SwornStatement = () => {
   const showAlert = useAlert();
   const navigate = useRouter();
   const dispatch = useDispatch();
+
+  const userLocal: User =
+    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+
+  if (userLocal.admin === true) {
+    navigate.push('/views/manage-schedule');
+  }
 
   useEffect(() => {
     dispatch(setPersistence());
@@ -132,10 +143,10 @@ const SwornStatement = () => {
                 <Box className={styles.BoxOfCheckbox}>
                   {buttonValidate ? (
                     <span className={styles.BoxOfCheckbox} onClick={handleButtonClickDesactivate}>
-                      <Checkbox required disabled={true}/>
+                      <Checkbox required disabled={true} />
                     </span>
                   ) : (
-                    <Checkbox required disabled={false}/>
+                    <Checkbox required disabled={false} />
                   )}
 
                   <Typography variant="p" className={styles.wordTextTrue}>
