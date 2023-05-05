@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import {
   Container,
   Button,
@@ -36,11 +37,31 @@ const initialPackage: Package = {
 
 interface User {
   status: string;
-  admin?: boolean;
 }
+
+// type Props = {
+//   packageByUser: Package;
+// };
+
+// type Params = {
+//   id: string;
+// };
 
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
+// export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ query }) => {
+//   const packageIdSelected: string = (query?.id ?? '').toString();
+//   const response = await fetch(`${urlApi}/packages/${packageIdSelected}`);
+//   const packageByUser = await response.json();
+
+//   return {
+//     props: {
+//       packageByUser,
+//     },
+//   };
+// };
+
+// export default function CurrentDistribution({ packageByUser }: { packageByUser: Package }) {
 export default function CurrentDistribution() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useRouter();
@@ -50,10 +71,6 @@ export default function CurrentDistribution() {
 
   const user: User =
     typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
-
-  if (user.admin === true) {
-    navigate.push('/views/manage-schedule');
-  }
 
   const fetchPackage = useCallback(() => {
     fetch(`${urlApi}/packages/${packageIdSelected}`)
