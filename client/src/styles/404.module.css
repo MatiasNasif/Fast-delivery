@@ -1,0 +1,36 @@
+.errorNumberText{
+    font-family: Roboto;
+    text-Align: center;
+    margin-top:20px;
+    font-weight: 700;
+}
+.boxError404{
+    display: flex;
+    justify-content: center;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+.errorText{
+    font-family: Roboto;
+    text-Align: center;
+    margin-top:20px;
+    font-weight: 500;
+    color: #615e5e;
+}
+
+.errorNumber{
+    margin-left: 15px;
+    font-family: Roboto;
+    text-Align: center;
+    margin-top:20px;
+    font-weight: 500;
+    color: #FCBC11;
+}
+.errorTextPage{
+
+    font-family: Roboto;
+    text-Align: center;
+    margin-top:30px;
+    font-weight: 500;
+}
