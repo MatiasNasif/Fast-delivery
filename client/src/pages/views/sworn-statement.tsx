@@ -13,6 +13,8 @@ import { useSnackbar } from 'notistack';
 import { userLogout } from '@/store/user';
 import { useAlert } from '@/hook/Alerthook';
 import Spinner from '@/commons/Spinner';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface User {
   admin: boolean;
@@ -36,6 +38,7 @@ const SwornStatement = () => {
 
   const [answers, setAnswers] = useState({});
   const [buttonValidate, setButtonValidate] = useState<boolean>(true);
+  const [buttonSubmitLoading, setButtonSubmitLoading] = useState<boolean>(false);
   const [buttonClicks, setButtonClicks] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const showAlert = useAlert();
@@ -89,6 +92,7 @@ const SwornStatement = () => {
 
   const handleSubmitSwornStatement = (event: ReactEventHandler) => {
     event.preventDefault();
+    setButtonSubmitLoading(true);
     dispatch(formCreate(dataForm))
       .then(() =>
         showAlert(
@@ -154,13 +158,14 @@ const SwornStatement = () => {
                     todas las preguntas con la mayor honestidad posible.
                   </Typography>
                 </Box>
+
                 {buttonValidate ? (
                   <span onClick={handleButtonClickDesactivate}>
                     <ButtonApp typeofButton="submit" variantButton="contained" isDisable={true}>
                       No Puedes Continuar
                     </ButtonApp>
                   </span>
-                ) : (
+                ) : !buttonSubmitLoading ? (
                   <ButtonApp
                     typeofButton="submit"
                     variantButton="contained"
@@ -169,6 +174,19 @@ const SwornStatement = () => {
                   >
                     Continuar
                   </ButtonApp>
+                ) : (
+                  <Box className={styles.buttonLoading}>
+                    <LoadingButton
+                      loading
+                      size="small"
+                      loadingPosition="start"
+                      startIcon={<SaveIcon />}
+                      variant="outlined"
+                      fullWidth
+                    >
+                      Cargando
+                    </LoadingButton>
+                  </Box>
                 )}
               </Box>
             </form>

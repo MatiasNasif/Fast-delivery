@@ -17,6 +17,8 @@ import {
   Typography,
 } from '@mui/material';
 
+import { useAlert } from '@/hook/Alerthook';
+
 interface Package {
   address: string;
   receiver: string;
@@ -68,6 +70,7 @@ export default function CurrentDistribution() {
   const [isLoading, setIsLoading] = useState(false);
   const packageIdSelected: string = (navigate.query.id ?? '').toString();
   const [packageByUser, setPackageByUser] = useState<Package>(initialPackage);
+  const showAlert = useAlert();
 
   const user: User =
     typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
@@ -97,17 +100,10 @@ export default function CurrentDistribution() {
     })
       .then((response) => response.json())
       .then(() =>
-        enqueueSnackbar(`Paquete entregado`, {
-          variant: 'info',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-          style: {
-            fontSize: '16px',
-            color: '#fffff',
-            fontWeight: 'bold',
-          },
+        showAlert({
+          message: 'Paquete Entregado',
+          typeAlert: 'success',
+          showCloseButton: true,
         })
       )
       .then(() => navigate.push('/views/start-workday'))

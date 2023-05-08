@@ -16,6 +16,7 @@ import { userLogin } from '@/store/user';
 import axios from 'axios';
 import { useAlert } from '@/hook/Alerthook';
 import Spinner from '@/commons/Spinner';
+import branding from '../assets/branding.svg';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -54,7 +55,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmitOfLogin = (data: LoginFormData) => {
-    console.log(data, 'data')
+    console.log(data, 'data');
     dispatch(userLogin({ data, showAlert, setAnimationLogin, setIsLoading }));
   };
   useEffect(() => {
@@ -101,7 +102,7 @@ export default function Login() {
   ${animationLogin ? 'animate__animated animate__bounceOutRight animate__duration-1s' : ''}
 
 `}
-              src={brand}
+              src={branding}
               alt="Fast Delivery Brand"
             />
           </Box>

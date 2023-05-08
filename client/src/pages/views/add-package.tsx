@@ -125,7 +125,7 @@ const AddPackage = () => {
             />
           </div>
 
-          {errors?.deliveryDate && <FormHelperText error={true}>Falta la fecha pa</FormHelperText>}
+          {errors?.deliveryDate && <FormHelperText error={true}>Fecha requerida</FormHelperText>}
           <Box className={styles.boxContainer}>
             <ButtonApp typeofButton="submit" variantButton="contained">
               Agregar

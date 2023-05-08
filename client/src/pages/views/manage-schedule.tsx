@@ -141,7 +141,7 @@ const ManageSchedule = () => {
           </Box>
         </Box>
         <Calendar updatePackagesByDate={updatePackagesByDate} />
-        <Box mt={2}>
+        <Box mt={2} sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
           <Accordion defaultExpanded>
             <AccordionSummary
               expandIcon={<ArrowDropDownSharpIcon />}
