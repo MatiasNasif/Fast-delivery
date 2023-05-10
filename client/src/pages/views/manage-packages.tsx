@@ -30,6 +30,7 @@ interface Package {
 
 const ManagePackages = () => {
   const [packages, setPackages] = useState<Package[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const router = useRouter();
 
   const user: User =
@@ -68,9 +69,16 @@ const ManagePackages = () => {
   return (
     <>
       <Container className={styles.containerManagePackages} maxWidth="xs" disableGutters={true}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         <Link href={'/views/manage-schedule'}>
-          <ArrowApp />
+          <ArrowApp
+            onClick={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+          />
         </Link>
         <Box className={styles.box}>
           <Accordion defaultExpanded>

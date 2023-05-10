@@ -34,6 +34,7 @@ const DeliveryManDetails = () => {
   const [deliveryMan, setDeliveryMan] = useState<User>(initialUserState);
   const [deliveredPackages, setDeliveredPackages] = useState<Package[]>([]);
   const [pendingPackages, setPendingPackages] = useState<Package[]>([]);
+
   const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(
     deliveryMan.status !== 'Activo' ? false : true
   );

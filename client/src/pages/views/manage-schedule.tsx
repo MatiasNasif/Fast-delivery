@@ -44,6 +44,11 @@ const ManageSchedule = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>(dateFormatted);
+  const [userPhoto, setUserPhoto] = useState('');
+  useEffect(() => {
+    const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+    setUserPhoto(user?.photo);
+  }, []);
   const router = useRouter();
   const user: User =
     typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
@@ -129,7 +134,7 @@ const ManageSchedule = () => {
         />
         <Box className={styles.boxAdmin}>
           <Link href={`/views/profile/${user?.id}`}>
-            <Avatar alt="Admin" src={user?.photo} className={styles.avatarAdmin} />
+            <Avatar alt="Admin" src={userPhoto} className={styles.avatarAdmin} />
           </Link>
           <Box>
             <Typography className={styles.helloAdmin} variant="inherit" color="black">
