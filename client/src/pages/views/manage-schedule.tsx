@@ -27,7 +27,8 @@ interface User {
   avatar?: string;
   id?: string;
   fullName?: string;
-  admin: boolean;
+  admin?: boolean;
+  photo?: string;
 }
 
 interface Package {
@@ -46,6 +47,13 @@ const ManageSchedule = () => {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>(dateFormatted);
   const [isLoadingSpinner, setIsLoadingSpinner] = useState<Boolean>(true);
+  const [userPhoto, setUserPhoto] = useState('');
+
+  // useEffect(() => {
+  //   const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  //   setUserPhoto(user?.photo);
+  // }, []);
+
   const router = useRouter();
   const user: User =
     typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');

@@ -22,9 +22,23 @@ const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 interface ClickLoader {
   onClickedLogout: () => void;
   onClickedProfile: () => void;
+  upgradePhotoinHeader: string;
 }
-export default function Header({ onClickedLogout, onClickedProfile }: ClickLoader) {
+export default function Header({
+  onClickedLogout,
+  onClickedProfile,
+  upgradePhotoinHeader,
+}: ClickLoader) {
   const [isLoading, setIsLoading] = useState(true);
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const userId = user.id;
+
+  const [userPhoto, setUserPhoto] = useState('');
+  useEffect(() => {
+    const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+    setUserPhoto(user?.photo);
+  }, []);
+
   const showAlert = useAlert();
   const dispatch = useDispatch();
   const navigate = useRouter();
@@ -37,9 +51,6 @@ export default function Header({ onClickedLogout, onClickedProfile }: ClickLoade
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
-  const userId = user.id;
 
   const onClickLogoutSession = () => {
     dispatch(userLogout({ setIsLoading })).then(() => navigate.push('/'));
@@ -71,7 +82,14 @@ export default function Header({ onClickedLogout, onClickedProfile }: ClickLoade
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
               >
-                <Avatar src={user?.photo} className={styles.iconButtonAccount} />
+                <Avatar className={styles.iconButtonAccount}>
+                  <Image
+                    src={upgradePhotoinHeader ? upgradePhotoinHeader : userPhoto}
+                    width="30"
+                    height="30"
+                    alt="Avatar"
+                  />
+                </Avatar>
               </IconButton>
               <Menu
                 id="basic-menu"
