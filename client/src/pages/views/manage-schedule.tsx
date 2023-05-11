@@ -16,6 +16,7 @@ import Progress from '../../commons/progress';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Spinner from '@/commons/Spinner';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPersistence } from '@/store/user';
 
@@ -44,6 +45,7 @@ const ManageSchedule = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>(dateFormatted);
+  const [isLoadingSpinner, setIsLoadingSpinner] = useState<Boolean>(true);
   const router = useRouter();
   const user: User =
     typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
@@ -55,7 +57,10 @@ const ManageSchedule = () => {
   useEffect(() => {
     fetch(`${urlApi}/users/alldeliveryman`)
       .then((response) => response.json())
-      .then((deliveryMans: User[]) => setDeliveryMans(deliveryMans))
+      .then((deliveryMans: User[]) => {
+        setDeliveryMans(deliveryMans);
+        setIsLoadingSpinner(false);
+      })
       .catch((error) => console.log(error));
   }, []);
 
@@ -122,89 +127,93 @@ const ManageSchedule = () => {
 
   return (
     <>
-      <Container disableGutters={true} className={styles.containerManage}>
-        <Header
-          onClickedLogout={() => setIsLoading(true)}
-          onClickedProfile={() => setIsLoading(true)}
-        />
-        <Box className={styles.boxAdmin}>
-          <Link href={`/views/profile/${user?.id}`}>
-            <Avatar alt="Admin" src={user?.photo} className={styles.avatarAdmin} />
-          </Link>
-          <Box>
-            <Typography className={styles.helloAdmin} variant="inherit" color="black">
-              Hola admin !
-            </Typography>
-            <Typography className={styles.textOfmanage} variant="inherit" color="black">
-              Gestionar Pedidos
-            </Typography>
-          </Box>
-        </Box>
-        <Calendar updatePackagesByDate={updatePackagesByDate} />
-        <Box mt={2} sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
-          <Accordion defaultExpanded>
-            <AccordionSummary
-              expandIcon={<ArrowDropDownSharpIcon />}
-              aria-controls="panel1a-content"
-            >
-              <Typography className={styles.textOfdetails} variant="inherit">
-                {selectedDate} - Detalles
+      {isLoadingSpinner ? (
+        <Spinner />
+      ) : (
+        <Container disableGutters={true} className={styles.containerManage}>
+          <Header
+            onClickedLogout={() => setIsLoading(true)}
+            onClickedProfile={() => setIsLoading(true)}
+          />
+          <Box className={styles.boxAdmin}>
+            <Link href={`/views/profile/${user?.id}`}>
+              <Avatar alt="Admin" src={user?.photo} className={styles.avatarAdmin} />
+            </Link>
+            <Box>
+              <Typography className={styles.helloAdmin} variant="inherit" color="black">
+                Hola admin !
               </Typography>
-            </AccordionSummary>
-            <Box>
-              <Box className={styles.boxOfdeliveryman}>
-                <Progress value={activeDeliveryManPercentage} />
-                <Box sx={{ width: '100%' }}>
-                  <Typography className={styles.textOfdeliveryman} variant="inherit">
-                    Repartidores
-                  </Typography>
-                  <Typography className={styles.textOfstatus} variant="inherit">
-                    {`${activeDeliveryManCounter}/${totalDeliveryManCounter}`} Activos
-                  </Typography>
-                </Box>
-                <AvatarGroup max={2} sx={{ marginLeft: 'auto', marginRight: '20px' }}>
-                  {randomActiveDeliveryMans.map((deliveryUser, i) => (
-                    <Avatar key={i} alt="Remy Sharp" src={deliveryUser.photo} />
-                  ))}
-                </AvatarGroup>
-              </Box>
-              <Box className={styles.boxBtn}>
-                <Box mt={2} px={2}>
-                  <Link href={'/views/manage-delivery-man'}>
-                    <Button fullWidth variant="contained" size="small">
-                      Ver Repartidores
-                    </Button>
-                  </Link>
-                </Box>
-              </Box>
+              <Typography className={styles.textOfmanage} variant="inherit" color="black">
+                Gestionar Pedidos
+              </Typography>
             </Box>
-            <Box>
-              <Box className={styles.boxOfpackages}>
-                <Progress value={deliveredPackagesPercentage} />
-                <Box sx={{ width: '100%' }}>
-                  <Typography className={styles.textOfdeliveryman} variant="inherit">
-                    Paquetes
-                  </Typography>
-
-                  <Typography className={styles.textOfstatus} variant="inherit">
-                    {`${deliveredPackages}/${totalPackages}`} Repartidos
-                  </Typography>
-                </Box>{' '}
-              </Box>
-
-              <Box className={styles.boxBtn}>
-                <Box mt={2} px={2}>
-                  <Link href={'/views/manage-packages'}>
-                    <Button fullWidth variant="contained" size="small" className={styles.box}>
-                      Ver Paquetes
-                    </Button>
-                  </Link>
+          </Box>
+          <Calendar updatePackagesByDate={updatePackagesByDate} />
+          <Box mt={2} sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
+            <Accordion defaultExpanded>
+              <AccordionSummary
+                expandIcon={<ArrowDropDownSharpIcon />}
+                aria-controls="panel1a-content"
+              >
+                <Typography className={styles.textOfdetails} variant="inherit">
+                  {selectedDate} - Detalles
+                </Typography>
+              </AccordionSummary>
+              <Box>
+                <Box className={styles.boxOfdeliveryman}>
+                  <Progress value={activeDeliveryManPercentage} />
+                  <Box sx={{ width: '100%' }}>
+                    <Typography className={styles.textOfdeliveryman} variant="inherit">
+                      Repartidores
+                    </Typography>
+                    <Typography className={styles.textOfstatus} variant="inherit">
+                      {`${activeDeliveryManCounter}/${totalDeliveryManCounter}`} Activos
+                    </Typography>
+                  </Box>
+                  <AvatarGroup max={2} sx={{ marginLeft: 'auto', marginRight: '20px' }}>
+                    {randomActiveDeliveryMans.map((deliveryUser, i) => (
+                      <Avatar key={i} alt="Remy Sharp" src={deliveryUser.photo} />
+                    ))}
+                  </AvatarGroup>
+                </Box>
+                <Box className={styles.boxBtn}>
+                  <Box mt={2} px={2}>
+                    <Link href={'/views/manage-delivery-man'}>
+                      <Button fullWidth variant="contained" size="small">
+                        Ver Repartidores
+                      </Button>
+                    </Link>
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-          </Accordion>
-        </Box>
-      </Container>
+              <Box>
+                <Box className={styles.boxOfpackages}>
+                  <Progress value={deliveredPackagesPercentage} />
+                  <Box sx={{ width: '100%' }}>
+                    <Typography className={styles.textOfdeliveryman} variant="inherit">
+                      Paquetes
+                    </Typography>
+
+                    <Typography className={styles.textOfstatus} variant="inherit">
+                      {`${deliveredPackages}/${totalPackages}`} Repartidos
+                    </Typography>
+                  </Box>{' '}
+                </Box>
+
+                <Box className={styles.boxBtn}>
+                  <Box mt={2} px={2}>
+                    <Link href={'/views/manage-packages'}>
+                      <Button fullWidth variant="contained" size="small" className={styles.box}>
+                        Ver Paquetes
+                      </Button>
+                    </Link>
+                  </Box>
+                </Box>
+              </Box>
+            </Accordion>
+          </Box>
+        </Container>
+      )}
     </>
   );
 };

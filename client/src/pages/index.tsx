@@ -55,9 +55,28 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmitOfLogin = (data: LoginFormData) => {
-    console.log(data, 'data');
     dispatch(userLogin({ data, showAlert, setAnimationLogin, setIsLoading }));
   };
+
+  useEffect(() => {
+    const userLocal = localStorage.getItem('user');
+
+    if (userLocal) {
+      try {
+        const parsedUser = JSON.parse(userLocal);
+
+        if (parsedUser.admin === true) {
+          navigate.push('/views/manage-schedule');
+        } else {
+          navigate.push('/views/start-workday');
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        // Manejar el error de análisis de JSON, por ejemplo, redireccionar a una página de error o mostrar un mensaje al usuario.
+      }
+    }
+  }, []);
+
   useEffect(() => {
     if (userId !== null && userId !== undefined) {
       getAllFormSwornByUser(userId)
