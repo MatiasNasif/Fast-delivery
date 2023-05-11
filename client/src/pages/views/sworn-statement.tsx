@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactEventHandler } from 'react';
+import { useState, useEffect, ReactEventHandler, useRef } from 'react';
 import ArrowApp from '@/commons/arrowApp';
 import ButtonApp from '@/commons/buttonApp';
 import { Container, Box, Typography } from '@mui/material';
@@ -8,8 +8,6 @@ import SwitchSworn from '../../commons/switchSworn';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { formCreate } from '../../store/formSworn';
-import { setPersistence } from '@/store/user';
-import { useSnackbar } from 'notistack';
 import { userLogout } from '@/store/user';
 import { useAlert } from '@/hook/Alerthook';
 import Spinner from '@/commons/Spinner';
@@ -41,25 +39,39 @@ const SwornStatement = () => {
   const [buttonSubmitLoading, setButtonSubmitLoading] = useState<boolean>(false);
   const [buttonClicks, setButtonClicks] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [userInLocalStorage, setUserInLocalStorage] = useState<string>('');
+  useEffect(() => {
+    const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+    setUserInLocalStorage(user);
+  }, []);
   const showAlert = useAlert();
   const navigate = useRouter();
   const dispatch = useDispatch();
 
-  const userLocal: User =
-    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  const checkboxRef = useRef(null);
 
-  if (userLocal.admin === true) {
+  const handleClickTextOfCheckbox = () => {
+    if (!checkboxRef.current) {
+      showAlert(
+        {
+          message: `Selecciona todos los campos y activa el checkbox`,
+          typeAlert: 'error',
+          showCloseButton: true,
+        },
+        { autoHideDuration: 3000 }
+      );
+      return;
+    }
+    checkboxRef.current.click();
+  };
+
+  if (userInLocalStorage.admin === true) {
     navigate.push('/views/manage-schedule');
   }
 
-  useEffect(() => {
-    dispatch(setPersistence());
-  }, [dispatch]);
-
-  const user = useSelector((state) => state.user);
-
   const dataForm = {
-    user: user.id,
+    user: userInLocalStorage.id,
     ...answers,
   };
 
@@ -79,7 +91,7 @@ const SwornStatement = () => {
   const handleButtonClickDesactivate = () => {
     return showAlert(
       {
-        message: `Tiene que completar todos los campos`,
+        message: `Tiene que completar todos los campos `,
         typeAlert: 'error',
         showCloseButton: true,
       },
@@ -150,10 +162,17 @@ const SwornStatement = () => {
                       <Checkbox required disabled={true} />
                     </span>
                   ) : (
-                    <Checkbox required disabled={false} />
+                    <Checkbox required disabled={false} inputRef={checkboxRef} id="myCheckbox" />
                   )}
 
-                  <Typography variant="p" className={styles.wordTextTrue}>
+                  <Typography
+                    variant="p"
+                    className={styles.wordTextTrue}
+                    htmlFor="myCheckbox"
+                    variant="p"
+                    onClick={handleClickTextOfCheckbox}
+                    style={{ cursor: 'pointer' }}
+                  >
                     Declaro que mis respuestas fueron totalmente verdaderas y que he respondido a
                     todas las preguntas con la mayor honestidad posible.
                   </Typography>
@@ -184,7 +203,7 @@ const SwornStatement = () => {
                       variant="outlined"
                       fullWidth
                     >
-                      Cargando
+                      Cargando...
                     </LoadingButton>
                   </Box>
                 )}
