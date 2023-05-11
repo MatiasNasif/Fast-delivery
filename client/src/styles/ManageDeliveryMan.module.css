@@ -1,112 +1,99 @@
-
-.tittle{
-    font-size: 18px;
-    font-weight: 700;
-    font-family: 'Roboto';
+.tittle {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Roboto';
 }
-.boxOfdeliveryman{
-    display: flex;
-    margin-bottom: 20%
-}
-
-
-.deliveryName{
-    display: inline-block;
-    font-size: 18px;
-    font-weight: 700;
-    font-family: 'Roboto';
-    max-width: 400px; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.boxOfdeliveryman {
+  display: flex;
+  margin-bottom: 20%;
 }
 
-.deliveryManDot{
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 5px;
-
+.deliveryName {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Roboto';
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.deliveryStatusBlue{    
-    font-size: 14px;
-    font-weight: 400;
-    font-family: 'Roboto';
-    margin-top: 5px;
-    color: blue;
-    max-width: 400px; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.deliveryManDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
 }
 
-.deliveryStatusRed{
-    font-size: 14px;
-    font-weight: 400;
-    font-family: 'Roboto';
-    margin-top: 5px;
-    color: red;
-   
+.deliveryStatusBlue {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Roboto';
+  margin-top: 5px;
+  color: blue;
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-
-.boxmayor{
-    display: flex;
+.deliveryStatusRed {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Roboto';
+  margin-top: 5px;
+  color: red;
 }
 
-.boxcito{
-display: flex;
-
-}
-.boxOfall{
-    display: flex;
-    flex-direction: column;
+.boxmayor {
+  display: flex;
+  height: 100px;
 }
 
-.deliveryStatusFinish{
-    font-size: 14px;
-    font-weight: 400;
-    font-family: 'Roboto';
-    margin-top: 5px;
-    color:  #96DB76;
+.boxcito {
+  display: flex;
+}
+.boxOfall {
+  display: flex;
+  flex-direction: column;
 }
 
-.deliveryStatusInCourse{
-    font-size: 14px;
-    font-weight: 400;
-    font-family: 'Roboto';
-    margin-top: 5px;
-    color: #217BCE;
+.deliveryStatusFinish {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Roboto';
+  margin-top: 5px;
+  color: #96db76;
 }
 
-
-
-.deliveryManContainer{
-    margin-left: 20px;
-    margin-bottom: 20%;
-    margin-top: 1%;
-   
+.deliveryStatusInCourse {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Roboto';
+  margin-top: 5px;
+  color: #217bce;
 }
 
-.boxStatus{
-    display: flex; 
-
+.deliveryManContainer {
+  margin-left: 20px;
+  margin-bottom: 20%;
+  margin-top: 1%;
 }
 
+.boxStatus {
+  display: flex;
+}
 
+.boxcitomax {
+  display: flex;
+}
 
-.boxcitomax{
-display: flex;
-} 
-
-.containerManageDeliveryMan{
-    height: 100vh;
-     width: 100vw
- }
- .boxManageDeliveryMan{
-    padding-left: 15px;
-    padding-right: 15px;
-    
- }
- 
+.containerManageDeliveryMan {
+  height: 100vh;
+  width: 100vw;
+}
+.boxManageDeliveryMan {
+  padding-left: 15px;
+  padding-right: 15px;
+}

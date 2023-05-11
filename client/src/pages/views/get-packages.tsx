@@ -20,6 +20,10 @@ interface Package {
   _id: string;
 }
 
+interface User {
+  admin?: boolean;
+}
+
 export default function GetPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
@@ -33,6 +37,10 @@ export default function GetPackages() {
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
   const navigate = useRouter();
+
+  if (user.admin === true) {
+    navigate.push('/views/manage-schedule');
+  }
 
   const fetchPackages = useCallback(() => {
     fetch(`${API_URL}/packages/packagesPendingNotAssign`)

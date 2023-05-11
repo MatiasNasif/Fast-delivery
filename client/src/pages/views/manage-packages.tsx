@@ -9,10 +9,12 @@ import ArrowApp from '@/commons/arrowApp';
 import styles from '../../styles/Manage-packages.module.css';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 interface User {
   email: string;
   id: string;
+  admin: boolean;
 }
 
 interface Package {
@@ -28,11 +30,14 @@ interface Package {
 
 const ManagePackages = () => {
   const [packages, setPackages] = useState<Package[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const router = useRouter();
 
-  let user: User | null = null;
-  if (typeof window !== 'undefined') {
-    const userLocalStorage = localStorage.getItem('user');
-    user = userLocalStorage !== null ? JSON.parse(userLocalStorage) : null;
+  const user: User =
+    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+
+  if (user.admin === false) {
+    router.push('/views/start-workday');
   }
 
   const today = new Date();
@@ -64,9 +69,16 @@ const ManagePackages = () => {
   return (
     <>
       <Container className={styles.containerManagePackages} maxWidth="xs" disableGutters={true}>
-        <Header />
+        <Header
+          onClickedLogout={() => setIsLoading(true)}
+          onClickedProfile={() => setIsLoading(true)}
+        />
         <Link href={'/views/manage-schedule'}>
-          <ArrowApp />
+          <ArrowApp
+            onClick={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+          />
         </Link>
         <Box className={styles.box}>
           <Accordion defaultExpanded>

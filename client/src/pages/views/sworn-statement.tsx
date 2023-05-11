@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactEventHandler } from 'react';
+import { useState, useEffect, ReactEventHandler, useRef } from 'react';
 import ArrowApp from '@/commons/arrowApp';
 import ButtonApp from '@/commons/buttonApp';
 import { Container, Box, Typography } from '@mui/material';
@@ -8,11 +8,15 @@ import SwitchSworn from '../../commons/switchSworn';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { formCreate } from '../../store/formSworn';
-import { setPersistence } from '@/store/user';
-import { useSnackbar } from 'notistack';
 import { userLogout } from '@/store/user';
 import { useAlert } from '@/hook/Alerthook';
 import Spinner from '@/commons/Spinner';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
+
+interface User {
+  admin: boolean;
+}
 
 const SwornStatement = () => {
   const repetitiveText = [
@@ -32,20 +36,42 @@ const SwornStatement = () => {
 
   const [answers, setAnswers] = useState({});
   const [buttonValidate, setButtonValidate] = useState<boolean>(true);
+  const [buttonSubmitLoading, setButtonSubmitLoading] = useState<boolean>(false);
   const [buttonClicks, setButtonClicks] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [userInLocalStorage, setUserInLocalStorage] = useState<string>('');
+  useEffect(() => {
+    const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+    setUserInLocalStorage(user);
+  }, []);
   const showAlert = useAlert();
   const navigate = useRouter();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setPersistence());
-  }, [dispatch]);
+  const checkboxRef = useRef(null);
 
-  const user = useSelector((state) => state.user);
+  const handleClickTextOfCheckbox = () => {
+    if (!checkboxRef.current) {
+      showAlert(
+        {
+          message: `Selecciona todos los campos y activa el checkbox`,
+          typeAlert: 'error',
+          showCloseButton: true,
+        },
+        { autoHideDuration: 3000 }
+      );
+      return;
+    }
+    checkboxRef.current.click();
+  };
+
+  if (userInLocalStorage.admin === true) {
+    navigate.push('/views/manage-schedule');
+  }
 
   const dataForm = {
-    user: user.id,
+    user: userInLocalStorage.id,
     ...answers,
   };
 
@@ -65,7 +91,7 @@ const SwornStatement = () => {
   const handleButtonClickDesactivate = () => {
     return showAlert(
       {
-        message: `Tiene que completar todos los campos`,
+        message: `Tiene que completar todos los campos `,
         typeAlert: 'error',
         showCloseButton: true,
       },
@@ -78,6 +104,7 @@ const SwornStatement = () => {
 
   const handleSubmitSwornStatement = (event: ReactEventHandler) => {
     event.preventDefault();
+    setButtonSubmitLoading(true);
     dispatch(formCreate(dataForm))
       .then(() =>
         showAlert(
@@ -132,24 +159,32 @@ const SwornStatement = () => {
                 <Box className={styles.BoxOfCheckbox}>
                   {buttonValidate ? (
                     <span className={styles.BoxOfCheckbox} onClick={handleButtonClickDesactivate}>
-                      <Checkbox required disabled={true}/>
+                      <Checkbox required disabled={true} />
                     </span>
                   ) : (
-                    <Checkbox required disabled={false}/>
+                    <Checkbox required disabled={false} inputRef={checkboxRef} id="myCheckbox" />
                   )}
 
-                  <Typography variant="p" className={styles.wordTextTrue}>
+                  <Typography
+                    variant="p"
+                    className={styles.wordTextTrue}
+                    htmlFor="myCheckbox"
+                    variant="p"
+                    onClick={handleClickTextOfCheckbox}
+                    style={{ cursor: 'pointer' }}
+                  >
                     Declaro que mis respuestas fueron totalmente verdaderas y que he respondido a
                     todas las preguntas con la mayor honestidad posible.
                   </Typography>
                 </Box>
+
                 {buttonValidate ? (
                   <span onClick={handleButtonClickDesactivate}>
                     <ButtonApp typeofButton="submit" variantButton="contained" isDisable={true}>
                       No Puedes Continuar
                     </ButtonApp>
                   </span>
-                ) : (
+                ) : !buttonSubmitLoading ? (
                   <ButtonApp
                     typeofButton="submit"
                     variantButton="contained"
@@ -158,6 +193,19 @@ const SwornStatement = () => {
                   >
                     Continuar
                   </ButtonApp>
+                ) : (
+                  <Box className={styles.buttonLoading}>
+                    <LoadingButton
+                      loading
+                      size="small"
+                      loadingPosition="start"
+                      startIcon={<SaveIcon />}
+                      variant="outlined"
+                      fullWidth
+                    >
+                      Cargando...
+                    </LoadingButton>
+                  </Box>
                 )}
               </Box>
             </form>

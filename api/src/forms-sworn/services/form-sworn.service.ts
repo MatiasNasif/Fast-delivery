@@ -50,8 +50,18 @@ export class FormSwornService {
   }
 
   async getFormSwornByUserId(userId: string): Promise<CreateFormSwornDto> {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
     const formSworn: CreateFormSwornDto = await this.formSwornModel.findOne({
-      user: userId,
+      $and: [
+        { user: userId },
+        { createdAt: { $gte: today.toISOString() } },
+        { createdAt: { $lt: tomorrow.toISOString() } },
+      ],
     });
     return formSworn;
   }

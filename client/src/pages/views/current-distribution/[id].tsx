@@ -7,7 +7,7 @@ import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { GetServerSideProps } from 'next';
 import {
   Container,
   Button,
@@ -16,6 +16,8 @@ import {
   AccordionDetails,
   Typography,
 } from '@mui/material';
+
+import { useAlert } from '@/hook/Alerthook';
 
 interface Package {
   address: string;
@@ -39,28 +41,50 @@ interface User {
   status: string;
 }
 
+// type Props = {
+//   packageByUser: Package;
+// };
+
+// type Params = {
+//   id: string;
+// };
+
 const urlApi: string | undefined = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
+// export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ query }) => {
+//   const packageIdSelected: string = (query?.id ?? '').toString();
+//   const response = await fetch(`${urlApi}/packages/${packageIdSelected}`);
+//   const packageByUser = await response.json();
+
+//   return {
+//     props: {
+//       packageByUser,
+//     },
+//   };
+// };
+
+// export default function CurrentDistribution({ packageByUser }: { packageByUser: Package }) {
 export default function CurrentDistribution() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const packageIdSelected: string = (navigate.query.id ?? '').toString();
   const [packageByUser, setPackageByUser] = useState<Package>(initialPackage);
+  const showAlert = useAlert();
 
-  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
-  const userId = user.id;
+  const user: User =
+    typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
 
   const fetchPackage = useCallback(() => {
     fetch(`${urlApi}/packages/${packageIdSelected}`)
       .then((response) => response.json())
       .then((packageByUser: Package) => setPackageByUser(packageByUser))
       .catch((error) => console.log(error));
-  }, [packageIdSelected]);
+  }, []);
 
   useEffect(() => {
     fetchPackage();
-  }, [fetchPackage]);
+  }, []);
 
   const handleUpdatePackageStatus = (
     packageId: string | undefined,
@@ -76,17 +100,10 @@ export default function CurrentDistribution() {
     })
       .then((response) => response.json())
       .then(() =>
-        enqueueSnackbar(`Paquete entregado`, {
-          variant: 'info',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-          style: {
-            fontSize: '16px',
-            color: '#fffff',
-            fontWeight: 'bold',
-          },
+        showAlert({
+          message: 'Paquete Entregado',
+          typeAlert: 'success',
+          showCloseButton: true,
         })
       )
       .then(() => navigate.push('/views/start-workday'))

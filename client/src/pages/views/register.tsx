@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { userRegister } from '@/store/user';
 import { useAlert } from '@/hook/Alerthook';
 import Spinner from '@/commons/Spinner';
+import branding from '../../assets/branding.svg';
 import 'animate.css';
 
 interface RegisterFormData {
@@ -54,7 +55,7 @@ export default function Register() {
   ${animationLogin ? 'animate__animated animate__bounceOutRight animate__duration-1s' : ''}
 
 `}
-              src={brand}
+              src={branding}
               alt="Fast Delivery Brand"
             />
           </Box>
