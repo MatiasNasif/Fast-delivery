@@ -8,7 +8,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddelware) =>
     getDefaultMiddelware({
       serializableCheck: false,
-    }).concat(logger),
+    }),
+  // .concat(logger)
   reducer: {
     user: userReducer,
     form: formSwornReducer,
