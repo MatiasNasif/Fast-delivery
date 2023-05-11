@@ -37,31 +37,28 @@ export default function StartWorkday() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [enableRegretButton, setEnableRegretButton] = useState<boolean>(false);
-  const [userInLocalStorage, setUserInLocalStorage] = useState<string>('');
+  // const [userInLocalStorage, setUserInLocalStorage] = useState<string>('');
 
   const dispatch = useDispatch();
   const showAlert = useAlert();
   const form = useSelector((state) => state.form);
-  const userRedux = useSelector((state) => state.user);
+  // const userRedux = useSelector((state) => state.user);
   const router = useRouter();
 
-  useEffect(() => {
-    const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
-    setUserInLocalStorage(user);
-  }, []);
+  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
 
-  if (userInLocalStorage.admin === true) {
+  if (user.admin === true) {
     router.push('/views/manage-schedule');
   }
 
-  const userId = userInLocalStorage.id;
+  const userId = user.id;
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
   const counterPackages: number = packages.length;
-  console.log();
+
   function AlertLogin() {
     return showAlert(
       {
-        message: `Bienvenido/a ${userRedux?.fullName}`,
+        message: `Bienvenido/a ${user?.fullName}`,
         typeAlert: 'success',
         showCloseButton: true,
       },
@@ -122,7 +119,7 @@ export default function StartWorkday() {
   const messageOfalcoholYesButton = () => {
     setEnableRegretButton(true);
     const messageOfalcoholYes =
-      'Tu declaración jurada indica que has consumido alcohol en las últimas 24 horas, por lo que lamentablemente no podemos permitirte el acceso en este momento. Por favor, regresa mañana.';
+      'Tu DDJJ indica que has consumido alcohol en las últimas 24 horas, por lo que lamentablemente no podemos permitirte el acceso en este momento. Por favor, regresa mañana.';
     showAlert(
       {
         message: `${messageOfalcoholYes}`,

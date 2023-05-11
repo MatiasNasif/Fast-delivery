@@ -80,11 +80,11 @@ export default function CurrentDistribution() {
       .then((response) => response.json())
       .then((packageByUser: Package) => setPackageByUser(packageByUser))
       .catch((error) => console.log(error));
-  }, [packageIdSelected]);
+  }, []);
 
   useEffect(() => {
     fetchPackage();
-  }, [fetchPackage]);
+  }, []);
 
   const handleUpdatePackageStatus = (
     packageId: string | undefined,
