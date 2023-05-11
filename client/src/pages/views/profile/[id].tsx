@@ -19,6 +19,7 @@ import {
   Input,
 } from '@mui/material';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
+import AvatarDefault from '../../../assets/avatarDefault.png';
 
 const Profile = () => {
   const [selectedImage, setSelectedImage] = useState('');
@@ -126,7 +127,7 @@ const Profile = () => {
         ) : (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Avatar sx={{ height: '200px', width: '200px' }}>
-              <Image src={''} width="200" height="200" alt="Avatar" />
+              <Image src={AvatarDefault} width="200" height="200" alt="Avatar" />
             </Avatar>
           </Box>
         )}
@@ -161,6 +162,14 @@ const Profile = () => {
             <Box className={styles.boxInfoMost}>
               <Box className={styles.boxInfo}>
                 <Typography className={styles.userInfo} variant="inherit">
+                  Status:
+                </Typography>
+                <Typography className={styles.userInfoContent} variant="inherit">
+                  {userInLocalStorage.status}
+                </Typography>
+              </Box>
+              <Box className={styles.boxInfo}>
+                <Typography className={styles.userInfo} variant="inherit">
                   Nombre:
                 </Typography>
                 <Typography className={styles.userInfoContent} variant="inherit">
@@ -183,6 +192,7 @@ const Profile = () => {
                   {userInLocalStorage.admin ? 'Admin' : 'Repartidor'}
                 </Typography>
               </Box>
+
               <Box className={styles.boxInfo}>
                 <Typography className={styles.userInfo} variant="inherit">
                   Id:

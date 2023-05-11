@@ -34,7 +34,7 @@ const DeliveryManDetails = () => {
   const [deliveryMan, setDeliveryMan] = useState<User>(initialUserState);
   const [deliveredPackages, setDeliveredPackages] = useState<Package[]>([]);
   const [pendingPackages, setPendingPackages] = useState<Package[]>([]);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [checkSwitchChange, setCheckSwitchChange] = useState<boolean>(
     deliveryMan.status !== 'Activo' ? false : true
   );
@@ -107,7 +107,10 @@ const DeliveryManDetails = () => {
 
   return (
     <>
-      <Header />
+      <Header
+        onClickedLogout={() => setIsLoading(true)}
+        onClickedProfile={() => setIsLoading(true)}
+      />
       <Link href={'/views/manage-delivery-man'}>
         <ArrowApp />
       </Link>

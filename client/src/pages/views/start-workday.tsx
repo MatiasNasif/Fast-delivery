@@ -35,27 +35,33 @@ interface User {
 export default function StartWorkday() {
   const [packagesPending, setPackagesPending] = useState<Package[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [enableRegretButton, setEnableRegretButton] = useState<boolean>(false);
+  const [userInLocalStorage, setUserInLocalStorage] = useState<string>('');
 
   const dispatch = useDispatch();
   const showAlert = useAlert();
   const form = useSelector((state) => state.form);
+  const userRedux = useSelector((state) => state.user);
   const router = useRouter();
 
-  const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+  useEffect(() => {
+    const user = typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user') ?? '');
+    setUserInLocalStorage(user);
+  }, []);
 
-  if (user.admin === true) {
+  if (userInLocalStorage.admin === true) {
     router.push('/views/manage-schedule');
   }
 
-  const userId = user.id;
+  const userId = userInLocalStorage.id;
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
   const counterPackages: number = packages.length;
-
+  console.log();
   function AlertLogin() {
     return showAlert(
       {
-        message: `Bienvenido/a ${user.fullName}`,
+        message: `Bienvenido/a ${userRedux.fullName}`,
         typeAlert: 'success',
         showCloseButton: true,
       },
@@ -100,16 +106,30 @@ export default function StartWorkday() {
       dispatch(getFormById(userId));
     }
   }, [dispatch, userId]);
+  const messageRegretButton = () => {
+    const messageRegretButtonClick =
+      '¿Cometiste un error en el formulario? ¡No te preocupes! Envíanos un correo electrónico a fastdelivery@mail.com para que podamos ayudarte.';
+    showAlert(
+      {
+        message: `${messageRegretButtonClick}`,
+        typeAlert: 'success',
+        showCloseButton: true,
+      },
+      { autoHideDuration: 8000 }
+    );
+  };
+
   const messageOfalcoholYesButton = () => {
+    setEnableRegretButton(true);
     const messageOfalcoholYes =
-      'En tu declaración jurada haz seleccionado que haz bebido alcohol en las ultimas 24 horas, por lo tanto tienes denegado el acceso. Vuelve mañana por favor';
+      'Tu declaración jurada indica que has consumido alcohol en las últimas 24 horas, por lo que lamentablemente no podemos permitirte el acceso en este momento. Por favor, regresa mañana.';
     showAlert(
       {
         message: `${messageOfalcoholYes}`,
-        typeAlert: 'info',
+        typeAlert: 'warning',
         showCloseButton: true,
       },
-      { autoHideDuration: 3000 }
+      { autoHideDuration: 8000 }
     );
   };
 
@@ -126,12 +146,28 @@ export default function StartWorkday() {
               onClickedProfile={() => setIsLoading(true)}
             />
             {form.alcohol === 'si' ? (
-              <span onClick={messageOfalcoholYesButton}>
-                <ButtonApp variantButton="contained" isDisable={true}>
-                  {' '}
-                  NO PODES LABURAR POR 24 HORAS
-                </ButtonApp>
-              </span>
+              <Box>
+                <span onClick={messageOfalcoholYesButton}>
+                  <ButtonApp variantButton="contained" isDisable={true}>
+                    {' '}
+                    NO PUEDES TRABAJAR POR 24 HORAS
+                  </ButtonApp>
+                </span>
+                {enableRegretButton && (
+                  <p
+                    style={{
+                      textAlign: 'center',
+                      color: 'blue',
+                      marginTop: '10px',
+                      fontFamily: 'Roboto',
+                      cursor: 'pointer',
+                    }}
+                    onClick={messageRegretButton}
+                  >
+                    Me equivoqué. ¿Qué puedo hacer?
+                  </p>
+                )}
+              </Box>
             ) : (
               <Link href="/views/get-packages">
                 <ButtonApp variantButton="contained">obtener paquetes</ButtonApp>{' '}

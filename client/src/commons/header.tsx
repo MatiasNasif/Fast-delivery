@@ -16,6 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Spinner from './Spinner';
 import Avatar from '@mui/material/Avatar';
+import AvatarDefault from '../assets/avatarDefault.png';
 
 const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
@@ -84,7 +85,13 @@ export default function Header({
               >
                 <Avatar className={styles.iconButtonAccount}>
                   <Image
-                    src={upgradePhotoinHeader ? upgradePhotoinHeader : userPhoto}
+                    src={
+                      upgradePhotoinHeader
+                        ? upgradePhotoinHeader
+                        : userPhoto
+                        ? userPhoto
+                        : AvatarDefault
+                    }
                     width="30"
                     height="30"
                     alt="Avatar"
