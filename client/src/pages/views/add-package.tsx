@@ -42,11 +42,23 @@ const AddPackage = () => {
   const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_KEY;
 
   const handleFormSubmit = (data) => {
+    const deliveryDateToFormat = data.deliveryDate;
+
+    const [year, month, day] = deliveryDateToFormat.split('-');
+
+    let date = new Date(year, month - 1, day);
+
+    let formattedDay = date.getDate().toString();
+    let formattedMonth = (date.getMonth() + 1).toString();
+    let formattedYear = date.getFullYear().toString().slice(-2);
+
+    let formattedDate = `${formattedDay}/${formattedMonth}/${formattedYear}`;
+
     const formdata = {
       address: data.address,
       receiver: data.receiver,
       weight: Number(data.weight),
-      deliveryDate: data.deliveryDate,
+      deliveryDate: formattedDate,
     };
 
     fetch(`${API_URL}/packages/create`, {

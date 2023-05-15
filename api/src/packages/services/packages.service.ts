@@ -84,7 +84,6 @@ export class PackagesService {
         deliveryDate: deliveryDate,
       })
       .exec();
-
     return packagesByDate;
   }
 

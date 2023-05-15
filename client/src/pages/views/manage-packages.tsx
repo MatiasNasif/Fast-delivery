@@ -30,6 +30,7 @@ interface Package {
 
 const ManagePackages = () => {
   const [packages, setPackages] = useState<Package[]>([]);
+  console.log(packages, "soy packages")
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const router = useRouter();
 
@@ -74,11 +75,7 @@ const ManagePackages = () => {
           onClickedProfile={() => setIsLoading(true)}
         />
         <Link href={'/views/manage-schedule'}>
-          <ArrowApp
-            onClick={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-          />
+          <ArrowApp />
         </Link>
         <Box className={styles.box}>
           <Accordion defaultExpanded>
