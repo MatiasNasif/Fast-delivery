@@ -30,7 +30,6 @@ interface Package {
 
 const ManagePackages = () => {
   const [packages, setPackages] = useState<Package[]>([]);
-  console.log(packages, "soy packages")
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const router = useRouter();
 

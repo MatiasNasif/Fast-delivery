@@ -44,6 +44,7 @@ const DaysOfWeek = ({ updatePackagesByDate }: Props) => {
             typeAlert: 'error',
             showCloseButton: true,
           });
+          return [];
         }
       })
       .then((packageByDate: Package[]) => {

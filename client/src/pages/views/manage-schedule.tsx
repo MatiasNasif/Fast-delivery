@@ -77,10 +77,14 @@ const ManageSchedule = () => {
       .then((response) => {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error('No se encontraron paquetes para la fecha de entrega ' + dateFormatted);
         }
       })
       .then((packageByDate: Package[]) => {
-        setPackages(packageByDate);
+        if (packageByDate && packageByDate.length > 0) {
+          setPackages(packageByDate);
+        } else return [];
       })
       .catch((error) => console.log(error));
   }, []);

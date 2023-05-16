@@ -7,12 +7,12 @@
   font-weight: bold;
   margin-top: 2px;
 }
-.textLabelcolor{
-    color: #FEBC14 !important;
-    font-weight: 400;
-    fill: solid;
-    font-style: regular;
-    text-decoration-color: blue !important;
+.textLabelcolor {
+  color: #217bce !important;
+  font-weight: 400;
+  fill: solid;
+  font-style: regular;
+  text-decoration-color: blue !important;
 }
 .formAdd {
   margin-bottom: 30px;
@@ -22,7 +22,7 @@
 }
 
 .labelColor {
-  color: #febc14 !important;
+  color: #217bce !important;
   font-weight: 400;
   fill: solid;
   font-style: regular;
